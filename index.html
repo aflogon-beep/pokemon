@@ -980,13 +980,13 @@ battle(){
     <div id="sh1" style="position:absolute;z-index:2;pointer-events:none;"></div>
     <div id="sh2" style="position:absolute;z-index:2;pointer-events:none;"></div>
     <!-- P1 sprite — left side, mirrored to face right -->
-    <div id="sp1wrap" style="position:absolute;z-index:3;left:0;bottom:0;">
+<div id="sp1wrap" style="position:absolute;z-index:3;">
       <img id="sp1" src="${su(pk1.id)}"
         style="display:block;transform:scaleX(-1);${p1faint?"filter:grayscale(1) opacity(.25);":""}"
         onload="onSpriteLoad(this,'sp1wrap','sh1',true,${sc.groundH})">
     </div>
     <!-- P2 sprite — right side -->
-    <div id="sp2wrap" style="position:absolute;z-index:3;right:0;bottom:0;">
+<div id="sp2wrap" style="position:absolute;z-index:3;">
       <img id="sp2" src="${su(pk2.id)}"
         style="display:block;${p2faint?"filter:grayscale(1) opacity(.25);":""}"
         onload="onSpriteLoad(this,'sp2wrap','sh2',false,${sc.groundH})">
@@ -1280,15 +1280,31 @@ function amsg(html,dur=2000){
 
 // -- Effects ----------------------------------------------------
 function spawnDmg(wrapId,dmg,color,isS){
-  const arena=document.getElementById("arena");if(!arena)return;
+  const arena=document.getElementById("arena");
+  if(!arena)return;
+
   const W=arena.offsetWidth||SP.W||300;
-  const H=arena.offsetHeight||SP.groundY*1.5||200;
+  const H=arena.offsetHeight||300;
   const isP1=wrapId==="sp1wrap";
-  // Use SP if available, else fallback to % of arena
-  const cx=SP.W>0?(isP1?SP.p1cx:SP.p2cx):(isP1?W*0.22:W*0.78);
-  const cy=SP.groundY>0?(SP.groundY-SP.sprH*0.6):(H*0.4);
+
+  const cx=SP.W>0 ? (isP1 ? SP.p1cx : SP.p2cx) : (isP1 ? W*0.18 : W*0.82);
+  const cy=SP.groundY>0 ? (SP.groundY - SP.sprH*0.72) : H*0.45;
+
   const d=document.createElement("div");
-  d.style.cssText=`position:absolute;left:${cx}px;top:${cy}px;transform:translateX(-50%);font-weight:900;font-size:${isS?"min(2.8rem,8vw)":"min(2.2rem,6.5vw)"};color:${isS?"#FCD34D":color};text-shadow:0 3px 14px rgba(0,0,0,.95),0 0 30px ${color};pointer-events:none;animation:dmgFloat 1.3s ease-out forwards;z-index:100;white-space:nowrap;`;
+  d.style.cssText=`
+    position:absolute;
+    left:${cx}px;
+    top:${cy}px;
+    transform:translateX(-50%);
+    font-weight:900;
+    font-size:${isS?"min(2.8rem,8vw)":"min(2.2rem,6.5vw)"};
+    color:${isS?"#FCD34D":color};
+    text-shadow:0 3px 14px rgba(0,0,0,.95),0 0 30px ${color};
+    pointer-events:none;
+    animation:dmgFloat 1.3s ease-out forwards;
+    z-index:100;
+    white-space:nowrap;
+  `;
   d.textContent=(isS?"★":"")+"-"+dmg;
   arena.appendChild(d);
   setTimeout(()=>d.remove(),2000);
@@ -1361,37 +1377,58 @@ function sfxBurst(isSuper,color){
 function jsLunge(el,isP1,onImpact){
   const wrapEl=document.getElementById(isP1?"sp1wrap":"sp2wrap");
   if(!wrapEl)return;
+
   const arena=document.getElementById("arena");
-  const W=arena?arena.offsetWidth:SP.W||800;
-  const dist=Math.round(W*0.18);
-  // P1 faces right (scaleX-1), lunges toward p2 = move right = left increases
-  // P2 faces left, lunges toward p1 = move left = right decreases (or left set)
-  const offsets=[0, dist*0.2*(isP1?1:-1), dist*(isP1?1:-1), dist*0.3*(isP1?1:-1), 0];
-  const times=[0,200,160,120,280];
+  const W=arena ? arena.offsetWidth : SP.W || 800;
+
+  // Embestida corta y seca, más arcade
+  const dist=Math.round(W*0.10);
+
+  const offsets=[0, dist*0.45, dist, dist*0.25, 0];
+  const times=[0, 90, 100, 90, 160];
+
   let step=0;
+
   const origLeft=wrapEl.style.left;
   const origRight=wrapEl.style.right;
+  const origTop=wrapEl.style.top;
+
   const origLeftPx=parseInt(origLeft)||0;
   const origRightPx=parseInt(origRight)||0;
+  const origTopPx=parseInt(origTop)||0;
+
   function next(){
     if(step>=offsets.length){
       wrapEl.style.transition="";
-      if(isP1)wrapEl.style.left=origLeft;
-      else wrapEl.style.right=origRight;
+      wrapEl.style.top=origTop;
+      if(isP1){
+        wrapEl.style.left=origLeft;
+      }else{
+        wrapEl.style.right=origRight;
+      }
       return;
     }
-    const spd=step===0?0.01:step===2?0.13:0.22;
+
+    const travel=offsets[step];
+    const hop = step === 2 ? -10 : step === 3 ? -4 : 0;
+    const spd=step===0 ? 0.01 : 0.09;
+
+    wrapEl.style.transition=`all ${spd}s ease-out`;
+
     if(isP1){
-      wrapEl.style.transition=`left ${spd}s ease`;
-      wrapEl.style.left=(origLeftPx+offsets[step])+"px";
-    } else {
-      wrapEl.style.transition=`right ${spd}s ease`;
-      wrapEl.style.right=(origRightPx-offsets[step])+"px";
+      wrapEl.style.left=(origLeftPx + travel)+"px";
+    }else{
+      wrapEl.style.right=(origRightPx - travel)+"px";
     }
+
+    wrapEl.style.top=(origTopPx + hop)+"px";
+
     if(step===2&&onImpact)onImpact();
+
     setTimeout(next,times[step]);
     step++;
   }
+
   next();
 }
 
@@ -1572,23 +1609,88 @@ function placeSpriteNow(img, wrapId, shadowId, isP1, groundH){
   const W=arena.offsetWidth, H=arena.offsetHeight;
   if(!W||!H)return;
 
-  const groundY=Math.round(H*(100-groundH)/100);
-  // SF-style: sprite width = 28% of arena width
-  const targetW=Math.min(220,Math.max(100,Math.round(W*0.20)));
+  // Horizonte visual del escenario
+  const horizonY=Math.round(H*(100-groundH)/100);
+
+  // Suelo REAL de combate, más abajo, estilo fighter 2D
+  const fighterGroundY=Math.round(H*0.90);
+
+  // Sprites más grandes y con más presencia
+  const targetW=Math.min(380, Math.max(190, Math.round(W*0.28)));
 
   img.style.width=targetW+"px";
   img.style.height="auto";
   img.style.display="block";
 
-  // Get real rendered height after setting width
-  let rendH=img.offsetHeight;
-  if(!rendH&&img.naturalWidth){
-    rendH=Math.round(targetW*img.naturalHeight/img.naturalWidth);
-  }
-  if(!rendH)rendH=targetW; // fallback square
+  const ratio=(img.naturalHeight&&img.naturalWidth)
+    ? img.naturalHeight/img.naturalWidth
+    : 1;
+
+  let spriteH=Math.round(targetW*ratio);
+  spriteH=Math.min(spriteH, Math.round(H*0.46));
 
   const wrap=document.getElementById(wrapId);
   if(!wrap)return;
+
+  // Más cerca de las esquinas, menos "centrados en el aire"
+  const sidePad=Math.round(W*0.08);
+
+  wrap.style.cssText = [
+    "position:absolute",
+    "z-index:3",
+    "background:transparent",
+    "border:none",
+    "outline:none",
+    "box-shadow:none",
+    "overflow:visible",
+    `width:${targetW}px`,
+    `height:${spriteH}px`,
+    `top:${fighterGroundY - spriteH}px`,
+    "bottom:auto",
+    isP1 ? `left:${sidePad}px` : `right:${sidePad}px`
+  ].join(";") + ";";
+
+  if(isP1){
+    wrap.style.right="auto";
+    SP.p1cx = sidePad + targetW * 0.5;
+  }else{
+    wrap.style.left="auto";
+    SP.p2cx = W - sidePad - targetW * 0.5;
+  }
+
+  SP.sprH = spriteH;
+  SP.groundY = fighterGroundY;
+  SP.horizonY = horizonY;
+  SP.W = W;
+  SP.sprTop = fighterGroundY - spriteH;
+
+  const sfx=document.getElementById("sfx-center");
+  if(sfx){
+    sfx.style.left = Math.round(W*0.5)+"px";
+    sfx.style.top = Math.round(fighterGroundY - spriteH*0.55)+"px";
+  }
+
+  const sh=document.getElementById(shadowId);
+  if(sh){
+    const shW=Math.round(targetW*0.55);
+    const shH=Math.max(10, Math.round(shW*0.14));
+    const shX=isP1 ? (sidePad + targetW*0.5) : (W - sidePad - targetW*0.5);
+
+    sh.style.cssText = [
+      "position:absolute",
+      `left:${shX}px`,
+      `top:${fighterGroundY - shH/2}px`,
+      `width:${shW}px`,
+      `height:${shH}px`,
+      "transform:translateX(-50%)",
+      "background:rgba(0,0,0,.42)",
+      "border-radius:50%",
+      "filter:blur(10px)",
+      "pointer-events:none",
+      "z-index:2"
+    ].join(";") + ";";
+  }
+}
 
   // Use naturalHeight/naturalWidth for reliable ratio (not offsetHeight which can be 0)
   const ratio = (img.naturalHeight&&img.naturalWidth) ? img.naturalHeight/img.naturalWidth : 1;
