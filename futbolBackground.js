@@ -1,12 +1,10 @@
-// futbolBackground.js - Escenario de Fútbol mejorado con Canvas
-
 class FutbolBackground extends BackgroundCanvas {
   constructor() {
     super();
     this.clouds = [
-      {x: 150, y: 90, size: 120, speed: 0.09},
-      {x: 580, y: 120, size: 150, speed: 0.07},
-      {x: 920, y: 75, size: 100, speed: 0.11}
+      {x: 120, y: 85, size: 130, speed: 0.10},
+      {x: 550, y: 115, size: 155, speed: 0.07},
+      {x: 920, y: 70, size: 105, speed: 0.13}
     ];
     this.confetti = [];
     this.time = 0;
@@ -17,97 +15,79 @@ class FutbolBackground extends BackgroundCanvas {
     const w = this.canvas.width;
     const h = this.canvas.height;
 
-    // Cielo azul estadio
-    const grad = ctx.createLinearGradient(0, 0, 0, h * 0.62);
+    // Cielo
+    const grad = ctx.createLinearGradient(0, 0, 0, h*0.62);
     grad.addColorStop(0, "#1e40af");
     grad.addColorStop(1, "#60a5fa");
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, w, h);
 
-    // Nubes lentas
-    ctx.fillStyle = "rgba(255,255,255,0.92)";
+    // Nubes
+    ctx.fillStyle = "rgba(255,255,255,0.95)";
     this.clouds.forEach(c => {
-      const cx = (c.x + this.time * c.speed) % (w + 400) - 150;
+      const cx = (c.x + this.time * c.speed) % (w + 400) - 180;
       ctx.beginPath();
-      ctx.ellipse(cx, c.y, c.size, c.size * 0.58, 0, 0, Math.PI * 2);
+      ctx.ellipse(cx, c.y, c.size, c.size*0.58, 0, 0, Math.PI*2);
       ctx.fill();
       ctx.beginPath();
-      ctx.ellipse(cx + 45, c.y - 22, c.size * 0.72, c.size * 0.48, 0, 0, Math.PI * 2);
+      ctx.ellipse(cx + 50, c.y - 25, c.size*0.75, c.size*0.48, 0, 0, Math.PI*2);
       ctx.fill();
     });
 
-    // Césped verde fútbol
+    // Césped
     ctx.fillStyle = "#166534";
-    ctx.fillRect(0, h * 0.58, w, h * 0.42);
+    ctx.fillRect(0, h*0.58, w, h*0.42);
 
-    // Líneas del campo FIJAS (sin movimiento)
+    // Líneas del campo (FIJAS)
     ctx.strokeStyle = "#f1f5f9";
     ctx.lineWidth = 5;
-    ctx.shadowBlur = 6;
-    ctx.shadowColor = "rgba(255,255,255,0.5)";
+    ctx.shadowBlur = 8;
+    ctx.shadowColor = "rgba(255,255,255,0.6)";
 
-    // Bordes y líneas horizontales
     ctx.beginPath();
-    ctx.moveTo(30, h*0.63);
-    ctx.lineTo(w-30, h*0.63);
-    ctx.moveTo(30, h*0.73);
-    ctx.lineTo(w-30, h*0.73);
-    ctx.moveTo(30, h*0.68);
-    ctx.lineTo(w-30, h*0.68);
-
-    // Línea central
-    ctx.moveTo(w/2, h*0.63);
-    ctx.lineTo(w/2, h*0.73);
-
-    // Círculo central
-    ctx.arc(w/2, h*0.68, 75, 0, Math.PI * 2);
+    ctx.moveTo(40, h*0.63); ctx.lineTo(w-40, h*0.63);
+    ctx.moveTo(40, h*0.73); ctx.lineTo(w-40, h*0.73);
+    ctx.moveTo(40, h*0.68); ctx.lineTo(w-40, h*0.68);
+    ctx.moveTo(w/2, h*0.63); ctx.lineTo(w/2, h*0.73);
+    ctx.arc(w/2, h*0.68, 72, 0, Math.PI*2);
     ctx.stroke();
 
-    // Áreas
-    ctx.strokeRect(55, h*0.63, 160, h*0.10);
-    ctx.strokeRect(w-215, h*0.63, 160, h*0.10);
+    // Áreas y porterías
+    ctx.strokeRect(60, h*0.63, 150, h*0.11);
+    ctx.strokeRect(w-210, h*0.63, 150, h*0.11);
+    ctx.strokeRect(28, h*0.635, 22, h*0.155);
+    ctx.strokeRect(w-50, h*0.635, 22, h*0.155);
 
     ctx.shadowBlur = 0;
-    ctx.lineWidth = 3;
-
-    // Porterías
-    ctx.strokeRect(25, h*0.64, 22, h*0.16);
-    ctx.strokeRect(w-47, h*0.64, 22, h*0.16);
-
-    this.time += 0.8;
+    this.time += 0.9;
   }
 
   updateAndDrawParticles() {
-    // Confetti simple pero visible
-    if (Math.random() < 0.4) {
+    if (Math.random() < 0.35) {
       this.confetti.push({
         x: Math.random() * this.canvas.width,
-        y: Math.random() * -50,
-        vx: (Math.random() - 0.5) * 2.5,
-        vy: 1.5 + Math.random() * 2.5,
+        y: -30,
+        vx: (Math.random()-0.5)*2.2,
+        vy: 1.8 + Math.random()*2.8,
         color: ["#ef4444","#3b82f6","#eab308","#22c55e","#a855f7"][Math.floor(Math.random()*5)],
-        size: 7 + Math.random() * 8,
-        life: 120
+        size: 6 + Math.random()*9,
+        life: 110
       });
     }
 
-    for (let i = this.confetti.length - 1; i >= 0; i--) {
+    for (let i = this.confetti.length-1; i >= 0; i--) {
       const p = this.confetti[i];
       p.x += p.vx;
       p.y += p.vy;
-      p.vy += 0.09;
+      p.vy += 0.1;
       p.life--;
 
-      this.ctx.save();
-      this.ctx.globalAlpha = p.life / 120;
+      this.ctx.globalAlpha = p.life / 110;
       this.ctx.fillStyle = p.color;
-      this.ctx.fillRect(p.x, p.y, p.size, p.size * 0.6);
-      this.ctx.restore();
+      this.ctx.fillRect(p.x, p.y, p.size, p.size*0.55);
 
-      if (p.life <= 0) this.confetti.splice(i, 1);
+      if (p.life <= 0) this.confetti.splice(i,1);
     }
+    this.ctx.globalAlpha = 1;
   }
 }
-
-// Exponer para el juego
-window.FutbolBackground = FutbolBackground;
