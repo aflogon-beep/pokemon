@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+<script src="backgroundCanvas.js"></script>
+<script src="futbolBackground.js"></script>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
 <title>PokéBattle v9.3.0</title>
@@ -338,6 +340,7 @@ const SCENARIOS=[
   // 4. Campo de fútbol — mejorado
   {
     name:"futbol",
+    useCanvas: true,           // ← nueva flag
     sky:`linear-gradient(180deg,#1a3a6e 0%,#2e6db4 30%,#5ba3e0 60%,#87CEEB 100%)`,
     clouds:true,
     ground:`linear-gradient(180deg,#1a5c1a 0%,#2d7a2d 30%,#1a5c1a 60%,#0f3d0f 100%)`,
@@ -453,12 +456,28 @@ const SCENARIOS=[
     msgBg:"rgba(2,5,15,.92)",msgBorder:"#818CF8"
   }
 ];
-
-function buildSceneBg(sc){
-  const w=document.createElement("canvas");
-  w.style.cssText="position:absolute;inset:0;width:100%;height:100%;";
-  return w;
+function buildSceneBg(sc) {
+  if (sc.useCanvas && window.FutbolBackground && sc.name === "futbol") {
+    const container = document.createElement("div");
+    container.style.cssText = "position:absolute;inset:0;width:100%;height:100%;overflow:hidden;";
+    
+    const bgCanvas = document.createElement("canvas");
+    bgCanvas.id = "futbolBgCanvas";
+    container.appendChild(bgCanvas);
+    
+    // Iniciar el fondo
+    setTimeout(() => {
+      const bg = new FutbolBackground();
+      bg.start();
+    }, 50);
+    
+    return container;
+  }
+  
+  // Código antiguo (SVG) para los demás escenarios
+  // ... tu código actual con sceneSVG
 }
+
 
 // ═══════════════════════════════════════════
 // POKEMON QUOTES — pega aquí el código generado
