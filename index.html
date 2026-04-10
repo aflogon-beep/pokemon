@@ -793,6 +793,8 @@ function render(){document.getElementById("app").innerHTML=SCREENS[G.scr]?SCREEN
 const POKEBALL_MINI=`<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" width="40" height="40"><circle cx="100" cy="100" r="95" fill="white" stroke="#1E293B" stroke-width="6"/><path d="M 10 100 A 90 90 0 0 1 190 100 Z" fill="#EF4444"/><line x1="10" y1="100" x2="190" y2="100" stroke="#1E293B" stroke-width="6"/><circle cx="100" cy="100" r="22" fill="white" stroke="#1E293B" stroke-width="6"/><circle cx="100" cy="100" r="10" fill="#E2E8F0"/></svg>`;
 const POKEBALL=`<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" width="110" height="110"><circle cx="100" cy="100" r="95" fill="white" stroke="#1E293B" stroke-width="6"/><path d="M 10 100 A 90 90 0 0 1 190 100 Z" fill="#EF4444"/><line x1="10" y1="100" x2="190" y2="100" stroke="#1E293B" stroke-width="6"/><circle cx="100" cy="100" r="22" fill="white" stroke="#1E293B" stroke-width="6"/><circle cx="100" cy="100" r="10" fill="#E2E8F0"/></svg>`;
 
+const DEX={"1":"Lleva un bulbo en la espalda que huele fatal. Sus amigos le dicen que se duche más.","2":"Su flor ya huele un poco mejor. Aunque solo un poco. Sigue trabajando en ello.","3":"Su flor gigante absorbe el sol. También absorbe los insultos y los ignora.","4":"Tiene fuego en la cola. Si se apaga, adiós Charmander. No lo apagues, en serio.","5":"Está en la fase rebelde. No le mandes a hacer la cama. Te arderá la cama.","6":"Puede volar a 1400 km/h. Y te lo recuerda cada vez que puede.","7":"Su caparazón es durísimo. Lo usa de escudo, de cama y de sombrero cuando llueve.","8":"Tiene orejas de conejo y cola de ardilla. Él dice que es tendencia.","9":"Dos cañones de agua en la espalda. Ideal para llenar la piscina en 3 segundos.","10":"Un gusano que come hojas todo el día. Sueña con ser mariposa. Nosotros también.","11":"No se puede mover. No puede atacar. Pero está endureciendo. Muy. Lentamente.","12":"Esparce polvos raros mientras duerme. Sus compañeros de piso ya no le hablan.","13":"Tiene un aguijón venenoso en la cabeza. Muy útil para no perder el gorro.","14":"Igual que Metapod pero más puntiagudo. La personalidad brilla por su ausencia.","15":"Tres aguijones. Tres. Uno para cada vez que alguien le llama 'abejita'.","16":"El pajarito más común de Kanto. Su sueño es ser raro. No lo conseguirá.","17":"Creció un poco. Ahora es más mandón. Sus hermanos pequeños le odian.","18":"Vuela a Mach 2. Aun así llega tarde al colegio. El tráfico es terrible.","19":"Muerde todo lo que ve. Tu dedo, tu mochila, tus ilusiones. Todo.","20":"Sus dientes nunca dejan de crecer. Gasta una fortuna en dentista.","21":"Siempre está de mal humor. Se levantó con el pie izquierdo hace 3 años.","22":"Su pico es tan largo que a veces se pincha él solo. No aprende.","23":"Se enrolla en espiral para dormir. También para saludar. Y para atacar.","24":"Puede aplastar a sus enemigos con el cuerpo. Y lo sabe. Vaya que si lo sabe.","25":"El más famoso de todos. Cobra derechos de imagen por cada foto. Es un divo.","26":"Versión adulta de Pikachu. Tiene más voltios pero menos seguidores en redes.","27":"Se enrolla en una bola cuando tiene miedo. Spoiler: tiene miedo de todo.","28":"Sus garras son afiladísimas. Ideal para rascarse. Menos ideal para abrazar.","29":"Tiene un cuerno venenoso pequeñito. Compensa con mucha actitud.","30":"Ya creció un poco. Su cuerno es más grande. Su actitud también.","31":"Reina del veneno. Manda en su territorio. No se discute con Nidoqueen.","32":"Su cuerno apunta hacia arriba. Muy práctico para colgar el abrigo.","33":"Está en fase de crecimiento. Lo del cuerno ya va mejor. Lo de la actitud, no.","34":"El rey del veneno. Le gusta pisotear cosas. Y que le digan rey.","35":"Sus canciones hacen dormir a todos. Útil en reuniones familiares aburridas.","36":"Versión mejorada de Clefairy. Ahora también hace dormir con la mirada.","37":"Tiene seis colas. Las agita cuando está contento. Necesita mucho espacio.","38":"Nueve colas mágicas. Dicen que cada una concede un deseo. Mentira, pero suena bien.","39":"Canta tan mal que todos se duermen. Tiene 5 millones de oyentes en Spotify.","40":"Más grande y más rosa. Su abrazo puede romperte tres costillas. Con cariño.","41":"Sale solo de noche y choca contra todo. Su GPS está estropeado desde siempre.","42":"Versión grande del Zubat. Ahora choca contra cosas más grandes. Progreso.","43":"Huele tan mal que sus enemigos huyen antes de pelear. Técnica efectiva.","44":"Huele peor que Oddish. Sus amigos le regalan ambientadores por Navidad.","45":"La flor más apestosa de Kanto. Los Concursos de Belleza no son lo suyo.","46":"Un hongo le controla el cerebro. Sinceramente, no parece muy diferente.","47":"El hongo lo controla todo. Parasect ya no recuerda quién era antes. Triste.","48":"Sus ojos enormes ven en la oscuridad. También ven tus miedos más profundos.","49":"Vuela en la noche esparciendo escamas. Sus vecinos han puesto una queja.","50":"Solo mide 20cm. Se ofende muchísimo cuando se lo recuerdas.","51":"Tres Diglett juntos. Dicen que son familia. Nadie sabe quién manda.","52":"Habla como humano pero actúa como gato. Es lo peor de los dos mundos.","53":"Elegante, sofisticado y con garras. Como un aristocrata con mal día.","54":"Le duele la cabeza todo el tiempo. Pero cuando le duele mucho, saca poderes.","55":"Ya no le duele la cabeza. Ahora le duelen las rodillas. La edad, amigo.","56":"Siempre está enfadado. Se despertó enfadado. Comerá enfadado. Dormirá enfadado.","57":"Más enfadado que Mankey. Se pensaba que no era posible. Era posible.","58":"Un perrito de fuego. Mueve la cola cuando está contento. Prende fuego a la cola.","59":"El perro más majestuoso de Kanto. Si te muerde, te abrasa. No le busques las cosquillas.","60":"Una cola que gira como hélice. Así nada. Así vuela. Así bate huevos.","61":"Ya tiene brazos. Los usa para aplaudir cuando gana. Mucho.","62":"Campeón de natación y boxeo a la vez. Sus rivales lloran solos.","63":"Duerme el 99% del tiempo. El 1% restante lo usa para teletransportarse a dormir en otro sitio.","64":"Dobla cucharas con la mente. Sus padres ya no le dejan poner la mesa.","65":"Tiene un IQ de 5000. Aun así pierde las llaves constantemente.","66":"Entrena 24 horas al día. Come piedras para desayunar. Le encanta.","67":"Sus músculos son tan grandes que ya no caben por las puertas normales.","68":"Cuatro brazos. Puede darte palmadas en la espalda y en la cara a la vez.","69":"Parece inofensivo. Huele fatal. Te atrapa con sus vides. No te fíes.","70":"Sus hojas cortan como cuchillas. Útil para hacer ensaladas peligrosas.","71":"Una planta carnívora gigante. Tiene hambre de rivales. Y de turistas.","72":"Transparent y venenoso. Como ciertos profesores de mates.","73":"Tiene 80 tentáculos. Los cuenta antes de dormir en vez de ovejas.","74":"Una roca con ojos. Se ofende mucho cuando le llaman 'piedra'.","75":"Una roca más grande con más ojos. Ahora también rueda hacia ti.","76":"La roca más grande de todas. Básicamente es una montaña con mal humor.","77":"Un caballo de fuego. Sus cascos dejan marcas en el suelo. Y en los corazones.","78":"Un unicornio de fuego. Galopa a 240 km/h. No acepta pasajeros.","79":"El más lento de Kanto. Tarda 5 segundos en sentir dolor. Ventajas y desventajas.","80":"Tiene una Shelder en la cola. La Shelder tampoco sabe cómo llegó ahí.","81":"Un imán con ojos. Come tornillos de desayuno. Y clavos de merienda.","82":"Tres Magnemite juntos. Ahora pueden comer tuercas también. El progreso.","83":"Lleva un puerro como arma. Lleva años buscando uno mejor. No lo encuentra.","84":"Dos cabezas, un cuerpo. Siempre discuten sobre a dónde ir a cenar.","85":"Tres cabezas. Las discusiones son épicas. Ninguna cena en paz.","86":"Un lobito marino que siempre tiene frío. Se queja del termostato.","87":"Ya tiene más pelo. Sigue teniendo frío. El termostato sigue sin funcionar.","88":"Está hecho de basura tóxica. Su olor hace llorar a las piedras.","89":"Más basura, más olor, más lágrimas. Los ecologistas le tienen manía.","90":"Su concha es durísima. La usa de escudo, de casco y de plato sopero.","91":"Su defensa es la más alta de todos. Por dentro es muy sensible. No se lo digas.","92":"Un fantasma gaseoso. Puede traversar paredes. Usa este poder para espiar.","93":"Tiene manos flotantes. Las usa para asustar. Y para hacer sombras chinas.","94":"Su sonrisa no desaparece nunca. Ni cuando duerme. Ni cuando pierde.","95":"Una serpiente de roca kilométrica. Ocupa demasiado en el ascensor.","96":"Te hipnotiza para robar tus sueños. Los guarda en una colección.","97":"Su colección de sueños robados ya ocupa tres habitaciones.","98":"Una cangrejo con una pinza enorme. La otra pinza es diminuta. No preguntes.","99":"Dos pinzas enormes. Rompe rocas, nueces y esperanzas de sus rivales.","100":"Una bomba con ojos. Está siempre a punto de explotar. Siempre.","101":"Explota más rápido que Voltorb. Sus amigos mantienen las distancias.","102":"Seis huevos que se comunican telepáticamente. Discuten sobre quién saldrá primero.","103":"Un árbol con cara de pocos amigos. No le preguntes cómo está. No bien.","104":"Usa el cráneo de su madre como casco. Es triste pero también muy duro.","105":"El hueso que lleva es el de su madre. Lucha por ella. Siempre.","106":"Sus patadas alcanzan los 10000 km/h. Sus pantalones no sobreviven.","107":"Sus puñetazos son tan rápidos que parecen invisibles. Sus guantes, también.","108":"Su lengua mide 2 metros. La usa para limpiar platos. Se ahorra el lavavajillas.","109":"Desprende gases venenosos por los poros. Sus vecinos han puesto una queja.","110":"Dos cabezas de gas tóxico. La mezcla resulta en algo aún más asqueroso.","111":"Un rinoceronte con cuerno de piedra. Carga contra todo. Todo.","112":"Ahora camina en dos patas. Sigue cargando contra todo. Pero más alto.","113":"Cura a todos los que están heridos. Cobra en huevos. Solo acepta huevos.","114":"Está hecho de enredaderas. Si te abraza, tardas una hora en soltarte.","115":"Lleva a su bebé en la bolsa. El bebé le da consejos tácticos. Buenos consejos.","116":"Un caballito de mar diminuto. Muy mono. Muy peligroso. Las dos cosas a la vez.","117":"Ya creció. Sigue siendo un caballito de mar. Ahora escupe burbujas más grandes.","118":"Un pez dorado que puede atacar con su cuerno. El más peligroso del acuario.","119":"El rey del acuario. Cobra impuestos a todos los peces de su territorio.","120":"Una estrella de mar que gira como un trompo. Marea a sus enemigos. Y a sus amigos.","121":"Una estrella de mar psíquica. Lee tu mente. Sabe lo que hiciste el verano pasado.","122":"Imita todo lo que ves. Todo. Incluyendo tus peores bailes.","123":"Sus guadañas cortan el aire con un silbido. Y también todo lo demás.","124":"Canta canciones de hielo que congelan el corazón. Número 1 en la lista navideña.","125":"Lleva un rayo en la frente. Cuando está nervioso, da pequeñas descargas. A todos.","126":"Sus puños arden a 1200 grados. Da abrazos solo cuando se lo piden. Nadie lo pide.","127":"Sus cuernos parten rocas por la mitad. Muy útil. Muy peligroso. Muy Pinsir.","128":"Tiene dos colas. Empieza con ellas. Acaba con todo lo demás.","129":"Solo sabe salpicar. Pero un día... Un día será Gyarados. El día que tememos.","130":"La venganza de Magikarp hecha realidad. Vale la pena haberle aguantado.","131":"Tan amable que lleva a los náufragos hasta la orilla. Cobra en canciones.","132":"Puede convertirse en cualquier cosa. Actualmente tiene una crisis de identidad.","133":"Puede evolucionar de ocho formas distintas. Aún no sabe cuál elegir. La presión.","134":"Evolución acuática de Eevee. Nada tan rápido que parece que teletransporta.","135":"Evolución eléctrica. Tan rápido que a veces llega antes de salir.","136":"Evolución de fuego. Sus abrazos son un peligro. Sus patadas, una catástrofe.","137":"Hecho de código informático. Tiene bugs. Muchos bugs. Como todos.","138":"Un fósil marino revivido. Lleva 70 millones de años intentando entender el mundo.","139":"Versión evolucionada del fósil. Ahora entiende algo más. Tampoco mucho.","140":"Otro fósil marino. Lleva igual de mucho tiempo despierto. Igual de confundido.","141":"Versión evolucionada. Sus guadañas cortan rocas. Y confusiones existenciales.","142":"Un fósil volador. Lleva millones de años sin dormir. Se nota.","143":"Duerme 20 horas al día. Las otras 4 las dedica a comer. Es un sistema perfecto.","144":"El legendario del hielo. Solo aparece en lugares muy fríos. Y en tus pesadillas.","145":"El legendario eléctrico. Su vuelo crea tormentas. Los aeropuertos le odian.","146":"El legendario de fuego. Donde vuela, arde. Los bomberos le tienen mucho respeto.","147":"Un dragón bebé. Parece inofensivo. Parece. No te dejes engañar.","148":"Ya casi es dragón adulto. Practica cara de malo frente al espejo cada mañana.","149":"El dragón más poderoso de Kanto. Podría destruirlo todo. Prefiere dar paseos.","150":"Creado en un laboratorio. Sin familia, sin amigos, sin sonrisas. Solo poder.","151":"El Pokémon más raro de todos. Quizás exista. Quizás lo estés imaginando."};
+
 const SCREENS={
 intro(){
   const b=G.bat,sc=G.scenario;
@@ -881,7 +883,7 @@ title(){
             ${CFG.sfx?"🔊":"🔕"} Efectos
           </button>
         </div>
-        <div style="text-align:center;margin-top:8px;color:rgba(255,255,255,.25);font-size:.7rem;letter-spacing:.15em;font-family:'Roboto',monospace;font-weight:700;">v9.3.0</div>
+        <div style="text-align:center;margin-top:8px;color:rgba(255,255,255,.25);font-size:.7rem;letter-spacing:.15em;font-family:'Roboto',monospace;font-weight:700;">v9.3.2</div>
       </div>
     </div>
   </div>`;
@@ -1042,43 +1044,80 @@ select(){
     </div>`;
   }).join("");
 
-  // ── MODAL ────────────────────────────────────────────────
+  // ── MODAL TCG CARD ───────────────────────────────────────
   let modal="";
   if(G.modal){
     const pk=PKS.find(p=>p.id===G.modal);
     if(pk){
       const iS=!!G.sel.find(s=>s.id===pk.id);
       const canAdd=!iS&&G.sel.length<3;
-      const statBar=(val,col)=>`<div style="flex:1;height:6px;background:rgba(255,255,255,.1);border-radius:3px;overflow:hidden;"><div style="width:${Math.min(100,val/160*100)}%;height:100%;background:${col};border-radius:3px;"></div></div>`;
-      modal=`<div onclick="G.modal=null;render()" style="position:absolute;inset:0;background:rgba(0,0,0,.75);z-index:50;display:flex;align-items:flex-end;">
-        <div onclick="event.stopPropagation()" style="width:100%;background:#0f0f0f;border-top:2px solid ${acc};border-radius:20px 20px 0 0;padding:20px 18px 8px;">
-          <div style="display:flex;gap:14px;align-items:flex-start;margin-bottom:16px;">
-            <img src="${su(pk.id)}" style="width:min(90px,22vw);height:min(90px,22vw);object-fit:contain;flex-shrink:0;filter:drop-shadow(0 0 16px ${acc});">
-            <div style="flex:1;min-width:0;">
-              <div style="font-family:'Rajdhani',sans-serif;font-weight:700;font-size:min(1.5rem,5.5vw);color:#fff;letter-spacing:.06em;">${pk.name.toUpperCase()}</div>
-              <div style="margin:5px 0;">${pk.types.map(t=>bdg(t)).join("")}</div>
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px;">
-                <div><div style="font-size:.62rem;color:#666;font-weight:700;margin-bottom:2px;">HP</div><div style="display:flex;align-items:center;gap:5px;"><span style="font-weight:900;color:#22C55E;font-size:.85rem;">${pk.hp}</span>${statBar(pk.hp,"#22C55E")}</div></div>
-                <div><div style="font-size:.62rem;color:#666;font-weight:700;margin-bottom:2px;">ATAQUE</div><div style="display:flex;align-items:center;gap:5px;"><span style="font-weight:900;color:#EF4444;font-size:.85rem;">${pk.atk}</span>${statBar(pk.atk,"#EF4444")}</div></div>
-                <div><div style="font-size:.62rem;color:#666;font-weight:700;margin-bottom:2px;">DEFENSA</div><div style="display:flex;align-items:center;gap:5px;"><span style="font-weight:900;color:#3B82F6;font-size:.85rem;">${pk.def}</span>${statBar(pk.def,"#3B82F6")}</div></div>
-                <div><div style="font-size:.62rem;color:#666;font-weight:700;margin-bottom:2px;">VELOCIDAD</div><div style="display:flex;align-items:center;gap:5px;"><span style="font-weight:900;color:#F59E0B;font-size:.85rem;">${pk.spd}</span>${statBar(pk.spd,"#F59E0B")}</div></div>
+      const tc0=TC[pk.types[0]]||TC.normal;
+      const dexText=(DEX[String(pk.id)]||DEX[pk.id]||"Un Pokémon misterioso del que poco se sabe.");
+      const typeIcon={fire:"🔥",water:"💧",grass:"🌿",electric:"⚡",psychic:"🔮",normal:"⭐",fighting:"👊",poison:"☠️",ground:"🌍",flying:"🌪️",rock:"🪨",ice:"❄️",bug:"🐛",ghost:"👻",dragon:"🐉"}[pk.types[0]]||"✨";
+      const weakMap={fire:"💧",water:"⚡",grass:"🔥",electric:"🌍",psychic:"👻",normal:"👊",fighting:"🔮",poison:"🌍",ground:"💧",flying:"⚡",rock:"💧",ice:"🔥",bug:"🔥",ghost:"👻",dragon:"❄️"};
+      const sb=(val,col,lbl)=>`<div style="margin-bottom:4px;"><div style="display:flex;justify-content:space-between;margin-bottom:1px;"><span style="font-family:'Roboto',sans-serif;font-size:.58rem;font-weight:700;color:rgba(0,0,0,.45);letter-spacing:.05em;">${lbl}</span><span style="font-family:'Rajdhani',sans-serif;font-size:.82rem;font-weight:700;color:rgba(0,0,0,.6);">${val}</span></div><div style="height:4px;background:rgba(0,0,0,.1);border-radius:2px;overflow:hidden;"><div style="width:${Math.min(100,val/160*100)}%;height:100%;background:${col};border-radius:2px;"></div></div></div>`;
+      modal=`<div onclick="G.modal=null;render()" style="position:absolute;inset:0;background:rgba(0,0,0,.85);z-index:50;display:flex;align-items:center;justify-content:center;padding:10px;">
+        <div onclick="event.stopPropagation()" style="width:min(300px,90vw);max-height:90vh;overflow-y:auto;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.8),0 0 0 3px ${tc0.bg},0 0 0 6px rgba(255,215,0,.6);animation:vsSlam .3s ease both;">
+          <!-- Header -->
+          <div style="background:linear-gradient(135deg,${tc0.bg},${tc0.grd});padding:10px 14px 8px;border-radius:16px 16px 0 0;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+              <div style="display:flex;align-items:center;gap:6px;">
+                <span style="background:rgba(255,255,255,.25);color:#fff;font-family:'Roboto',sans-serif;font-size:.55rem;font-weight:800;padding:2px 6px;border-radius:3px;letter-spacing:.06em;">BÁSICO</span>
+                <span style="font-family:'Rajdhani',sans-serif;font-size:min(1.2rem,5vw);color:#fff;font-weight:700;">${pk.name.toUpperCase()}</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:2px;">
+                <span style="font-family:'Roboto',sans-serif;font-size:.6rem;font-weight:700;color:rgba(255,255,255,.8);">PS</span>
+                <span style="font-family:'Rajdhani',sans-serif;font-size:1.25rem;font-weight:700;color:#fff;">${pk.hp*2}</span>
+                <span>${typeIcon}</span>
               </div>
             </div>
+            <div style="display:flex;gap:3px;flex-wrap:wrap;">${pk.types.map(t=>bdg(t)).join("")}${pk.shiny?'<span style="background:linear-gradient(135deg,#FFD700,#FFA500);color:#000;font-size:.52rem;font-weight:800;padding:2px 5px;border-radius:3px;">✨SHINY</span>':''}</div>
           </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:14px;">
-            ${pk.moves.map(m=>`<div style="background:linear-gradient(135deg,${(TC[m.t]||TC.normal).bg},${(TC[m.t]||TC.normal).grd});border-radius:8px;padding:7px 9px;"><div style="font-weight:900;font-size:.78rem;color:#fff;">${m.n}</div><div style="font-size:.6rem;color:rgba(255,255,255,.7);margin-top:1px;">${bdg(m.t)} PWR ${m.p} · PP ${m.pp}</div></div>`).join("")}
+          <!-- Image -->
+          <div style="background:linear-gradient(180deg,${tc0.bg}66,#f0e8d0);position:relative;height:min(170px,42vw);overflow:hidden;">
+            <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 40%,rgba(255,255,255,.5),transparent 65%);"></div>
+            <img src="${su(pk.id)}" style="width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 6px 12px rgba(0,0,0,.25))${pk.shiny?' drop-shadow(0 0 10px #FFD700)':''};">
+            <div style="position:absolute;bottom:4px;right:8px;font-family:'Roboto',sans-serif;font-size:.5rem;color:rgba(0,0,0,.35);">N°${String(pk.id).padStart(3,'0')} · Altura y Peso desconocidos</div>
           </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding-bottom:12px;">
-            <button onclick="G.modal=null;render()" style="border:none;cursor:pointer;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);font-family:'Roboto',sans-serif;font-size:min(.95rem,3.5vw);font-weight:700;letter-spacing:.08em;padding:14px;border-radius:8px;">✕ CERRAR</button>
-            <button onclick="${canAdd||iS?'modalAct('+pk.id+')':''}" style="border:none;cursor:${canAdd||iS?'pointer':'not-allowed'};background:${iS?'linear-gradient(135deg,#EF4444,#991B1B)':canAdd?'linear-gradient(135deg,'+acc+','+acc+'99)':'rgba(255,255,255,.05)'};color:${canAdd||iS?'#fff':'rgba(255,255,255,.2)'};font-family:'Roboto',sans-serif;font-weight:700;font-size:min(1rem,3.5vw);letter-spacing:.08em;padding:14px;border-radius:8px;box-shadow:${canAdd?'0 4px 20px '+accG:'none'};">
-              ${iS?"✕ QUITAR":canAdd?"+ AÑADIR":"EQUIPO LLENO"}
-            </button>
+          <!-- Body -->
+          <div style="background:#f5ead0;padding:10px 12px;">
+            <!-- Dex text -->
+            <div style="background:rgba(255,255,255,.55);border-radius:7px;padding:7px 9px;margin-bottom:8px;border-left:3px solid ${tc0.bg};">
+              <div style="font-family:'Roboto',sans-serif;font-size:.7rem;color:rgba(0,0,0,.6);line-height:1.5;font-style:italic;">"${dexText}"</div>
+            </div>
+            <!-- Stats -->
+            <div style="background:rgba(255,255,255,.45);border-radius:7px;padding:8px 10px;margin-bottom:8px;">
+              ${sb(pk.hp,"#22C55E","HP")}
+              ${sb(pk.atk,"#EF4444","ATAQUE")}
+              ${sb(pk.def,"#3B82F6","DEFENSA")}
+              ${sb(pk.spd,"#F59E0B","VELOCIDAD")}
+            </div>
+            <!-- Moves -->
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:8px;">
+              ${(pk.moves||[]).filter(m=>m&&m.n&&m.p>0).slice(0,4).map(m=>`<div style="background:linear-gradient(135deg,${(TC[m.t]||TC.normal).bg},${(TC[m.t]||TC.normal).grd});border-radius:7px;padding:6px 7px;"><div style="font-family:'Roboto',sans-serif;font-weight:700;font-size:.68rem;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${m.n}</div><div style="font-size:.56rem;color:rgba(255,255,255,.7);margin-top:1px;">${bdg(m.t)} ${m.p}⚡ PP${m.pp}</div></div>`).join("")}
+            </div>
+            <!-- Weakness row -->
+            <div style="display:flex;gap:5px;margin-bottom:10px;">
+              <div style="flex:1;background:rgba(255,255,255,.4);border-radius:6px;padding:5px;text-align:center;"><div style="font-family:'Roboto',sans-serif;font-size:.52rem;font-weight:700;color:rgba(0,0,0,.4);margin-bottom:2px;">DEBILIDAD</div><div>${weakMap[pk.types[0]]||"⭐"} ×2</div></div>
+              <div style="flex:1;background:rgba(255,255,255,.4);border-radius:6px;padding:5px;text-align:center;"><div style="font-family:'Roboto',sans-serif;font-size:.52rem;font-weight:700;color:rgba(0,0,0,.4);margin-bottom:2px;">RESISTENCIA</div><div>-30</div></div>
+              <div style="flex:1;background:rgba(255,255,255,.4);border-radius:6px;padding:5px;text-align:center;"><div style="font-family:'Roboto',sans-serif;font-size:.52rem;font-weight:700;color:rgba(0,0,0,.4);margin-bottom:2px;">RETIRADA</div><div>${"⚪".repeat(Math.max(1,Math.min(4,Math.round(pk.hp/50))))}</div></div>
+            </div>
+            <!-- Buttons -->
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+              <button onclick="G.modal=null;render()" style="border:2px solid rgba(59,130,246,.4);cursor:pointer;background:rgba(15,23,42,.85);color:#60A5FA;font-family:'Roboto',sans-serif;font-size:.88rem;font-weight:700;padding:12px;border-radius:8px;letter-spacing:.04em;">✕ CERRAR</button>
+              <button onclick="${canAdd||iS?'modalAct('+pk.id+')':''}" style="border:none;cursor:${canAdd||iS?'pointer':'not-allowed'};background:${iS?'linear-gradient(135deg,#EF4444,#991B1B)':canAdd?'linear-gradient(135deg,#3B82F6,#1D4ED8)':'rgba(0,0,0,.15)'};color:${canAdd||iS?'#fff':'rgba(0,0,0,.3)'};font-family:'Roboto',sans-serif;font-size:.88rem;font-weight:700;padding:12px;border-radius:8px;letter-spacing:.04em;box-shadow:${canAdd?'0 4px 14px rgba(59,130,246,.4)':'none'};">
+                ${iS?"✕ QUITAR":canAdd?"＋ AÑADIR":"EQUIPO LLENO"}
+              </button>
+            </div>
+          </div>
+          <!-- Footer -->
+          <div style="background:#e8d8b0;padding:5px 14px;border-radius:0 0 16px 16px;text-align:center;">
+            <span style="font-family:'Roboto',sans-serif;font-size:.5rem;color:rgba(0,0,0,.3);">Illus. PokéBattle Studio · ${String(pk.id).padStart(3,'0')}/151 ©PokéBattle</span>
           </div>
         </div>
       </div>`;
     }
   }
-
   const n=G.sel.length,ready=n===3;
   return`<div style="background:radial-gradient(ellipse at 50% 0%,${isP2?'#1a0a3e':'#0F172A'} 0%,#1E3A5F 80%);display:flex;flex-direction:column;position:absolute;inset:0;overflow:hidden;">
     <!-- Header -->
@@ -1212,22 +1251,94 @@ battle(){
       </div>`;
     } else if(b.ph==="attack"){
       const defPk=b.ct==="p1"?pk2:pk1;
+      const effLabels={2:"▲ SÚPER EFECTIVO",0.5:"▼ POCO EFECTIVO",0:"✗ SIN EFECTO"};
+      const effColors={2:"#FCD34D",0.5:"#93C5FD",0:"#6B7280"};
+      const effBgs={2:"rgba(252,211,77,.15)",0.5:"rgba(147,197,253,.12)",0:"rgba(107,114,128,.12)"};
+      const moveDescs={
+        "Descanso":"Recupera todo el HP y cura estados",
+        "Afilar":"Sube el ataque del usuario",
+        "Refugio":"Sube la defensa del usuario",
+        "Amnesia":"Sube mucho el ataque especial",
+        "Barrera":"Sube mucho la defensa",
+        "Canto":"Hace dormir al rival",
+      };
       const ms=(apk.moves||[]).map((m,i)=>{
-        if(!m||!m.n)return"";  // guard against undefined moves
+        if(!m||!m.n)return"";
         const isCd=(cd[i]||0)>0;
+        const ppLeft=(apk.ppLeft||[])[i]??m.pp;
+        const ppPct=Math.max(0,ppLeft/m.pp);
+        const ppCol=ppPct>.5?"#22C55E":ppPct>.25?"#F59E0B":"#EF4444";
         const tc=TC[m.t]||TC.normal;
-        const bg=`linear-gradient(135deg,${tc.bg},${tc.grd})`;
-        const eff=te(m.t,(defPk||{types:[]}).types||[]);
-        const effTag=eff>=2?'<span style="font-size:.55rem;background:rgba(255,220,0,.25);color:#FCD34D;border-radius:3px;padding:1px 4px;font-weight:700;margin-left:3px;">▲</span>':eff===0?'<span style="font-size:.55rem;background:rgba(100,100,100,.3);color:#888;border-radius:3px;padding:1px 4px;font-weight:700;margin-left:3px;">✗</span>':eff<=.5?'<span style="font-size:.55rem;background:rgba(100,150,255,.2);color:#93C5FD;border-radius:3px;padding:1px 4px;font-weight:700;margin-left:3px;">▼</span>':"";
-        return`<button onclick="${isCd?"":"sfxAtk();doAtk("+i+")"}" class="mv-btn" style="background:${bg};padding:12px 10px;min-height:60px;${isCd?"opacity:.35;cursor:not-allowed;filter:saturate(.1);":""}${eff>=2?"border:2px solid #FCD34D;":""}" ${isCd?"disabled":""} onpointerdown="if(!this.disabled)this.style.transform='scale(.92)'" onpointerup="this.style.transform='scale(1)'">
-          <div style="font-family:'Roboto',sans-serif;font-weight:700;font-size:min(.9rem,2.6vw);letter-spacing:.03em;">${m.n.toUpperCase()}${effTag}</div>
-          <div style="font-size:.65rem;opacity:.8;margin-top:2px;">${bdg(m.t)} ${m.p} · PP ${(apk.ppLeft||[])[i]??m.pp}${isCd?` · ⏳${cd[i]}`:""}
+        const isStatus=m.p===0;
+        const eff=isStatus?1:te(m.t,(defPk||{types:[]}).types||[]);
+        // Effectiveness badge
+        const effKey=eff>=2?2:eff===0?0:eff<=.5?0.5:1;
+        const effBadge=effKey!==1?`<div style="display:inline-flex;align-items:center;gap:3px;background:${effBgs[effKey]};border:1px solid ${effColors[effKey]}44;border-radius:4px;padding:2px 6px;margin-top:4px;"><span style="font-size:.6rem;font-weight:800;color:${effColors[effKey]};letter-spacing:.04em;">${effLabels[effKey]}</span></div>`:"";
+        // Power bar (only for attacking moves)
+        const pwrBar=!isStatus?`<div style="margin-top:5px;"><div style="height:3px;background:rgba(255,255,255,.15);border-radius:2px;overflow:hidden;"><div style="width:${Math.min(100,m.p/150*100)}%;height:100%;background:rgba(255,255,255,.7);border-radius:2px;"></div></div></div>`:"";
+        // PP dots
+        const ppMax=Math.min(m.pp,5);
+        const ppFilled=Math.ceil(ppLeft/m.pp*ppMax);
+        const ppDots=Array.from({length:ppMax},(_,di)=>{
+          return '<div style="width:7px;height:7px;border-radius:50%;background:'+(di<ppFilled?ppCol:'rgba(255,255,255,.15)')+'"></div>';
+        }).join("");
+        // Status description
+        const statusDesc=moveDescs[m.n]?`<div style="font-size:.6rem;color:rgba(255,255,255,.6);margin-top:3px;font-style:italic;">${moveDescs[m.n]}</div>`:"";
+        // Glow border for super effective
+        const border=eff>=2?"box-shadow:0 0 0 2px #FCD34D,0 0 16px rgba(252,211,77,.3);":isCd?"":"";
+        return`<button onclick="${isCd?"":"sfxAtk();doAtk("+i+")"}"
+          style="border:none;cursor:${isCd?"not-allowed":"pointer"};border-radius:10px;overflow:hidden;text-align:left;padding:0;${isCd?"opacity:.4;filter:saturate(.2);":""}${border};transition:transform .1s,box-shadow .1s;"
+          ${isCd?"disabled":""}
+          onpointerdown="if(!this.disabled){this.style.transform='scale(.94)';this.style.filter='brightness(.85)';}"
+          onpointerup="this.style.transform='scale(1)';this.style.filter='';">
+          <!-- Top: type color band -->
+          <div style="background:linear-gradient(135deg,${tc.bg},${tc.grd});padding:8px 12px 6px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <div style="display:flex;align-items:center;gap:6px;">
+                ${bdg(m.t)}
+                <span style="font-family:'Rajdhani',sans-serif;font-size:min(1rem,3.5vw);font-weight:700;color:#fff;letter-spacing:.04em;">${m.n.toUpperCase()}</span>
+              </div>
+              ${!isStatus?`<div style="display:flex;align-items:baseline;gap:2px;"><span style="font-family:'Press Start 2P',monospace;font-size:.75rem;color:#fff;line-height:1;">${m.p}</span><span style="font-size:.55rem;color:rgba(255,255,255,.6);font-family:'Roboto',sans-serif;">POD</span></div>`:`<span style="font-size:.7rem;background:rgba(255,255,255,.2);color:#fff;padding:2px 6px;border-radius:4px;font-family:'Roboto',sans-serif;font-weight:700;">ESTADO</span>`}
+            </div>
+            ${pwrBar}
+          </div>
+          <!-- Bottom: details -->
+          <div style="background:rgba(5,10,25,.88);padding:6px 12px 8px;">
+            ${effBadge}
+            ${statusDesc}
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-top:5px;">
+              <div style="display:flex;gap:2px;align-items:center;">
+                ${ppDots}
+                <span style="font-family:'Roboto',sans-serif;font-size:.6rem;color:${ppCol};font-weight:700;margin-left:4px;">PP ${ppLeft}/${m.pp}</span>
+              </div>
+              ${isCd?`<span style="font-size:.6rem;color:#F59E0B;font-weight:700;">⏳ ${cd[i]} turnos</span>`:""}
+            </div>
           </div>
         </button>`;
       }).filter(Boolean).join("");
-      ac=`<div style="background:#0a0a0a;border-top:2px solid #222;flex-shrink:0;padding:8px 10px;">
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px;">${ms}</div>
-        <button class="btn" onclick="sfxMenu();bPh('action')" style="background:rgba(15,23,42,.9);border:1px solid rgba(59,130,246,.2);font-size:.85rem;padding:10px;border-radius:6px;color:#60A5FA;background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.2);">← ATRÁS</button>
+
+      // Header showing who's attacking vs who's defending
+      const atkHeader=`<div style="display:flex;align-items:center;justify-content:space-between;padding:6px 10px 4px;background:rgba(5,10,25,.6);">
+        <div style="display:flex;align-items:center;gap:6px;">
+          <img src="${su(apk.id)}" width="28" height="28" style="object-fit:contain;filter:drop-shadow(0 0 6px ${(TC[apk.types[0]]||TC.normal).bg});">
+          <div>
+            <div style="font-family:'Rajdhani',sans-serif;font-size:.8rem;font-weight:700;color:#fff;">${apk.name.toUpperCase()}</div>
+            <div style="font-size:.6rem;color:rgba(255,255,255,.4);font-family:'Roboto',sans-serif;">Elige un movimiento</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:5px;opacity:.6;">
+          <span style="font-size:.6rem;color:rgba(255,255,255,.5);font-family:'Roboto',sans-serif;">vs</span>
+          <img src="${su(defPk.id)}" width="22" height="22" style="object-fit:contain;filter:grayscale(.5);">
+          <span style="font-family:'Roboto',sans-serif;font-size:.65rem;color:rgba(255,255,255,.45);">${defPk.name}</span>
+        </div>
+      </div>`;
+
+      ac=`<div style="background:rgba(5,10,25,.96);border-top:1px solid rgba(59,130,246,.2);flex-shrink:0;">
+        ${atkHeader}
+        <div style="padding:6px 8px;">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px;">${ms}</div>
+          <button class="btn" onclick="sfxMenu();bPh('action')" style="background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.25);font-family:'Roboto',sans-serif;font-size:.85rem;font-weight:700;padding:9px;border-radius:7px;color:#60A5FA;">← ATRÁS</button>
+        </div>
       </div>`;
     } else if(b.ph==="switch"){
       const pks=at.map((pk,i)=>{
@@ -1876,6 +1987,7 @@ function doSw(i){
 // -- Main turn animator -----------------------------------------
 function execAnim(a1,a2){
   const b=G.bat;b.locked=true;render();
+  const sc=G.scenario;
   const nt1=b.t1.map(p=>({...p})),nt2=b.t2.map(p=>({...p}));
   let na1=b.a1,na2=b.a2;const st={...b.st};
   const p1f=nt1[b.a1].spd>=nt2[b.a2].spd;
@@ -1962,7 +2074,6 @@ function execAnim(a1,a2){
   else{resolveAct(nt2[b.a2],nt1[b.a1],a2,G.p2.name,false);if(nt1[na1].currentHp>0)resolveAct(nt1[b.a1],nt2[na2],a1,G.p1.name,true);}
 
   let delay=0;
-  const sc=G.scenario;
   evs.forEach(ev=>{
     setTimeout(()=>{
       if(G.scr!=="battle")return;
