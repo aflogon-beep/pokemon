@@ -1211,6 +1211,7 @@ battle(){
         <button id="exit-confirm" data-step="0" class="btn" onclick="exitBattle()" style="background:rgba(15,23,42,.9);border-radius:0;font-size:.75rem;padding:14px 4px;color:rgba(255,255,255,.35);">🚪</button>
       </div>`;
     } else if(b.ph==="attack"){
+      const defPk=b.ct==="p1"?pk2:pk1;
       const ms=(apk.moves||[]).map((m,i)=>{
         if(!m||!m.n)return"";  // guard against undefined moves
         const isCd=(cd[i]||0)>0;
