@@ -5,7 +5,7 @@
 <script src="futbolBackground.js"></script>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
-<title>PokéBattle v9.6.0</title>
+<title>PokéBattle v9.6.1</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Roboto:wght@400;500;700;900&family=Press+Start+2P&display=swap" rel="stylesheet">
@@ -1357,12 +1357,37 @@ battle(){
       </div>`;
     } 
     else if (b.ph === "attack") {
-      // ... (mantengo tu código de attack tal como lo tenías, para no alargar demasiado)
-      // Si quieres que te lo corrija también, avísame
-      ac = `<div style="background:rgba(5,10,25,.96);border-top:1px solid rgba(59,130,246,.2);flex-shrink:0;">
-        ${/* tu código actual de atkHeader y moves */ ''}
-      </div>`;
-    } 
+      // === PANEL DE MOVIMIENTOS (corregido y bonito) ===
+      const movesHTML = at[ai].moves.map((moveName, i) => {
+        const move = MOVES[moveName] || { name: moveName || "???", type: "normal", pp: 5, maxpp: 5 };
+        const currentPP = (at[ai].ppLeft && at[ai].ppLeft[i] !== undefined) ? at[ai].ppLeft[i] : (move.pp || 5);
+        const disabled = (cd[i] || 0) > 0 || currentPP <= 0;
+
+        return `
+          <button onclick="doAtk(${i});" class="mv-btn" ${disabled ? 'disabled' : ''}
+            style="background: linear-gradient(180deg, #1e40af, #1e3a8a); border: 2px solid rgba(59,130,246,.4); padding: 13px 10px; border-radius: 8px; text-align: left; width: 100%; font-weight: 700;">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <span style="color:#f1f5f9;font-size:1.02rem;">${move.name}</span>
+              <span style="font-family:'Press Start 2P',monospace;font-size:0.78rem;color:${disabled?'#64748b':'#93c5fd'};">${currentPP}/${move.maxpp||5}</span>
+            </div>
+            <div style="margin-top:4px;font-size:0.72rem;color:#60a5fa;">${move.type.toUpperCase()}</div>
+          </button>`;
+      }).join('');
+
+      ac = `
+        <div style="background:rgba(5,10,25,.96);border-top:1px solid rgba(59,130,246,.25);padding:12px 14px;flex-shrink:0;">
+          <div style="text-align:center;margin-bottom:10px;">
+            <span style="background:rgba(59,130,246,.15);color:#60a5fa;font-weight:700;font-size:0.95rem;padding:4px 16px;border-radius:999px;letter-spacing:1px;">⚔ ELIJE UN MOVIMIENTO</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;">
+            ${movesHTML}
+          </div>
+          <button onclick="sfxMenu();bPh('action')" 
+            style="margin-top:12px;width:100%;background:rgba(15,23,42,.9);border:1px solid rgba(59,130,246,.3);color:#60a5fa;font-weight:700;padding:13px;border-radius:8px;">
+            ← ATRÁS
+          </button>
+        </div>`;
+    }
     else if (b.ph === "switch") {
       // ... tu código de switch
       ac = `<div style="background:#0a0a0a;border-top:2px solid #222;flex-shrink:0;padding:8px 10px;">
