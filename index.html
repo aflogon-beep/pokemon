@@ -3,18 +3,27 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
-<title>PokéBattle v9.0.2</title>
+<title>PokéBattle v9.0.7</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Roboto:wght@400;500;700;900&family=Press+Start+2P&display=swap" rel="stylesheet">
 <style>
-*{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',system-ui,sans-serif;-webkit-tap-highlight-color:transparent;}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Roboto',system-ui,sans-serif;-webkit-tap-highlight-color:transparent;font-size:14px;}
 html,body{height:100%;overflow:hidden;background:#000;}
+/* Font roles:
+   Nunito     → body, descriptions, labels, UI text (12-16px)
+   Rajdhani   → section titles, trainer names, headers
+   Impact     → combat labels, HP bars, K.O. (legacy, loud)
+   Press Start 2P → damage numbers, pixel effects
+*/
 #app{position:fixed;inset:0;overflow:hidden;}
 /* SF-style HP bar */
 .sf-hpbar-wrap{flex:1;height:22px;background:#1a0000;border:2px solid rgba(255,255,255,.2);border-radius:3px;overflow:hidden;position:relative;box-shadow:inset 0 2px 4px rgba(0,0,0,.5);}
 .sf-hpbar-fill{position:absolute;top:0;bottom:0;height:100%;border-radius:2px;transition:width .6s cubic-bezier(.4,0,.2,1);}
 .sf-hpbar-fill.r{right:0;left:auto;}
-.sf-name{font-family:Impact,Arial Black,sans-serif;font-size:min(1rem,2.8vw);letter-spacing:.05em;text-transform:uppercase;}
+.sf-name{font-family:'Rajdhani',Impact,sans-serif;font-size:min(1rem,2.8vw);letter-spacing:.08em;text-transform:uppercase;font-weight:700;}
 /* Move buttons SF style */
-.mv-btn{border:none;cursor:pointer;font-weight:900;text-align:left;color:#fff;position:relative;overflow:hidden;transition:filter .1s,transform .1s;border-radius:6px;}
+.mv-btn{border:none;cursor:pointer;font-family:'Roboto',sans-serif;font-weight:900;text-align:left;color:#fff;position:relative;overflow:hidden;transition:filter .1s,transform .1s;border-radius:6px;}
 .mv-btn:active{transform:scale(.93);filter:brightness(.8);}
 .mv-btn[disabled]{opacity:.35;cursor:not-allowed;filter:saturate(.1);}
 
@@ -54,7 +63,8 @@ html,body{height:100%;overflow:hidden;background:#000;}
 @keyframes sfRecoil{0%,100%{transform:scaleX(-1) translateX(0)}30%{transform:scaleX(-1) translateX(22px)}}
 @keyframes sfRecoil2{0%,100%{transform:translateX(0)}30%{transform:translateX(-22px)}}
 
-.btn{border:none;border-radius:16px;font-weight:800;font-size:1.05rem;padding:15px;cursor:pointer;min-height:54px;width:100%;color:#fff;transition:transform .12s,filter .12s;line-height:1.3;display:block;text-align:center;}
+.btn{border:none;border-radius:16px;font-family:'Roboto',sans-serif;font-weight:700;font-size:1rem;padding:15px;cursor:pointer;min-height:54px;width:100%;color:#fff;transition:transform .12s,filter .12s;line-height:1.3;display:block;text-align:center;}
+.px{font-family:'Press Start 2P',monospace;}
 .btn:active{transform:scale(.92);filter:brightness(.82);}
 .btn[disabled]{background:#1E293B!important;color:#475569!important;cursor:not-allowed;transform:none;}
 .bdg{display:inline-block;padding:3px 9px;border-radius:999px;font-size:.62rem;font-weight:800;margin-right:3px;text-transform:uppercase;letter-spacing:.03em;}
@@ -628,7 +638,7 @@ intro(){
     <div style="position:relative;z-index:2;flex:1;display:flex;flex-direction:column;justify-content:space-between;padding:min(16px,3%) min(12px,2%);">
       <!-- Title -->
       <div style="text-align:center;flex-shrink:0;">
-        <div style="display:inline-block;background:linear-gradient(135deg,#EF4444,#B91C1C);color:#fff;font-family:Impact,sans-serif;font-size:min(1rem,4.5vmin);padding:7px 20px;border-radius:999px;letter-spacing:.15em;box-shadow:0 4px 20px rgba(239,68,68,.6);">⚡ ¡COMBATE POKÉMON! ⚡</div>
+        <div style="display:inline-block;background:linear-gradient(135deg,#EF4444,#B91C1C);color:#fff;font-family:'Roboto',sans-serif;font-weight:700;font-size:min(.95rem,4vmin);padding:7px 20px;border-radius:999px;letter-spacing:.15em;box-shadow:0 4px 20px rgba(239,68,68,.6);">⚡ ¡COMBATE POKÉMON! ⚡</div>
       </div>
       <!-- Cards — column on portrait, row on landscape -->
       <div style="display:flex;flex-direction:${window.innerWidth<window.innerHeight?"column":"row"};align-items:stretch;flex:1;margin:min(10px,2%) 0;min-height:0;gap:${window.innerWidth<window.innerHeight?"8px":"0"};">
@@ -636,7 +646,7 @@ intro(){
           const portrait=window.innerWidth<window.innerHeight;
           const vsEl=`<div style="${portrait?"display:flex;align-items:center;justify-content:center;flex-shrink:0;padding:4px 0":"width:min(70px,12vmin);flex-shrink:0;display:flex;align-items:center;justify-content:center"}">
             <div style="background:linear-gradient(135deg,#F59E0B,#EF4444);border-radius:50%;width:min(48px,9vmin);height:min(48px,9vmin);display:flex;align-items:center;justify-content:center;box-shadow:0 0 30px rgba(245,158,11,.9);border:2px solid rgba(255,255,255,.4);animation:vsSlam .7s cubic-bezier(.175,.885,.32,1.275) .7s both;">
-              <span style="font-family:Impact,sans-serif;font-size:min(1.3rem,5vmin);color:#fff;">VS</span>
+              <span style="font-family:'Rajdhani',sans-serif;font-weight:700;font-size:min(1.4rem,5.5vmin);color:#fff;">VS</span>
             </div>
           </div>`;
           const card1=`<div style="flex:1;min-width:0;${portrait?"min-height:0":"height:100%"};animation:p1Slide .5s ease .2s both;">
@@ -644,7 +654,7 @@ intro(){
               <div style="${portrait?"flex-shrink:0":"margin-bottom:8px"};display:flex;align-items:center;gap:6px;${portrait?"":"flex-shrink:0"}">
                 <span style="font-size:min(1.2rem,5vmin);">${A[G.p1.avatar]}</span>
                 <div><div style="color:#FCD34D;font-weight:900;font-size:min(.95rem,4vmin);white-space:nowrap;">${G.p1.name}</div>
-                <div style="color:rgba(255,255,255,.45);font-size:min(.55rem,2.2vmin);font-family:Impact,sans-serif;">ENTRENADOR</div></div>
+                <div style="color:rgba(255,255,255,.45);font-family:'Roboto',sans-serif;font-size:min(.6rem,2.4vmin);font-weight:600;letter-spacing:.04em;">ENTRENADOR</div></div>
               </div>
               <div style="display:flex;gap:${portrait?"8px":"4px"};align-items:center;${portrait?"flex:1;justify-content:space-around":"flex:1;align-items:flex-end"}">${team1imgs}</div>
             </div>
@@ -654,7 +664,7 @@ intro(){
               <div style="${portrait?"flex-shrink:0":"margin-bottom:8px;justify-content:flex-end"};display:flex;align-items:center;gap:6px;${portrait?"":"flex-shrink:0;flex-direction:row-reverse"}">
                 <span style="font-size:min(1.2rem,5vmin);">${A[G.p2.avatar]}</span>
                 <div style="${portrait?"":"text-align:right"}"><div style="color:#93C5FD;font-weight:900;font-size:min(.95rem,4vmin);white-space:nowrap;">${G.p2.name}</div>
-                <div style="color:rgba(255,255,255,.45);font-size:min(.55rem,2.2vmin);font-family:Impact,sans-serif;">${G.p2.isCPU?"CPU":"ENTRENADOR"}</div></div>
+                <div style="color:rgba(255,255,255,.45);font-family:'Roboto',sans-serif;font-size:min(.6rem,2.4vmin);font-weight:600;letter-spacing:.04em;">${G.p2.isCPU?"CPU":"ENTRENADOR"}</div></div>
               </div>
               <div style="display:flex;gap:${portrait?"8px":"4px"};align-items:center;${portrait?"flex:1;justify-content:space-around":"flex:1;align-items:flex-end"}">${team2imgs}</div>
             </div>
@@ -665,7 +675,7 @@ intro(){
       <!-- Bottom -->
       <div style="text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px;flex-shrink:0;">
         <div style="background:rgba(0,0,0,.55);color:rgba(255,255,255,.65);font-size:min(.7rem,3vmin);font-weight:700;padding:3px 12px;border-radius:999px;letter-spacing:.08em;">${_scLabels[sc.name]||sc.name}</div>
-        <button onclick="sfxMenu();go('battle')" style="border:none;cursor:pointer;background:linear-gradient(135deg,#22C55E,#15803D);color:#fff;font-family:Impact,Arial Black,sans-serif;font-size:min(1rem,4.5vmin);padding:13px min(40px,8vmin);border-radius:999px;box-shadow:0 4px 25px rgba(34,197,94,.6);letter-spacing:.08em;transition:transform .1s;animation:battleIntro .6s ease 1.2s both;" onpointerdown="this.style.transform='scale(.94)'" onpointerup="this.style.transform='scale(1)'">⚔️ ¡INICIAR BATALLA!</button>
+        <button onclick="sfxMenu();go('battle')" style="border:none;cursor:pointer;background:linear-gradient(135deg,#22C55E,#15803D);color:#fff;font-family:'Roboto',sans-serif;font-weight:700;font-size:min(.95rem,4vmin);padding:13px min(40px,8vmin);border-radius:999px;box-shadow:0 4px 25px rgba(34,197,94,.6);letter-spacing:.08em;transition:transform .1s;animation:battleIntro .6s ease 1.2s both;" onpointerdown="this.style.transform='scale(.94)'" onpointerup="this.style.transform='scale(1)'">⚔️ ¡INICIAR BATALLA!</button>
       </div>
     </div>
   </div>`;
@@ -676,22 +686,22 @@ title(){
   return`<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(160deg,#0F172A,#1E3A5F,#1E40AF);overflow:hidden;">${stars}
     <div style="display:flex;flex-direction:column;align-items:center;z-index:1;padding:0 28px;width:100%;max-width:400px;">
       <div style="animation:spin 12s linear infinite;margin-bottom:14px;">${POKEBALL}</div>
-      <h1 style="font-weight:900;font-size:clamp(2rem,7vw,3.6rem);background:linear-gradient(90deg,#FCD34D,#F97316,#EC4899,#60A5FA,#34D399);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:0 0 4px;line-height:1;text-align:center;">⚡ POKÉBATTLE ⚡</h1>
-      <p style="color:#93C5FD;font-weight:700;letter-spacing:.25em;font-size:.9rem;margin-bottom:32px;">GENERACIÓN 1</p>
+      <h1 style="font-family:'Rajdhani',Impact,sans-serif;font-weight:700;font-size:clamp(2.2rem,8vw,4rem);background:linear-gradient(90deg,#FCD34D,#F97316,#EC4899,#60A5FA,#34D399);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:0 0 4px;line-height:1;text-align:center;letter-spacing:.08em;">⚡ POKÉBATTLE ⚡</h1>
+      <p style="font-family:'Rajdhani',sans-serif;color:#93C5FD;font-weight:600;letter-spacing:.3em;font-size:1rem;margin-bottom:32px;">GENERACIÓN 1</p>
       <div style="display:flex;flex-direction:column;gap:14px;width:100%;">
         <button class="btn" style="background:linear-gradient(135deg,#3B82F6,#1D4ED8);font-size:1.15rem;padding:18px;box-shadow:0 4px 20px rgba(59,130,246,.5);" onclick="sfxMenu();go('mode')">🎮 Nueva Partida</button>
         <button class="btn" style="background:${hs?"linear-gradient(135deg,#8B5CF6,#6D28D9)":"#1E293B"};" onclick="sfxMenu();oSaves('load')" ${hs?"":"disabled"}>💾 Cargar Partida</button>
         <button class="btn" style="background:${hs?"linear-gradient(135deg,#475569,#1E293B)":"#1E293B"};" onclick="sfxMenu();oSaves('del')" ${hs?"":"disabled"}>🗑️ Borrar Partidas</button>
         <!-- Settings row -->
         <div style="display:flex;gap:10px;margin-top:4px;">
-          <button onclick="toggleMusic()" style="flex:1;border:none;cursor:pointer;border-radius:10px;padding:12px 8px;font-weight:800;font-size:.9rem;background:${CFG.music?"rgba(34,197,94,.2)":"rgba(255,255,255,.06)"};border:2px solid ${CFG.music?"#22C55E":"rgba(255,255,255,.12)"};color:${CFG.music?"#22C55E":"rgba(255,255,255,.4)"};transition:all .15s;">
+          <button onclick="toggleMusic()" style="flex:1;border:none;cursor:pointer;border-radius:10px;padding:12px 8px;font-family:'Roboto',sans-serif;font-weight:700;font-size:.9rem;background:${CFG.music?"rgba(34,197,94,.2)":"rgba(255,255,255,.06)"};border:2px solid ${CFG.music?"#22C55E":"rgba(255,255,255,.12)"};color:${CFG.music?"#22C55E":"rgba(255,255,255,.4)"};transition:all .15s;">
             ${CFG.music?"🎵":"🔇"} Música
           </button>
-          <button onclick="toggleSfx()" style="flex:1;border:none;cursor:pointer;border-radius:10px;padding:12px 8px;font-weight:800;font-size:.9rem;background:${CFG.sfx?"rgba(59,130,246,.2)":"rgba(255,255,255,.06)"};border:2px solid ${CFG.sfx?"#3B82F6":"rgba(255,255,255,.12)"};color:${CFG.sfx?"#3B82F6":"rgba(255,255,255,.4)"};transition:all .15s;">
+          <button onclick="toggleSfx()" style="flex:1;border:none;cursor:pointer;border-radius:10px;padding:12px 8px;font-family:'Roboto',sans-serif;font-weight:700;font-size:.9rem;background:${CFG.sfx?"rgba(59,130,246,.2)":"rgba(255,255,255,.06)"};border:2px solid ${CFG.sfx?"#3B82F6":"rgba(255,255,255,.12)"};color:${CFG.sfx?"#3B82F6":"rgba(255,255,255,.4)"};transition:all .15s;">
             ${CFG.sfx?"🔊":"🔕"} Efectos
           </button>
         </div>
-        <div style="text-align:center;margin-top:8px;color:rgba(255,255,255,.25);font-size:.7rem;letter-spacing:.1em;font-family:monospace;">v9.0.3</div>
+        <div style="text-align:center;margin-top:8px;color:rgba(255,255,255,.25);font-size:.7rem;letter-spacing:.15em;font-family:'Roboto',monospace;font-weight:700;">v9.0.7</div>
       </div>
     </div>
   </div>`;
@@ -703,15 +713,15 @@ mode(){
     const col=["#EF4444","#F59E0B","#A855F7","#3B82F6"][i%4];
     sparks+=`<div style="position:absolute;left:${x}%;top:${y}%;width:${sz}px;height:${sz}px;background:${col};border-radius:50%;animation:twinkle ${d}s ease-in-out ${dl}s infinite;opacity:.5;"></div>`;
   }
-  return`<div style="position:absolute;inset:0;overflow:hidden;background:radial-gradient(ellipse at 50% 30%,#1a0010 0%,#000 70%);">
+  return`<div style="position:absolute;inset:0;overflow:hidden;background:radial-gradient(ellipse at 50% 30%,#0F172A 0%,#1E3A5F 80%);">
     ${sparks}
-    <button onclick="sfxMenu();go('title')" style="position:absolute;top:16px;left:16px;z-index:10;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.7);font-size:.85rem;cursor:pointer;font-weight:800;padding:8px 16px;border-radius:6px;font-family:Impact,sans-serif;letter-spacing:.05em;">← VOLVER</button>
+    <button onclick="sfxMenu();go('title')" style="position:absolute;top:16px;left:16px;z-index:10;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.7);font-size:.85rem;cursor:pointer;font-weight:800;padding:8px 16px;border-radius:6px;font-family:'Roboto',sans-serif;font-weight:700;letter-spacing:.04em;">← ATRÁS</button>
     <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;">
       <div style="width:100%;max-width:380px;">
         <!-- Title -->
         <div style="text-align:center;margin-bottom:32px;">
           <div style="font-size:min(64px,18vw);line-height:1;margin-bottom:12px;filter:drop-shadow(0 0 24px #EF4444);">⚔️</div>
-          <div style="font-family:Impact,Arial Black,sans-serif;font-size:min(2rem,7vw);color:#fff;letter-spacing:.12em;text-shadow:0 0 30px rgba(239,68,68,.6);">MODO DE JUEGO</div>
+          <div style="font-family:'Rajdhani',Impact,sans-serif;font-size:min(2.2rem,7.5vw);color:#fff;font-weight:700;letter-spacing:.12em;text-shadow:0 0 30px rgba(239,68,68,.6);">MODO DE JUEGO</div>
           <div style="width:80px;height:3px;background:linear-gradient(90deg,#EF4444,#F59E0B);margin:10px auto 0;border-radius:2px;box-shadow:0 0 12px #EF4444;"></div>
         </div>
         <!-- Buttons -->
@@ -720,10 +730,10 @@ mode(){
           <button onclick="sfxMenu();sMode('cpu')" style="border:none;cursor:pointer;background:rgba(255,255,255,.04);border:1px solid rgba(239,68,68,.4);border-radius:14px;padding:20px 20px;text-align:left;display:flex;align-items:center;gap:16px;transition:all .15s;box-shadow:0 0 0 rgba(239,68,68,0);" onpointerdown="this.style.background='rgba(239,68,68,.15)';this.style.boxShadow='0 0 30px rgba(239,68,68,.3)'" onpointerup="this.style.background='rgba(255,255,255,.04)';this.style.boxShadow='none'">
             <div style="font-size:min(2.8rem,10vw);flex-shrink:0;filter:drop-shadow(0 0 10px #EF4444);">🤖</div>
             <div>
-              <div style="font-family:Impact,sans-serif;font-size:min(1.3rem,5vw);color:#fff;letter-spacing:.08em;">VS CPU</div>
+              <div style="font-family:'Roboto',sans-serif;font-size:min(1.1rem,4.5vw);color:#fff;font-weight:700;letter-spacing:.06em;">VS CPU</div>
               <div style="font-size:min(.8rem,3vw);color:rgba(255,255,255,.45);margin-top:3px;font-weight:600;">Desafía a la Inteligencia Artificial</div>
               <div style="margin-top:6px;display:flex;gap:4px;">
-                <span style="background:rgba(239,68,68,.25);color:#EF4444;font-size:.6rem;font-weight:800;padding:2px 8px;border-radius:4px;letter-spacing:.05em;border:1px solid rgba(239,68,68,.3);">1 JUGADOR</span>
+                <span style="background:rgba(239,68,68,.25);color:#EF4444;font-family:'Roboto',sans-serif;font-size:.6rem;font-weight:700;padding:2px 8px;border-radius:4px;letter-spacing:.04em;border:1px solid rgba(239,68,68,.3);">1 JUGADOR</span>
               </div>
             </div>
             <div style="margin-left:auto;color:rgba(255,255,255,.3);font-size:1.4rem;">›</div>
@@ -732,10 +742,10 @@ mode(){
           <button onclick="sfxMenu();sMode('pvp')" style="border:none;cursor:pointer;background:rgba(255,255,255,.04);border:1px solid rgba(59,130,246,.4);border-radius:14px;padding:20px 20px;text-align:left;display:flex;align-items:center;gap:16px;transition:all .15s;" onpointerdown="this.style.background='rgba(59,130,246,.15)';this.style.boxShadow='0 0 30px rgba(59,130,246,.3)'" onpointerup="this.style.background='rgba(255,255,255,.04)';this.style.boxShadow='none'">
             <div style="font-size:min(2.8rem,10vw);flex-shrink:0;filter:drop-shadow(0 0 10px #3B82F6);">👥</div>
             <div>
-              <div style="font-family:Impact,sans-serif;font-size:min(1.3rem,5vw);color:#fff;letter-spacing:.08em;">VS JUGADOR</div>
+              <div style="font-family:'Roboto',sans-serif;font-size:min(1.1rem,4.5vw);color:#fff;font-weight:700;letter-spacing:.06em;">VS JUGADOR</div>
               <div style="font-size:min(.8rem,3vw);color:rgba(255,255,255,.45);margin-top:3px;font-weight:600;">Batalla local en el mismo dispositivo</div>
               <div style="margin-top:6px;display:flex;gap:4px;">
-                <span style="background:rgba(59,130,246,.25);color:#3B82F6;font-size:.6rem;font-weight:800;padding:2px 8px;border-radius:4px;letter-spacing:.05em;border:1px solid rgba(59,130,246,.3);">2 JUGADORES</span>
+                <span style="background:rgba(59,130,246,.25);color:#3B82F6;font-family:'Roboto',sans-serif;font-size:.6rem;font-weight:700;padding:2px 8px;border-radius:4px;letter-spacing:.04em;border:1px solid rgba(59,130,246,.3);">2 JUGADORES</span>
               </div>
             </div>
             <div style="margin-left:auto;color:rgba(255,255,255,.3);font-size:1.4rem;">›</div>
@@ -763,22 +773,22 @@ create(){
     const x=Math.random()*100,d=1.5+Math.random()*3,dl=Math.random()*4,sz=1+Math.random()*2;
     sparks+=`<div style="position:absolute;left:${x}%;top:${Math.random()*100}%;width:${sz}px;height:${sz}px;background:${accentCol};border-radius:50%;animation:twinkle ${d}s ease-in-out ${dl}s infinite;opacity:.6;"></div>`;
   }
-  return`<div style="position:absolute;inset:0;overflow:hidden;background:radial-gradient(ellipse at 50% 0%,${isP2?"#1a0030":"#1a0000"} 0%,#000 70%);">
+  return`<div style="position:absolute;inset:0;overflow:hidden;background:radial-gradient(ellipse at 50% 0%,${isP2?'#1a0a3e':'#0F172A'} 0%,#1E3A5F 80%);">
     ${sparks}
     <!-- Back button -->
-    <button onclick="sfxMenu();${s===2?"bkCreate()":"go('mode')"}" style="position:absolute;top:16px;left:16px;z-index:10;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.7);font-size:.85rem;cursor:pointer;font-weight:800;padding:8px 16px;border-radius:6px;font-family:Impact,sans-serif;letter-spacing:.05em;">← VOLVER</button>
+    <button onclick="sfxMenu();${s===2?"bkCreate()":"go('mode')"}" style="position:absolute;top:16px;left:16px;z-index:10;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.7);font-size:.85rem;cursor:pointer;font-weight:800;padding:8px 16px;border-radius:6px;font-family:'Roboto',sans-serif;font-weight:700;letter-spacing:.04em;">← ATRÁS</button>
     <!-- Main card -->
     <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;">
       <div style="width:100%;max-width:400px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:24px 20px;backdrop-filter:blur(20px);box-shadow:0 0 60px ${accentGlow},inset 0 1px 0 rgba(255,255,255,.1);">
         <!-- Avatar big display -->
         <div style="text-align:center;margin-bottom:20px;">
           <div style="font-size:min(72px,18vw);line-height:1;margin-bottom:8px;filter:drop-shadow(0 0 20px ${accentCol});">${A[av]}</div>
-          <div style="font-family:Impact,Arial Black,sans-serif;font-size:min(1.4rem,5vw);color:#fff;letter-spacing:.12em;text-shadow:0 0 20px ${accentCol};">${title}</div>
+          <div style="font-family:'Rajdhani',Impact,sans-serif;font-size:min(1.5rem,5.5vw);color:#fff;font-weight:700;letter-spacing:.12em;text-shadow:0 0 20px ${accentCol};">${title}</div>
           <div style="width:60px;height:3px;background:${accentCol};margin:8px auto 0;box-shadow:0 0 12px ${accentCol};border-radius:2px;"></div>
         </div>
         <!-- Name input -->
         <div style="margin-bottom:18px;">
-          <div style="font-family:Impact,sans-serif;font-size:.75rem;color:${accentCol};letter-spacing:.15em;margin-bottom:6px;">NOMBRE DEL ENTRENADOR</div>
+          <div style="font-family:'Roboto',sans-serif;font-weight:700;font-size:.75rem;color:${accentCol};letter-spacing:.1em;margin-bottom:6px;">NOMBRE DEL ENTRENADOR</div>
           <input id="cname" placeholder="Escribe tu nombre..." maxlength="12"
             style="width:100%;background:rgba(0,0,0,.4);border:2px solid rgba(255,255,255,.15);border-radius:8px;padding:13px 16px;font-size:1.05rem;font-weight:700;outline:none;font-family:inherit;color:#fff;letter-spacing:.02em;"
             onfocus="this.style.borderColor='${accentCol}';this.style.boxShadow='0 0 16px ${accentGlow}'"
@@ -786,11 +796,11 @@ create(){
         </div>
         <!-- Avatar grid -->
         <div style="margin-bottom:20px;">
-          <div style="font-family:Impact,sans-serif;font-size:.75rem;color:${accentCol};letter-spacing:.15em;margin-bottom:10px;">ELIGE TU AVATAR</div>
+          <div style="font-family:'Roboto',sans-serif;font-weight:700;font-size:.75rem;color:${accentCol};letter-spacing:.1em;margin-bottom:10px;">ELIGE TU AVATAR</div>
           <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;max-height:min(220px,35vh);overflow-y:auto;padding-right:2px;">${avs}</div>
         </div>
         <!-- CTA button -->
-        <button onclick="sfxMenu();cNext()" style="width:100%;border:none;cursor:pointer;background:${accentGrad};color:#fff;font-family:Impact,Arial Black,sans-serif;font-size:min(1.15rem,4vw);letter-spacing:.1em;padding:16px;border-radius:8px;box-shadow:0 4px 24px ${accentGlow};transition:transform .1s,filter .1s;" onpointerdown="this.style.transform='scale(.95)'" onpointerup="this.style.transform='scale(1)'">
+        <button onclick="sfxMenu();cNext()" style="width:100%;border:none;cursor:pointer;background:${accentGrad};color:#fff;font-family:'Roboto',sans-serif;font-weight:700;font-size:min(1rem,4vw);letter-spacing:.06em;padding:16px;border-radius:8px;box-shadow:0 4px 24px ${accentGlow};transition:transform .1s,filter .1s;" onpointerdown="this.style.transform='scale(.95)'" onpointerup="this.style.transform='scale(1)'">
           ${btnLabel} ▶
         </button>
       </div>
@@ -853,7 +863,7 @@ select(){
           <div style="display:flex;gap:14px;align-items:flex-start;margin-bottom:16px;">
             <img src="${su(pk.id)}" style="width:min(90px,22vw);height:min(90px,22vw);object-fit:contain;flex-shrink:0;filter:drop-shadow(0 0 16px ${acc});">
             <div style="flex:1;min-width:0;">
-              <div style="font-family:Impact,sans-serif;font-size:min(1.4rem,5vw);color:#fff;letter-spacing:.06em;">${pk.name.toUpperCase()}</div>
+              <div style="font-family:'Rajdhani',sans-serif;font-weight:700;font-size:min(1.5rem,5.5vw);color:#fff;letter-spacing:.06em;">${pk.name.toUpperCase()}</div>
               <div style="margin:5px 0;">${pk.types.map(t=>bdg(t)).join("")}</div>
               <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px;">
                 <div><div style="font-size:.62rem;color:#666;font-weight:700;margin-bottom:2px;">HP</div><div style="display:flex;align-items:center;gap:5px;"><span style="font-weight:900;color:#22C55E;font-size:.85rem;">${pk.hp}</span>${statBar(pk.hp,"#22C55E")}</div></div>
@@ -867,8 +877,8 @@ select(){
             ${pk.moves.map(m=>`<div style="background:linear-gradient(135deg,${(TC[m.t]||TC.normal).bg},${(TC[m.t]||TC.normal).grd});border-radius:8px;padding:7px 9px;"><div style="font-weight:900;font-size:.78rem;color:#fff;">${m.n}</div><div style="font-size:.6rem;color:rgba(255,255,255,.7);margin-top:1px;">${bdg(m.t)} PWR ${m.p} · PP ${m.pp}</div></div>`).join("")}
           </div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding-bottom:12px;">
-            <button onclick="G.modal=null;render()" style="border:none;cursor:pointer;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.6);font-family:Impact,sans-serif;font-size:min(1rem,3.5vw);letter-spacing:.08em;padding:14px;border-radius:8px;">✕ CERRAR</button>
-            <button onclick="${canAdd||iS?'modalAct('+pk.id+')':''}" style="border:none;cursor:${canAdd||iS?'pointer':'not-allowed'};background:${iS?'linear-gradient(135deg,#EF4444,#991B1B)':canAdd?'linear-gradient(135deg,'+acc+','+acc+'99)':'rgba(255,255,255,.05)'};color:${canAdd||iS?'#fff':'rgba(255,255,255,.2)'};font-family:Impact,Arial Black,sans-serif;font-size:min(1rem,3.5vw);letter-spacing:.08em;padding:14px;border-radius:8px;box-shadow:${canAdd?'0 4px 20px '+accG:'none'};">
+            <button onclick="G.modal=null;render()" style="border:none;cursor:pointer;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);font-family:'Roboto',sans-serif;font-size:min(.95rem,3.5vw);font-weight:700;letter-spacing:.08em;padding:14px;border-radius:8px;">✕ CERRAR</button>
+            <button onclick="${canAdd||iS?'modalAct('+pk.id+')':''}" style="border:none;cursor:${canAdd||iS?'pointer':'not-allowed'};background:${iS?'linear-gradient(135deg,#EF4444,#991B1B)':canAdd?'linear-gradient(135deg,'+acc+','+acc+'99)':'rgba(255,255,255,.05)'};color:${canAdd||iS?'#fff':'rgba(255,255,255,.2)'};font-family:'Roboto',sans-serif;font-weight:700;font-size:min(1rem,3.5vw);letter-spacing:.08em;padding:14px;border-radius:8px;box-shadow:${canAdd?'0 4px 20px '+accG:'none'};">
               ${iS?"✕ QUITAR":canAdd?"+ AÑADIR":"EQUIPO LLENO"}
             </button>
           </div>
@@ -878,11 +888,11 @@ select(){
   }
 
   const n=G.sel.length,ready=n===3;
-  return`<div style="background:radial-gradient(ellipse at 50% 0%,${isP2?"#1a0030":"#1a0000"} 0%,#000 70%);display:flex;flex-direction:column;position:absolute;inset:0;overflow:hidden;">
+  return`<div style="background:radial-gradient(ellipse at 50% 0%,${isP2?'#1a0a3e':'#0F172A'} 0%,#1E3A5F 80%);display:flex;flex-direction:column;position:absolute;inset:0;overflow:hidden;">
     <!-- Header -->
     <div style="padding:10px 12px 8px;flex-shrink:0;background:rgba(0,0,0,.6);border-bottom:1px solid rgba(255,255,255,.08);">
       <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px;">
-        <div style="font-family:Impact,sans-serif;font-size:min(1.1rem,4.5vw);color:${acc};letter-spacing:.08em;white-space:nowrap;">${A[pl.avatar]} ${pl.name.toUpperCase()}</div>
+        <div style="font-family:'Rajdhani',sans-serif;font-weight:700;font-size:min(1.2rem,5vw);color:${acc};letter-spacing:.08em;white-space:nowrap;">${A[pl.avatar]} ${pl.name.toUpperCase()}</div>
         <div style="display:flex;gap:5px;flex-shrink:0;">${slots}</div>
       </div>
       <!-- Search -->
@@ -892,12 +902,12 @@ select(){
     </div>
     <!-- Grid -->
     <div style="flex:1;overflow-y:auto;padding:8px 8px 2px;">
-      ${filtered.length?`<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:7px;">${grid}</div>`:`<div style="text-align:center;padding:40px 20px;color:rgba(255,255,255,.3);font-family:Impact,sans-serif;font-size:1.1rem;">SIN RESULTADOS</div>`}
+      ${filtered.length?`<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:7px;">${grid}</div>`:`<div style="text-align:center;padding:40px 20px;font-family:'Roboto',sans-serif;font-weight:700;font-size:1rem;color:rgba(255,255,255,.3);">SIN RESULTADOS</div>`}
     </div>
     <!-- Bottom bar -->
     <div style="display:grid;grid-template-columns:auto 1fr;gap:0;background:#0a0a0a;border-top:2px solid #222;flex-shrink:0;">
-      <button onclick="sfxMenu();go('create')" style="background:#111;border:none;border-right:1px solid #333;color:#888;font-family:Impact,sans-serif;font-size:min(1rem,4vw);letter-spacing:.08em;padding:16px 18px;cursor:pointer;">← ATRÁS</button>
-      <button onclick="if(${ready}){sfxMenu();cSel();}" style="background:${ready?"linear-gradient(180deg,#15803D,#0f5f2e)":"#0a0a0a"};border:none;color:${ready?"#fff":"rgba(255,255,255,.2)"};font-family:Impact,Arial Black,sans-serif;font-size:min(1.05rem,4vw);letter-spacing:.1em;padding:16px;cursor:${ready?"pointer":"not-allowed"};">
+      <button onclick="sfxMenu();go('create')" style="background:#111;border:none;border-right:1px solid #333;font-family:'Roboto',sans-serif;font-size:min(.9rem,3.8vw);font-weight:700;color:#888;er-spacing:.08em;padding:16px 18px;cursor:pointer;">← ATRÁS</button>
+      <button onclick="if(${ready}){sfxMenu();cSel();}" style="background:${ready?"linear-gradient(180deg,#15803D,#0f5f2e)":"#0a0a0a"};border:none;color:${ready?"#fff":"rgba(255,255,255,.2)"};font-family:'Roboto',sans-serif;font-size:min(1rem,4vw);font-weight:700;letter-spacing:.06em;padding:16px;cursor:${ready?"pointer":"not-allowed"};">
         ${ready?"⚔  ¡A COMBATIR!":"SELECCIONA "+(3-n)+" MÁS..."}
       </button>
     </div>
@@ -907,7 +917,7 @@ select(){
 
 pass(){
   const p=G.pp;
-  return`<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(160deg,#0F172A,#1E3A5F);padding:0 28px;text-align:center;">
+  return`<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(160deg,#0F172A,#1E3A5F 80%);padding:0 28px;text-align:center;">
     <div id="pi">
       <div style="font-size:80px;margin-bottom:20px;animation:floatup 1.5s ease-in-out infinite;">📱</div>
       <h2 style="color:#fff;font-weight:900;font-size:1.8rem;margin:0 0 10px;">¡Pasa el dispositivo!</h2>
@@ -924,7 +934,7 @@ fswitch(){
     <div style="font-weight:800;font-size:.82rem;color:${d?"rgba(255,255,255,.3)":"#1E293B"};margin-top:4px;">${pk.name}</div>
     <div style="font-size:.72rem;color:${d?"rgba(255,255,255,.2)":"#64748B"};">${pk.currentHp}/${pk.hp}</div>
   </button>`;}).join("");
-  return`<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(160deg,#0F172A,#1E3A5F);padding:0 20px;text-align:center;">
+  return`<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(160deg,#0F172A,#1E3A5F 80%);padding:0 20px;text-align:center;">
     <div style="font-size:56px;margin-bottom:10px;">😔</div>
     <h2 style="color:#fff;font-weight:900;font-size:1.4rem;margin:0 0 6px;">${A[pl.avatar]} ${pl.name}</h2>
     <p style="color:#FCD34D;font-weight:700;margin-bottom:28px;font-size:.95rem;">¡Tu Pokémon se ha debilitado!<br>Elige el siguiente</p>
@@ -954,7 +964,7 @@ battle(){
         </div>
       </div>
       <!-- VS center badge -->
-      <div style="background:linear-gradient(135deg,#F59E0B,#EF4444);padding:5px 10px;border-radius:6px;font-family:Impact,sans-serif;font-size:1rem;color:#fff;flex-shrink:0;letter-spacing:.05em;box-shadow:0 2px 10px rgba(245,158,11,.5);">VS</div>
+      <div style="background:linear-gradient(135deg,#F59E0B,#EF4444);padding:5px 10px;border-radius:6px;font-family:'Roboto',sans-serif;font-size:.95rem;font-weight:700;color:#fff;flex-shrink:0;letter-spacing:.05em;box-shadow:0 2px 10px rgba(245,158,11,.5);">VS</div>
       <!-- P2 side (right) -->
       <div style="flex:1;min-width:0;">
         <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;">
@@ -975,18 +985,18 @@ battle(){
     ${sceneSVG(sc,100,100)}
     <!-- ground shadow overlay for depth -->
     <div style="position:absolute;bottom:0;left:0;right:0;height:${sc.groundH+5}%;background:linear-gradient(0deg,rgba(0,0,0,.35) 0%,transparent 100%);pointer-events:none;z-index:1;"></div>
-    <div style="position:absolute;top:8px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.6);color:rgba(255,255,255,.7);font-size:.62rem;font-weight:800;padding:3px 12px;border-radius:4px;z-index:5;letter-spacing:.1em;text-transform:uppercase;">${scLabel}</div>
+    <div style="position:absolute;top:8px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.6);color:rgba(255,255,255,.7);font-family:'Roboto',sans-serif;font-size:.62rem;font-weight:700;padding:3px 12px;border-radius:4px;z-index:5;letter-spacing:.08em;text-transform:uppercase;">${scLabel}</div>
     <!-- shadows -->
     <div id="sh1" style="position:absolute;z-index:2;pointer-events:none;"></div>
     <div id="sh2" style="position:absolute;z-index:2;pointer-events:none;"></div>
     <!-- P1 sprite — left side, mirrored to face right -->
-<div id="sp1wrap" style="position:absolute;z-index:3;">
+    <div id="sp1wrap" style="position:absolute;z-index:3;left:0;bottom:0;">
       <img id="sp1" src="${su(pk1.id)}"
         style="display:block;transform:scaleX(-1);${p1faint?"filter:grayscale(1) opacity(.25);":""}"
         onload="onSpriteLoad(this,'sp1wrap','sh1',true,${sc.groundH})">
     </div>
     <!-- P2 sprite — right side -->
-<div id="sp2wrap" style="position:absolute;z-index:3;">
+    <div id="sp2wrap" style="position:absolute;z-index:3;right:0;bottom:0;">
       <img id="sp2" src="${su(pk2.id)}"
         style="display:block;${p2faint?"filter:grayscale(1) opacity(.25);":""}"
         onload="onSpriteLoad(this,'sp2wrap','sh2',false,${sc.groundH})">
@@ -999,24 +1009,25 @@ battle(){
   let ac="";
   if(!b.locked){
     if(b.ph==="action"){
-      ac=`<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;background:#0a0a0a;border-top:2px solid #222;flex-shrink:0;">
-        <button class="btn" style="background:linear-gradient(180deg,#C0392B,#7B241C);border-radius:0;border-right:1px solid #333;font-family:Impact,sans-serif;font-size:1.1rem;letter-spacing:.05em;padding:16px 8px;" onclick="sfxMenu();bPh('attack')">⚔ ATACAR</button>
-        <button class="btn" style="background:linear-gradient(180deg,#1565C0,#0D47A1);border-radius:0;border-right:1px solid #333;font-family:Impact,sans-serif;font-size:1.1rem;letter-spacing:.05em;padding:16px 8px;" onclick="sfxMenu();bPh('switch')">↕ CAMBIAR</button>
-        <button class="btn" onclick="dSave()" style="background:linear-gradient(180deg,#1a1a1a,#111);border-radius:0;font-size:.85rem;padding:16px 8px;color:#666;">💾 GUARDAR</button>
+      ac=`<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:0;background:#0a0a0a;border-top:2px solid #222;flex-shrink:0;">
+        <button class="btn" style="background:linear-gradient(180deg,#C0392B,#7B241C);border-radius:0;border-right:1px solid #333;font-family:'Roboto',sans-serif;font-size:1rem;font-weight:700;letter-spacing:.06em;padding:16px 8px;" onclick="sfxMenu();bPh('attack')">⚔ ATACAR</button>
+        <button class="btn" style="background:linear-gradient(180deg,#1565C0,#0D47A1);border-radius:0;border-right:1px solid #333;font-family:'Roboto',sans-serif;font-size:1rem;font-weight:700;letter-spacing:.06em;padding:16px 8px;" onclick="sfxMenu();bPh('switch')">↕ CAMBIAR</button>
+        <button class="btn" onclick="dSave()" style="background:linear-gradient(180deg,#1a1a1a,#111);border-radius:0;border-right:1px solid #222;font-size:.85rem;padding:16px 8px;color:#666;">💾 GUARDAR</button>
+        <button id="exit-confirm" data-step="0" class="btn" onclick="exitBattle()" style="background:linear-gradient(180deg,#1a1a1a,#111);border-radius:0;font-size:.85rem;padding:16px 8px;color:#666;">🚪 SALIR</button>
       </div>`;
     } else if(b.ph==="attack"){
       const ms=apk.moves.map((m,i)=>{
         const isCd=cd[i]>0;
         const bg=`linear-gradient(135deg,${(TC[m.t]||TC.normal).bg},${(TC[m.t]||TC.normal).grd})`;
         return`<button onclick="${isCd?"":"sfxAtk();doAtk("+i+")"}" class="mv-btn" style="background:${bg};padding:12px 10px;min-height:60px;${isCd?"opacity:.35;cursor:not-allowed;filter:saturate(.1);":""}" ${isCd?"disabled":""} onpointerdown="if(!this.disabled)this.style.transform='scale(.92)'" onpointerup="this.style.transform='scale(1)'">
-          <div style="font-family:Impact,sans-serif;font-size:min(1rem,2.8vw);letter-spacing:.04em;">${m.n.toUpperCase()}</div>
+          <div style="font-family:'Roboto',sans-serif;font-weight:700;font-size:min(.9rem,2.6vw);letter-spacing:.03em;">${m.n.toUpperCase()}</div>
           <div style="font-size:.68rem;opacity:.8;margin-top:2px;">${bdg(m.t)} PWR ${m.p} · PP ${apk.ppLeft[i]}${isCd?` · ⏳${cd[i]}`:""}
           </div>
         </button>`;
       }).join("");
       ac=`<div style="background:#0a0a0a;border-top:2px solid #222;flex-shrink:0;padding:8px 10px;">
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px;">${ms}</div>
-        <button class="btn" onclick="sfxMenu();bPh('action')" style="background:#1a1a1a;border:1px solid #333;font-size:.85rem;padding:10px;border-radius:6px;color:#888;">← VOLVER</button>
+        <button class="btn" onclick="sfxMenu();bPh('action')" style="background:#1a1a1a;border:1px solid #333;font-size:.85rem;padding:10px;border-radius:6px;color:#888;">← ATRÁS</button>
       </div>`;
     } else if(b.ph==="switch"){
       const pks=at.map((pk,i)=>{
@@ -1029,14 +1040,14 @@ battle(){
       }).join("");
       ac=`<div style="background:#0a0a0a;border-top:2px solid #222;flex-shrink:0;padding:8px 10px;">
         <div style="display:flex;gap:6px;margin-bottom:6px;">${pks}</div>
-        <button class="btn" onclick="sfxMenu();bPh('action')" style="background:#1a1a1a;border:1px solid #333;font-size:.85rem;padding:10px;border-radius:6px;color:#888;">← VOLVER</button>
+        <button class="btn" onclick="sfxMenu();bPh('action')" style="background:#1a1a1a;border:1px solid #333;font-size:.85rem;padding:10px;border-radius:6px;color:#888;">← ATRÁS</button>
       </div>`;
     }
   } else {
-    ac=`<div style="padding:14px;background:#0a0a0a;border-top:2px solid #222;text-align:center;flex-shrink:0;"><span style="font-family:Impact,sans-serif;color:#444;font-size:1rem;letter-spacing:.1em;">COMBATIENDO...</span></div>`;
+    ac=`<div style="padding:14px;background:#0a0a0a;border-top:2px solid #222;text-align:center;flex-shrink:0;"><span style="font-family:'Roboto',sans-serif;color:#444;font-size:.9rem;font-weight:700;letter-spacing:.1em;">COMBATIENDO...</span></div>`;
   }
 
-  const tb=G.mode==="pvp"&&!b.locked?`<div style="text-align:center;padding:4px;background:#0a0a0a;"><span style="background:#F59E0B;color:#000;font-family:Impact,sans-serif;font-size:.85rem;padding:3px 16px;border-radius:3px;letter-spacing:.08em;">TURNO: ${G[b.ct==="p1"?"p1":"p2"].name.toUpperCase()}</span></div>`:"";
+  const tb=G.mode==="pvp"&&!b.locked?`<div style="text-align:center;padding:4px;background:#0a0a0a;"><span style="background:#F59E0B;color:#000;font-family:'Roboto',sans-serif;font-size:.85rem;font-weight:700;padding:3px 16px;border-radius:3px;letter-spacing:.06em;">TURNO: ${G[b.ct==="p1"?"p1":"p2"].name.toUpperCase()}</span></div>`:"";
 
   // Show enter quotes ONCE per battle (not on every render)
   setTimeout(()=>{
@@ -1063,25 +1074,25 @@ victory(){
     const s=6+Math.random()*10;
     cf+=`<div style="position:absolute;left:${x}%;top:-10px;width:${s}px;height:${s*.5}px;background:${col};border-radius:2px;animation:conffall ${2+dl}s linear ${dl}s infinite;"></div>`;
   }
-  return`<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(ellipse at center,#1a0505 0%,#000 100%);overflow:hidden;">
+  return`<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(ellipse at center,#0F172A 0%,#1E3A5F 100%);overflow:hidden;">
     ${cf}
     <div style="position:relative;z-index:1;text-align:center;padding:20px;">
-      <div style="font-family:Impact,Arial Black,sans-serif;font-size:min(4rem,12vw);color:#F59E0B;text-shadow:0 0 40px rgba(245,158,11,.8),0 4px 0 #7c3e00;letter-spacing:.1em;line-height:1;animation:vsSlam .6s cubic-bezier(.175,.885,.32,1.275) both;">K.O.!</div>
-      <div style="font-family:Impact,Arial Black,sans-serif;font-size:min(1.8rem,5vw);color:#fff;letter-spacing:.15em;margin:8px 0 20px;text-shadow:0 2px 10px rgba(0,0,0,.8);">${A[winner.avatar]} ${winner.name.toUpperCase()} WINS!</div>
+      <div style="font-family:'Press Start 2P',monospace;font-size:min(2.8rem,9vw);color:#F59E0B;text-shadow:0 0 40px rgba(245,158,11,.8),0 4px 0 #7c3e00;letter-spacing:.08em;line-height:1.2;animation:vsSlam .6s cubic-bezier(.175,.885,.32,1.275) both;">K.O.!</div>
+      <div style="font-family:'Rajdhani',Impact,sans-serif;font-size:min(2rem,6vw);color:#fff;font-weight:700;letter-spacing:.12em;margin:8px 0 20px;text-shadow:0 2px 10px rgba(0,0,0,.8);">${A[winner.avatar]} ${winner.name.toUpperCase()} WINS!</div>
       <div style="display:flex;gap:16px;justify-content:center;margin-bottom:24px;">
         <div style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:10px;padding:14px 20px;text-align:center;">
-          <div style="font-family:Impact,sans-serif;font-size:2rem;color:#F59E0B;">${stats.moves}</div>
-          <div style="font-size:.75rem;color:#888;font-weight:700;letter-spacing:.1em;">MOVIMIENTOS</div>
+          <div style="font-family:'Rajdhani',sans-serif;font-weight:700;font-size:2rem;color:#F59E0B;">${stats.moves}</div>
+          <div style="font-family:'Roboto',sans-serif;font-size:.75rem;color:#888;font-weight:700;letter-spacing:.06em;">MOVIMIENTOS</div>
         </div>
         <div style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:10px;padding:14px 20px;text-align:center;">
-          <div style="font-family:Impact,sans-serif;font-size:2rem;color:#EF4444;">${stats.defeated}</div>
-          <div style="font-size:.75rem;color:#888;font-weight:700;letter-spacing:.1em;">DERROTADOS</div>
+          <div style="font-family:'Rajdhani',sans-serif;font-weight:700;font-size:2rem;color:#EF4444;">${stats.defeated}</div>
+          <div style="font-family:'Roboto',sans-serif;font-size:.75rem;color:#888;font-weight:700;letter-spacing:.06em;">DERROTADOS</div>
         </div>
       </div>
       <div style="display:flex;flex-direction:column;gap:10px;width:min(280px,90vw);">
-        <button class="btn" style="background:linear-gradient(135deg,#EF4444,#7B241C);font-family:Impact,sans-serif;font-size:1.1rem;letter-spacing:.08em;border-radius:6px;" onclick="sfxMenu();doRm()">⟳ REVANCHA</button>
-        <button class="btn" style="background:linear-gradient(135deg,#F59E0B,#7c3e00);font-family:Impact,sans-serif;font-size:1.1rem;letter-spacing:.08em;border-radius:6px;" onclick="sfxMenu();go('mode')">◉ NUEVA PARTIDA</button>
-        <button class="btn" style="background:#111;border:1px solid #333;font-family:Impact,sans-serif;font-size:1rem;letter-spacing:.08em;border-radius:6px;color:#666;" onclick="sfxMenu();go('title')">← INICIO</button>
+        <button class="btn" style="background:linear-gradient(135deg,#EF4444,#7B241C);font-family:'Roboto',sans-serif;font-weight:700;font-size:1rem;letter-spacing:.04em;border-radius:6px;" onclick="sfxMenu();doRm()">⟳ REVANCHA</button>
+        <button class="btn" style="background:linear-gradient(135deg,#F59E0B,#7c3e00);font-family:'Roboto',sans-serif;font-weight:700;font-size:1rem;letter-spacing:.04em;border-radius:6px;" onclick="sfxMenu();go('mode')">◉ NUEVA PARTIDA</button>
+        <button class="btn" style="background:#111;border:1px solid #333;font-family:'Roboto',sans-serif;font-weight:700;font-size:.95rem;letter-spacing:.04em;border-radius:6px;color:#666;" onclick="sfxMenu();go('title')">← INICIO</button>
       </div>
     </div>
   </div>`;
@@ -1097,9 +1108,9 @@ saves(){
       </div>
       ${m==="load"?`<button class="btn" onclick="sfxMenu();lSave(${s.id})" style="background:linear-gradient(135deg,#22C55E,#15803D);padding:10px;font-size:.9rem;">▶ Cargar</button>`:`<button class="btn" onclick="dSaveItem(${s.id},this)" style="background:linear-gradient(135deg,#EF4444,#B91C1C);padding:10px;font-size:.9rem;" data-c="0">🗑️ Borrar</button>`}
     </div>`).join("");
-  return`<div style="position:absolute;inset:0;display:flex;flex-direction:column;background:linear-gradient(160deg,#0F172A,#1E3A5F);">
+  return`<div style="position:absolute;inset:0;display:flex;flex-direction:column;background:linear-gradient(160deg,#0F172A,#1E3A5F 80%);">
     <div style="display:flex;align-items:center;gap:12px;padding:20px 18px 14px;flex-shrink:0;background:rgba(0,0,0,.3);">
-      <button onclick="sfxMenu();go('title')" style="background:rgba(255,255,255,.1);border:none;color:#fff;font-size:.9rem;cursor:pointer;font-weight:800;padding:8px 14px;border-radius:12px;">← Volver</button>
+      <button onclick="sfxMenu();go('title')" style="background:rgba(255,255,255,.1);border:none;color:#fff;font-size:.9rem;cursor:pointer;font-weight:800;padding:8px 14px;border-radius:12px;">← ATRÁS</button>
       <h2 style="color:#fff;font-weight:900;font-size:1.3rem;margin:0;">${m==="load"?"💾 Cargar":"🗑️ Borrar"} Partidas</h2>
     </div>
     <div style="flex:1;overflow-y:auto;padding:12px 14px 16px;">${list}</div>
@@ -1107,43 +1118,114 @@ saves(){
 },
 scenepick(){
   const SC_INFO=[
-    {idx:0,emoji:"🌿",name:"Campo",desc:"Hierba, árboles y cielo soleado",gr:"linear-gradient(135deg,#166534,#15803D)",sky:"linear-gradient(180deg,#87CEEB,#C8EBFF)"},
-    {idx:1,emoji:"🌌",name:"Galaxia",desc:"Espacio profundo y nebulosas",gr:"linear-gradient(135deg,#1E0A3C,#4C1D95)",sky:"linear-gradient(180deg,#020618,#2d1060)"},
-    {idx:2,emoji:"⚡",name:"Estadio",desc:"Arena oficial Pokémon con focos",gr:"linear-gradient(135deg,#1E3A5F,#1D4ED8)",sky:"linear-gradient(180deg,#1a1a2e,#0f3460)"},
-    {idx:3,emoji:"⚽",name:"Fútbol",desc:"Estadio con gradas llenas de fans",gr:"linear-gradient(135deg,#14532D,#166534)",sky:"linear-gradient(180deg,#4A90D9,#2D7A2D)"},
+    {
+      idx:0,name:"Campo",
+      tagline:"HIERBA Y NATURALEZA",
+      desc:"Batalla bajo el sol entre árboles y praderas",
+      emoji:"🌿",
+      accent:"#22C55E",
+      glow:"rgba(34,197,94,.6)",
+      bg:"linear-gradient(135deg,#052e16,#14532d,#166534)",
+      sky:"linear-gradient(180deg,#87CEEB,#B0E0FF,#8DB96A)",
+      icon:"🌳"
+    },
+    {
+      idx:1,name:"Galaxia",
+      tagline:"ESPACIO PROFUNDO",
+      desc:"Las estrellas y nebulosas serán testigos",
+      emoji:"🌌",
+      accent:"#A855F7",
+      glow:"rgba(168,85,247,.6)",
+      bg:"linear-gradient(135deg,#0d0020,#1E0A3C,#4C1D95)",
+      sky:"linear-gradient(180deg,#020618,#0B1A3E,#1a0a3e)",
+      icon:"⭐"
+    },
+    {
+      idx:2,name:"Estadio",
+      tagline:"ARENA OFICIAL",
+      desc:"Focos encendidos, gradas rugiendo",
+      emoji:"⚡",
+      accent:"#3B82F6",
+      glow:"rgba(59,130,246,.6)",
+      bg:"linear-gradient(135deg,#0c1a2e,#1E3A5F,#1D4ED8)",
+      sky:"linear-gradient(180deg,#1a1a2e,#16213e,#0f3460)",
+      icon:"🏟️"
+    },
+    {
+      idx:3,name:"Fútbol",
+      tagline:"ESTADIO LLENO",
+      desc:"Fans enloquecidos, césped mojado",
+      emoji:"⚽",
+      accent:"#F59E0B",
+      glow:"rgba(245,158,11,.6)",
+      bg:"linear-gradient(135deg,#052e16,#14532D,#166534)",
+      sky:"linear-gradient(180deg,#1a4a8a,#4A90D9,#2D7A2D)",
+      icon:"🏆"
+    },
   ];
-  const p1t=G.p1.team||[];const p2t=G.p2.team||[];
-  return`<div style="position:absolute;inset:0;display:flex;flex-direction:column;background:linear-gradient(160deg,#0F172A,#1E3A5F);overflow:hidden;">
-    <div style="padding:16px 18px 8px;flex-shrink:0;background:rgba(0,0,0,.4);">
-      <h2 style="color:#fff;font-weight:900;font-size:1.5rem;text-align:center;margin:0 0 2px;">🗺️ Elige el Escenario</h2>
-      <p style="color:#94A3B8;text-align:center;font-size:.85rem;">¿Dónde quieres combatir?</p>
+
+  // Animated particles background
+  let sparks="";
+  for(let i=0;i<20;i++){
+    const x=Math.random()*100,y=Math.random()*100;
+    const s=1+Math.random()*2,d=2+Math.random()*5,dl=Math.random()*4;
+    const col=["#EF4444","#F59E0B","#A855F7","#3B82F6","#22C55E"][i%5];
+    sparks+=`<div style="position:absolute;left:${x}%;top:${y}%;width:${s}px;height:${s}px;background:${col};border-radius:50%;animation:twinkle ${d}s ease-in-out ${dl}s infinite;opacity:.4;pointer-events:none;"></div>`;
+  }
+
+  const cards=SC_INFO.map(si=>`
+    <button onclick="sfxSel();pickScene(${si.idx})"
+      style="border:none;cursor:pointer;padding:0;background:transparent;display:block;width:100%;border-radius:16px;overflow:hidden;
+             box-shadow:0 4px 24px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.06);
+             transition:transform .15s,box-shadow .15s;"
+      onpointerdown="this.style.transform='scale(.94)';this.style.boxShadow='0 2px 10px rgba(0,0,0,.8),0 0 0 2px ${si.accent}'"
+      onpointerup="this.style.transform='scale(1)';this.style.boxShadow='0 4px 24px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.06)'"
+      onmouseenter="this.style.boxShadow='0 8px 32px ${si.glow},0 0 0 2px ${si.accent}'"
+      onmouseleave="this.style.boxShadow='0 4px 24px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.06)'">
+      <!-- Preview sky -->
+      <div style="height:min(100px,22vw);background:${si.sky};position:relative;overflow:hidden;">
+        <!-- Decorative shine -->
+        <div style="position:absolute;top:-30%;left:-10%;width:120%;height:80%;background:radial-gradient(ellipse at 50% 0%,rgba(255,255,255,.18) 0%,transparent 70%);pointer-events:none;"></div>
+        <!-- Big emoji center -->
+        <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:min(3.2rem,10vw);filter:drop-shadow(0 4px 12px rgba(0,0,0,.5));">${si.icon}</div>
+        <!-- Bottom fade -->
+        <div style="position:absolute;bottom:0;left:0;right:0;height:40%;background:linear-gradient(0deg,rgba(0,0,0,.7),transparent);"></div>
+        <!-- Tag top-right -->
+        <div style="position:absolute;top:8px;right:8px;background:rgba(0,0,0,.6);color:${si.accent};font-family:'Roboto',sans-serif;font-weight:700;font-size:min(.6rem,2.2vw);letter-spacing:.08em;padding:3px 8px;border-radius:4px;border:1px solid ${si.accent}44;">${si.tagline}</div>
+      </div>
+      <!-- Info strip -->
+      <div style="background:${si.bg};padding:10px 14px 12px;text-align:left;position:relative;">
+        <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,${si.accent},transparent);opacity:.7;"></div>
+        <div style="font-family:'Rajdhani',sans-serif;font-weight:700;font-size:min(1.1rem,4vw);color:#fff;letter-spacing:.06em;">${si.emoji} ${si.name.toUpperCase()}</div>
+        <div style="font-size:min(.7rem,2.4vw);color:rgba(255,255,255,.55);margin-top:3px;font-weight:600;">${si.desc}</div>
+        <!-- Arrow -->
+        <div style="position:absolute;right:12px;bottom:50%;transform:translateY(50%);color:${si.accent};font-size:1.2rem;opacity:.7;">›</div>
+      </div>
+    </button>`).join("");
+
+  return`<div style="position:absolute;inset:0;display:flex;flex-direction:column;background:radial-gradient(ellipse at 50% 0%,#0F172A 0%,#1E3A5F 80%);overflow:hidden;">
+    ${sparks}
+    <!-- Back button -->
+    <button onclick="sfxMenu();go('select')" style="position:absolute;top:14px;left:14px;z-index:10;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.7);font-family:'Roboto',sans-serif;font-size:.85rem;cursor:pointer;font-weight:700;padding:8px 16px;border-radius:6px;letter-spacing:.04em;">← ATRÁS</button>
+    <!-- Header -->
+    <div style="position:relative;z-index:2;padding:min(20px,4%) min(20px,4%) min(12px,3%);flex-shrink:0;text-align:center;">
+      <div style="font-size:min(2.4rem,8vw);line-height:1;margin-bottom:8px;filter:drop-shadow(0 0 20px #F59E0B);">🗺️</div>
+      <div style="font-family:'Rajdhani',Impact,sans-serif;font-size:min(1.8rem,6.5vw);color:#fff;font-weight:700;letter-spacing:.12em;text-shadow:0 0 30px rgba(245,158,11,.5);">ELIGE EL ESCENARIO</div>
+      <div style="color:rgba(255,255,255,.4);font-size:min(.8rem,3vw);font-weight:700;letter-spacing:.08em;margin-top:4px;">¿DÓNDE COMBATIRÁN ${G.p1.name.toUpperCase()} Y ${(G.p2.isCPU?"LA CPU":G.p2.name.toUpperCase())}?</div>
+      <div style="width:60px;height:2px;background:linear-gradient(90deg,#EF4444,#F59E0B,#EF4444);margin:10px auto 0;border-radius:2px;box-shadow:0 0 10px #F59E0B;"></div>
     </div>
-    <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 16px;background:rgba(0,0,0,.3);flex-shrink:0;">
-      <div style="display:flex;gap:4px;align-items:center;">
-        <span style="font-size:1.1rem;">${A[G.p1.avatar]}</span>
-        ${p1t.map(pk=>`<img src="${su(pk.id)}" width="32" height="32" style="object-fit:contain;">`).join("")}
+    <!-- Grid -->
+    <div style="position:relative;z-index:2;flex:1;overflow-y:auto;padding:0 min(16px,4%) min(14px,3%);">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:min(12px,2.5vw);margin-bottom:min(12px,2.5vw);">
+        ${cards}
       </div>
-      <span style="color:#F59E0B;font-weight:900;font-size:.9rem;">⚔️ VS ⚔️</span>
-      <div style="display:flex;gap:4px;align-items:center;">
-        ${p2t.map(pk=>`<img src="${su(pk.id)}" width="32" height="32" style="object-fit:contain;">`).join("")}
-        <span style="font-size:1.1rem;">${A[G.p2.avatar]}</span>
-      </div>
-    </div>
-    <div style="flex:1;overflow-y:auto;padding:14px;">
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-        ${SC_INFO.map(si=>`<button onclick="sfxSel();pickScene(${si.idx})" style="border:none;cursor:pointer;border-radius:20px;overflow:hidden;padding:0;transition:transform .15s;box-shadow:0 4px 16px rgba(0,0,0,.4);display:block;width:100%;" onpointerdown="this.style.transform='scale(.94)'" onpointerup="this.style.transform='scale(1)'">
-          <div style="height:85px;background:${si.sky};position:relative;overflow:hidden;">
-            <div style="position:absolute;bottom:0;left:0;right:0;height:35%;background:rgba(0,0,0,.2);"></div>
-            <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:2.5rem;opacity:.7;">${si.emoji}</div>
-          </div>
-          <div style="background:${si.gr};padding:10px 12px;text-align:left;">
-            <div style="font-weight:900;font-size:.95rem;color:#fff;">${si.emoji} ${si.name}</div>
-            <div style="font-size:.7rem;color:rgba(255,255,255,.75);margin-top:2px;">${si.desc}</div>
-          </div>
-        </button>`).join("")}
-      </div>
-      <button onclick="sfxSel();pickScene(-1)" class="btn" style="background:linear-gradient(135deg,#F59E0B,#D97706);margin-top:12px;font-size:1rem;">
-        🎲 ¡Sorpréndeme! (Aleatorio)
+      <!-- Random button -->
+      <button onclick="sfxSel();pickScene(-1)"
+        style="width:100%;border:none;cursor:pointer;background:linear-gradient(135deg,#92400E,#F59E0B,#D97706);color:#fff;font-family:'Roboto',sans-serif;font-weight:700;font-size:min(1rem,4vw);letter-spacing:.06em;padding:min(16px,4%) 20px;border-radius:12px;box-shadow:0 4px 24px rgba(245,158,11,.5);transition:transform .1s,filter .1s;display:flex;align-items:center;justify-content:center;gap:12px;"
+        onpointerdown="this.style.transform='scale(.97)';this.style.filter='brightness(.9)'"
+        onpointerup="this.style.transform='scale(1)';this.style.filter='brightness(1)'">
+        <span style="font-size:min(1.4rem,5vw);">🎲</span>
+        <span>¡SORPRÉNDEME! (ALEATORIO)</span>
       </button>
     </div>
   </div>`;
@@ -1230,6 +1312,28 @@ function doRm(){G.sel=[];G.sfor=1;G.pvpk=null;go("select");}
 function oSaves(m){G.smode=m;go("saves");}
 function lSave(id){const s=gs().find(x=>x.id===id);if(!s)return;G.p1=s.st.p1;G.p2=s.st.p2;G.mode=s.st.mode||"cpu";sBattle();}
 function dSaveItem(id,btn){if(btn.dataset.c==="1"){const ns=gs().filter(s=>s.id!==id);ps(ns);go("saves");}else{btn.textContent="¿Seguro? Toca de nuevo";btn.dataset.c="1";setTimeout(()=>{btn.textContent="🗑️ Borrar";btn.dataset.c="0";},3000);}}
+function exitBattle(){
+  const el=document.getElementById("exit-confirm");
+  if(!el)return;
+  if(el.dataset.step==="1"){
+    stopMusic();
+    G.bat=null;
+    go("title");
+  } else {
+    el.dataset.step="1";
+    el.textContent="⚠ ¿SEGURO?";
+    el.style.background="linear-gradient(180deg,#DC2626,#7f1d1d)";
+    el.style.color="#fff";
+    setTimeout(()=>{
+      if(el&&el.dataset.step==="1"){
+        el.dataset.step="0";
+        el.textContent="🚪 SALIR";
+        el.style.background="linear-gradient(180deg,#1a1a1a,#111)";
+        el.style.color="#666";
+      }
+    },2500);
+  }
+}
 function dSave(){if(!G.p1||!G.p2)return;const svs=gs();if(svs.length>=10)svs.pop();svs.unshift({id:Date.now(),ts:Date.now(),p1n:G.p1.name,p2n:G.p2.name,ids:[...(G.p1.team||[]).map(p=>p.id),...(G.p2.team||[]).map(p=>p.id)],st:{p1:JSON.parse(JSON.stringify(G.p1)),p2:JSON.parse(JSON.stringify(G.p2)),mode:G.mode}});ps(svs);alert("✅ ¡Partida guardada!");}
 
 // -- Arena floating message -------------------------------------
@@ -1280,31 +1384,15 @@ function amsg(html,dur=2000){
 
 // -- Effects ----------------------------------------------------
 function spawnDmg(wrapId,dmg,color,isS){
-  const arena=document.getElementById("arena");
-  if(!arena)return;
-
+  const arena=document.getElementById("arena");if(!arena)return;
   const W=arena.offsetWidth||SP.W||300;
-  const H=arena.offsetHeight||300;
+  const H=arena.offsetHeight||SP.groundY*1.5||200;
   const isP1=wrapId==="sp1wrap";
-
-  const cx=SP.W>0 ? (isP1 ? SP.p1cx : SP.p2cx) : (isP1 ? W*0.18 : W*0.82);
-  const cy=SP.groundY>0 ? (SP.groundY - SP.sprH*0.72) : H*0.45;
-
+  // Use SP if available, else fallback to % of arena
+  const cx=SP.W>0?(isP1?SP.p1cx:SP.p2cx):(isP1?W*0.22:W*0.78);
+  const cy=SP.groundY>0?(SP.groundY-SP.sprH*0.6):(H*0.4);
   const d=document.createElement("div");
-  d.style.cssText=`
-    position:absolute;
-    left:${cx}px;
-    top:${cy}px;
-    transform:translateX(-50%);
-    font-weight:900;
-    font-size:${isS?"min(2.8rem,8vw)":"min(2.2rem,6.5vw)"};
-    color:${isS?"#FCD34D":color};
-    text-shadow:0 3px 14px rgba(0,0,0,.95),0 0 30px ${color};
-    pointer-events:none;
-    animation:dmgFloat 1.3s ease-out forwards;
-    z-index:100;
-    white-space:nowrap;
-  `;
+  d.style.cssText=`position:absolute;left:${cx}px;top:${cy}px;transform:translateX(-50%);font-family:'Press Start 2P',monospace;font-weight:900;font-size:${isS?"min(1.4rem,4vw)":"min(1.1rem,3.2vw)"};color:${isS?"#FCD34D":color};text-shadow:0 3px 14px rgba(0,0,0,.95),0 0 20px ${color};pointer-events:none;animation:dmgFloat 1.3s ease-out forwards;z-index:100;white-space:nowrap;`;
   d.textContent=(isS?"★":"")+"-"+dmg;
   arena.appendChild(d);
   setTimeout(()=>d.remove(),2000);
@@ -1377,58 +1465,37 @@ function sfxBurst(isSuper,color){
 function jsLunge(el,isP1,onImpact){
   const wrapEl=document.getElementById(isP1?"sp1wrap":"sp2wrap");
   if(!wrapEl)return;
-
   const arena=document.getElementById("arena");
-  const W=arena ? arena.offsetWidth : SP.W || 800;
-
-  // Embestida corta y seca, más arcade
-  const dist=Math.round(W*0.10);
-
-  const offsets=[0, dist*0.45, dist, dist*0.25, 0];
-  const times=[0, 90, 100, 90, 160];
-
+  const W=arena?arena.offsetWidth:SP.W||800;
+  const dist=Math.round(W*0.18);
+  // P1 faces right (scaleX-1), lunges toward p2 = move right = left increases
+  // P2 faces left, lunges toward p1 = move left = right decreases (or left set)
+  const offsets=[0, dist*0.2*(isP1?1:-1), dist*(isP1?1:-1), dist*0.3*(isP1?1:-1), 0];
+  const times=[0,200,160,120,280];
   let step=0;
-
   const origLeft=wrapEl.style.left;
   const origRight=wrapEl.style.right;
-  const origTop=wrapEl.style.top;
-
   const origLeftPx=parseInt(origLeft)||0;
   const origRightPx=parseInt(origRight)||0;
-  const origTopPx=parseInt(origTop)||0;
-
   function next(){
     if(step>=offsets.length){
       wrapEl.style.transition="";
-      wrapEl.style.top=origTop;
-      if(isP1){
-        wrapEl.style.left=origLeft;
-      }else{
-        wrapEl.style.right=origRight;
-      }
+      if(isP1)wrapEl.style.left=origLeft;
+      else wrapEl.style.right=origRight;
       return;
     }
-
-    const travel=offsets[step];
-    const hop = step === 2 ? -10 : step === 3 ? -4 : 0;
-    const spd=step===0 ? 0.01 : 0.09;
-
-    wrapEl.style.transition=`all ${spd}s ease-out`;
-
+    const spd=step===0?0.01:step===2?0.13:0.22;
     if(isP1){
-      wrapEl.style.left=(origLeftPx + travel)+"px";
-    }else{
-      wrapEl.style.right=(origRightPx - travel)+"px";
+      wrapEl.style.transition=`left ${spd}s ease`;
+      wrapEl.style.left=(origLeftPx+offsets[step])+"px";
+    } else {
+      wrapEl.style.transition=`right ${spd}s ease`;
+      wrapEl.style.right=(origRightPx-offsets[step])+"px";
     }
-
-    wrapEl.style.top=(origTopPx + hop)+"px";
-
     if(step===2&&onImpact)onImpact();
-
     setTimeout(next,times[step]);
     step++;
   }
-
   next();
 }
 
@@ -1609,13 +1676,8 @@ function placeSpriteNow(img, wrapId, shadowId, isP1, groundH){
   const W=arena.offsetWidth, H=arena.offsetHeight;
   if(!W||!H)return;
 
-  // Horizonte visual del escenario
   const horizonY=Math.round(H*(100-groundH)/100);
-
-  // Suelo REAL de combate, más abajo, estilo fighter 2D
   const fighterGroundY=Math.round(H*0.90);
-
-  // Sprites más grandes y con más presencia
   const targetW=Math.min(380, Math.max(190, Math.round(W*0.28)));
 
   img.style.width=targetW+"px";
@@ -1623,75 +1685,44 @@ function placeSpriteNow(img, wrapId, shadowId, isP1, groundH){
   img.style.display="block";
 
   const ratio=(img.naturalHeight&&img.naturalWidth)
-    ? img.naturalHeight/img.naturalWidth
-    : 1;
-
+    ? img.naturalHeight/img.naturalWidth : 1;
   let spriteH=Math.round(targetW*ratio);
   spriteH=Math.min(spriteH, Math.round(H*0.46));
 
   const wrap=document.getElementById(wrapId);
   if(!wrap)return;
 
-  // Más cerca de las esquinas, menos "centrados en el aire"
   const sidePad=Math.round(W*0.08);
+  wrap.style.cssText=[
+    "position:absolute","z-index:3","background:transparent",
+    "border:none","outline:none","box-shadow:none","overflow:visible",
+    `width:${targetW}px`,`height:${spriteH}px`,
+    `top:${fighterGroundY-spriteH}px`,"bottom:auto",
+    isP1?`left:${sidePad}px`:`right:${sidePad}px`
+  ].join(";")+";";
 
-  wrap.style.cssText = [
-    "position:absolute",
-    "z-index:3",
-    "background:transparent",
-    "border:none",
-    "outline:none",
-    "box-shadow:none",
-    "overflow:visible",
-    `width:${targetW}px`,
-    `height:${spriteH}px`,
-    `top:${fighterGroundY - spriteH}px`,
-    "bottom:auto",
-    isP1 ? `left:${sidePad}px` : `right:${sidePad}px`
-  ].join(";") + ";";
+  if(isP1){wrap.style.right="auto";SP.p1cx=sidePad+targetW*0.5;}
+  else{wrap.style.left="auto";SP.p2cx=W-sidePad-targetW*0.5;}
 
-  if(isP1){
-    wrap.style.right="auto";
-    SP.p1cx = sidePad + targetW * 0.5;
-  }else{
-    wrap.style.left="auto";
-    SP.p2cx = W - sidePad - targetW * 0.5;
-  }
-
-  SP.sprH = spriteH;
-  SP.groundY = fighterGroundY;
-  SP.horizonY = horizonY;
-  SP.W = W;
-  SP.sprTop = fighterGroundY - spriteH;
+  SP.sprH=spriteH; SP.groundY=fighterGroundY; SP.horizonY=horizonY;
+  SP.W=W; SP.sprTop=fighterGroundY-spriteH;
 
   const sfx=document.getElementById("sfx-center");
-  if(sfx){
-    sfx.style.left = Math.round(W*0.5)+"px";
-    sfx.style.top = Math.round(fighterGroundY - spriteH*0.55)+"px";
-  }
+  if(sfx){sfx.style.left=Math.round(W*0.5)+"px";sfx.style.top=Math.round(fighterGroundY-spriteH*0.55)+"px";}
 
   const sh=document.getElementById(shadowId);
   if(sh){
     const shW=Math.round(targetW*0.55);
-    const shH=Math.max(10, Math.round(shW*0.14));
-    const shX=isP1 ? (sidePad + targetW*0.5) : (W - sidePad - targetW*0.5);
-
-    sh.style.cssText = [
-      "position:absolute",
-      `left:${shX}px`,
-      `top:${fighterGroundY - shH/2}px`,
-      `width:${shW}px`,
-      `height:${shH}px`,
-      "transform:translateX(-50%)",
-      "background:rgba(0,0,0,.42)",
-      "border-radius:50%",
-      "filter:blur(10px)",
-      "pointer-events:none",
-      "z-index:2"
-    ].join(";") + ";";
+    const shH=Math.max(10,Math.round(shW*0.14));
+    const shX=isP1?(sidePad+targetW*0.5):(W-sidePad-targetW*0.5);
+    sh.style.cssText=[
+      "position:absolute",`left:${shX}px`,`top:${fighterGroundY-shH/2}px`,
+      `width:${shW}px`,`height:${shH}px`,"transform:translateX(-50%)",
+      "background:rgba(0,0,0,.42)","border-radius:50%","filter:blur(10px)",
+      "pointer-events:none","z-index:2"
+    ].join(";")+";";
   }
 }
-
 
 
 function onSpriteLoad(img, wrapId, shadowId, isP1, groundH){
