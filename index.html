@@ -1042,8 +1042,8 @@ battle(){
     startMusic();
     const eq1=qGet(pk1.id,"enter");
     const eq2=qGet(pk2.id,"enter");
-    if(eq1){setTimeout(()=>amsg(`<span style="color:#FCD34D;font-weight:900;font-size:1rem;font-style:italic;">🟡 "${eq1}"</span>`,2000),400);}
-    if(eq2){setTimeout(()=>amsg(`<span style="color:#93C5FD;font-weight:900;font-size:1rem;font-style:italic;">🔵 "${eq2}"</span>`,2000),eq1?2600:400);}
+    if(eq1){setTimeout(()=>amsgPoke(true,`<span style="color:#FCD34D;font-weight:900;font-size:1rem;font-style:italic;">"${eq1}"</span>`,2200),500);}
+    if(eq2){setTimeout(()=>amsgPoke(false,`<span style="color:#93C5FD;font-weight:900;font-size:1rem;font-style:italic;">"${eq2}"</span>`,2200),eq1?2900:500);}
   },100);
   return`<div style="background:#000;display:flex;flex-direction:column;position:absolute;inset:0;overflow:hidden;">${sfTop}${arena}${tb}${ac}</div>`;
 },
@@ -1226,6 +1226,26 @@ function dSaveItem(id,btn){if(btn.dataset.c==="1"){const ns=gs().filter(s=>s.id!
 function dSave(){if(!G.p1||!G.p2)return;const svs=gs();if(svs.length>=10)svs.pop();svs.unshift({id:Date.now(),ts:Date.now(),p1n:G.p1.name,p2n:G.p2.name,ids:[...(G.p1.team||[]).map(p=>p.id),...(G.p2.team||[]).map(p=>p.id)],st:{p1:JSON.parse(JSON.stringify(G.p1)),p2:JSON.parse(JSON.stringify(G.p2)),mode:G.mode}});ps(svs);alert("✅ ¡Partida guardada!");}
 
 // -- Arena floating message -------------------------------------
+// Show message above a specific pokemon (p1=left, p2=right)
+function amsgPoke(isP1, html, dur=1800){
+  const arena=document.getElementById("arena");
+  if(!arena)return;
+  const W=arena.offsetWidth||300;
+  const H=arena.offsetHeight||300;
+  // Position above the pokemon sprite
+  const x = isP1 ? (SP.p1cx||W*0.22) : (SP.p2cx||W*0.78);
+  const y = SP.groundY>0 ? (SP.groundY - SP.sprH - 60) : H*0.25;
+  const d=document.createElement("div");
+  d.style.cssText=`position:absolute;left:${Math.round(x)}px;top:${Math.max(10,Math.round(y))}px;transform:translateX(-50%);z-index:25;pointer-events:none;max-width:min(220px,40%);text-align:center;`;
+  d.innerHTML=`<div style="background:rgba(5,5,20,.92);backdrop-filter:blur(10px);border:2px solid rgba(255,255,255,.25);border-radius:12px;padding:8px 14px;box-shadow:0 4px 20px rgba(0,0,0,.8);">${html}</div>`;
+  d.style.animation="msgPop .3s cubic-bezier(.175,.885,.32,1.275) forwards";
+  arena.appendChild(d);
+  setTimeout(()=>{
+    d.style.opacity="0";d.style.transition="opacity .4s";
+    setTimeout(()=>d.remove(),400);
+  },dur);
+}
+
 function amsg(html,dur=2000){
   const el=document.getElementById("amsg");if(!el)return;
   const arena=document.getElementById("arena");
@@ -1483,34 +1503,38 @@ function execAnim(a1,a2){
         // Show attacker quote if available
         const atkQ=qGet(ev.ip?b.t1[b.a1].id:b.t2[b.a2].id,"atk");
         if(atkQ){
-          amsg(`<span style="color:#FCD34D;font-weight:900;font-size:1.05rem;font-style:italic;">"${atkQ}"</span>`,900);
-          setTimeout(()=>amsg(`<span style="color:#fff;font-weight:900;font-size:1rem;">${ev.nm} usó <span style="color:${ev.col};font-size:1.2rem;text-shadow:0 0 10px ${ev.col};">${ev.mv.n}!</span></span>`,1200),950);
+          // Quote over attacker's head
+          const atkIsP1=ev.ip;
+          amsgPoke(atkIsP1,`<span style="color:#FCD34D;font-weight:900;font-size:1.05rem;font-style:italic;">"${atkQ}"</span>`,1800);
+          setTimeout(()=>amsg(`<span style="color:#fff;font-weight:900;font-size:1rem;">${ev.nm} usó <span style="color:${ev.col};font-size:1.2rem;text-shadow:0 0 10px ${ev.col};">${ev.mv.n}!</span></span>`,1600),1900);
         } else {
-          amsg(`<span style="color:#fff;font-weight:900;font-size:1rem;">${ev.nm} usó <span style="color:${ev.col};font-size:1.25rem;text-shadow:0 0 10px ${ev.col};">${ev.mv.n}!</span></span>`,1400);
+          amsg(`<span style="color:#fff;font-weight:900;font-size:1rem;">${ev.nm} usó <span style="color:${ev.col};font-size:1.25rem;text-shadow:0 0 10px ${ev.col};">${ev.mv.n}!</span></span>`,1800);
         }
-        // Hit after 800ms
+        // Hit after 1800ms
         setTimeout(()=>{
           if(G.scr!=="battle")return;
           sfxHit();
           if(ev.ip)hitAnim("sp2","sp2wrap","rip2",ev.col,ev.d,ev.isS);
           else hitAnim("sp1","sp1wrap","rip1",ev.col,ev.d,ev.isS);
-          // Defender quote on hit
+          // Defender quote on hit — shown over defender's head
           const defId=ev.ip?b.t2[b.a2].id:b.t1[b.a1].id;
+          const defIsP1=!ev.ip;
           if(ev.fainted){
             const fQ=qGet(defId,"faint");
             sfxFaint();
-            setTimeout(()=>amsg(`<span style="font-size:1rem;font-weight:900;color:#FCA5A5;">${fQ?`"${fQ}"`:""} 😔 ¡${ev.defNm} se ha debilitado!</span>`,2800),1400);
+            if(fQ) setTimeout(()=>amsgPoke(defIsP1,`<span style="color:#FCA5A5;font-weight:900;font-size:1rem;font-style:italic;">"${fQ}"</span>`,2000),400);
+            setTimeout(()=>amsg(`<span style="font-size:1rem;font-weight:900;color:#FCA5A5;">😔 ¡${ev.defNm} se ha debilitado!</span>`,2000),fQ?2500:400);
           } else {
             const hitQ=qGet(defId,"hit");
-            if(hitQ){setTimeout(()=>amsg(`<span style="color:#FDA4AF;font-weight:900;font-size:1rem;font-style:italic;">"${hitQ}"</span>`,1200),300);}
+            if(hitQ){setTimeout(()=>amsgPoke(defIsP1,`<span style="color:#FDA4AF;font-weight:900;font-size:1rem;font-style:italic;">"${hitQ}"</span>`,1800),300);}
           }
-          if(ev.isS){sfxSuper();setTimeout(()=>amsg(`<span style="font-size:1.35rem;font-weight:900;color:#FCD34D;text-shadow:0 0 20px #F59E0B;">💥 ¡ES SÚPER EFECTIVO!</span>`,1800),ev.fainted?0:900);}
-          else if(ev.isW){sfxWeak();setTimeout(()=>amsg(`<span style="font-size:1rem;font-weight:800;color:#CBD5E1;">😕 No es muy efectivo...</span>`,1800),ev.fainted?0:900);}
-          else if(ev.isN){setTimeout(()=>amsg(`<span style="font-size:1rem;font-weight:800;color:#9CA3AF;">❌ ¡No tiene efecto!</span>`,1800),ev.fainted?0:900);}
-        },1300);
+          if(ev.isS){sfxSuper();setTimeout(()=>amsg(`<span style="font-size:1.35rem;font-weight:900;color:#FCD34D;text-shadow:0 0 20px #F59E0B;">💥 ¡ES SÚPER EFECTIVO!</span>`,2000),ev.fainted?0:1200);}
+          else if(ev.isW){sfxWeak();setTimeout(()=>amsg(`<span style="font-size:1rem;font-weight:800;color:#CBD5E1;">😕 No es muy efectivo...</span>`,2000),ev.fainted?0:1200);}
+          else if(ev.isN){setTimeout(()=>amsg(`<span style="font-size:1rem;font-weight:800;color:#9CA3AF;">❌ ¡No tiene efecto!</span>`,2000),ev.fainted?0:1200);}
+        },1800);
       }
     },delay);
-    delay+=ev.type==="atk"?3800:(ev.type==="status_dmg"?2200:2000);
+    delay+=ev.type==="atk"?5500:(ev.type==="status_dmg"?2800:2400);
   });
 
   setTimeout(()=>{
@@ -1543,7 +1567,7 @@ function placeSpriteNow(img, wrapId, shadowId, isP1, groundH){
 
   const groundY=Math.round(H*(100-groundH)/100);
   // SF-style: sprite width = 28% of arena width
-  const targetW=Math.min(280,Math.max(100,Math.round(W*0.28)));
+  const targetW=Math.min(260,Math.max(120,Math.round(W*0.25)));
 
   img.style.width=targetW+"px";
   img.style.height="auto";
