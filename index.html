@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
-<title>PokéBattle</title>
+<title>PokéBattle v9.0.2</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',system-ui,sans-serif;-webkit-tap-highlight-color:transparent;}
 html,body{height:100%;overflow:hidden;background:#000;}
@@ -1234,7 +1234,7 @@ function amsgPoke(isP1, html, dur=1800){
   const H=arena.offsetHeight||300;
   // Position above the pokemon sprite
   const x = isP1 ? (SP.p1cx||W*0.22) : (SP.p2cx||W*0.78);
-  const y = SP.groundY>0 ? (SP.groundY - SP.sprH - 60) : H*0.25;
+  const y = SP.groundY>0 ? (SP.groundY - SP.sprH - 70) : H*0.25;
   const d=document.createElement("div");
   d.style.cssText=`position:absolute;left:${Math.round(x)}px;top:${Math.max(10,Math.round(y))}px;transform:translateX(-50%);z-index:25;pointer-events:none;max-width:min(220px,40%);text-align:center;`;
   d.innerHTML=`<div style="background:rgba(5,5,20,.92);backdrop-filter:blur(10px);border:2px solid rgba(255,255,255,.25);border-radius:12px;padding:8px 14px;box-shadow:0 4px 20px rgba(0,0,0,.8);">${html}</div>`;
@@ -1606,11 +1606,11 @@ function placeSpriteNow(img, wrapId, shadowId, isP1, groundH){
     wrap.style.left="auto";
     SP.p2cx=W-padX-targetW*0.5;
   }
-  // top = groundY - rendH + footOffset  (pushes down so feet hit ground)
-  wrap.style.top=(groundY-rendH+footOffset)+"px";
-  wrap.style.bottom="auto";
+  // Position using bottom so feet always touch the ground line
+  wrap.style.top="auto";
+  wrap.style.bottom=(H-groundY)+"px";
 
-  SP.sprH=rendH; SP.groundY=groundY; SP.W=W; SP.sprTop=groundY-rendH+footOffset;
+  SP.sprH=rendH; SP.groundY=groundY; SP.W=W; SP.sprTop=groundY-rendH;
 
   // sfx center
   const sfx=document.getElementById("sfx-center");
