@@ -1692,44 +1692,7 @@ function placeSpriteNow(img, wrapId, shadowId, isP1, groundH){
   }
 }
 
-  // Use naturalHeight/naturalWidth for reliable ratio (not offsetHeight which can be 0)
-  const ratio = (img.naturalHeight&&img.naturalWidth) ? img.naturalHeight/img.naturalWidth : 1;
-  const finalW = Math.min(220, Math.max(100, Math.round(W*0.20)));
-  img.style.width = finalW+"px";
-  img.style.height = "auto";
-  const calcH = Math.round(finalW * ratio);
-  // Clamp to 48% of arena height
-  const clampH = Math.min(calcH, Math.round(H*0.48));
 
-  const padX = Math.round(W*0.05);
-  wrap.style.cssText = "position:absolute;z-index:3;background:transparent;border:none;outline:none;box-shadow:none;overflow:visible;width:"+finalW+"px;height:"+clampH+"px;";
-  if(isP1){
-    wrap.style.left = padX+"px";
-    wrap.style.right = "auto";
-    SP.p1cx = padX + finalW*0.5;
-  } else {
-    wrap.style.right = padX+"px";
-    wrap.style.left = "auto";
-    SP.p2cx = W - padX - finalW*0.5;
-  }
-  // Place bottom of wrap exactly at ground line
-  wrap.style.top = (groundY - clampH)+"px";
-  wrap.style.bottom = "auto";
-
-  SP.sprH=clampH; SP.groundY=groundY; SP.W=W; SP.sprTop=groundY-clampH;
-
-  // sfx center
-  const sfx=document.getElementById("sfx-center");
-  if(sfx){sfx.style.left=Math.round(W*0.5)+"px";sfx.style.top=Math.round(groundY-rendH*0.6)+"px";}
-
-  // Shadow
-  const sh=document.getElementById(shadowId);
-  if(sh){
-    const shW=Math.round(targetW*0.65),shH=Math.max(6,Math.round(shW*0.12));
-    const shX=isP1?(padX+targetW*0.5):(W-padX-targetW*0.5);
-    sh.style.cssText=`position:absolute;left:${shX}px;top:${groundY-shH/2}px;width:${shW}px;height:${shH}px;transform:translateX(-50%);background:rgba(0,0,0,.45);border-radius:50%;filter:blur(10px);pointer-events:none;z-index:2;`;
-  }
-}
 
 function onSpriteLoad(img, wrapId, shadowId, isP1, groundH){
   // Retry up to 5 times if arena not measured yet (mobile timing issue)
