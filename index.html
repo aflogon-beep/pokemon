@@ -282,7 +282,7 @@ const SCENARIOS=[
     sky:`linear-gradient(180deg,#4A90D9 0%,#87CEEB 40%,#B0E0FF 70%,#C8EBFF 100%)`,
     clouds:true,
     ground:`linear-gradient(180deg,#2D7A2D 0%,#1A5C1A 50%,#0F3D0F 100%)`,
-    groundH:44,
+    groundH:40,
     groundDeco:`<g>
       <rect x="5%" y="68%" width="90%" height="1.5%" fill="rgba(255,255,255,.2)"/>
       <rect x="5%" y="76%" width="90%" height="1.5%" fill="rgba(255,255,255,.2)"/>
@@ -691,6 +691,7 @@ title(){
             ${CFG.sfx?"🔊":"🔕"} Efectos
           </button>
         </div>
+        <div style="text-align:center;margin-top:8px;color:rgba(255,255,255,.25);font-size:.7rem;letter-spacing:.1em;font-family:monospace;">v9.0.3</div>
       </div>
     </div>
   </div>`;
@@ -1037,13 +1038,18 @@ battle(){
 
   const tb=G.mode==="pvp"&&!b.locked?`<div style="text-align:center;padding:4px;background:#0a0a0a;"><span style="background:#F59E0B;color:#000;font-family:Impact,sans-serif;font-size:.85rem;padding:3px 16px;border-radius:3px;letter-spacing:.08em;">TURNO: ${G[b.ct==="p1"?"p1":"p2"].name.toUpperCase()}</span></div>`:"";
 
-  // Show enter quotes for both starting pokemon
+  // Show enter quotes ONCE per battle (not on every render)
   setTimeout(()=>{
     startMusic();
-    const eq1=qGet(pk1.id,"enter");
-    const eq2=qGet(pk2.id,"enter");
-    if(eq1){setTimeout(()=>amsgPoke(true,`<span style="color:#FCD34D;font-weight:900;font-size:1rem;font-style:italic;">"${eq1}"</span>`,2200),500);}
-    if(eq2){setTimeout(()=>amsgPoke(false,`<span style="color:#93C5FD;font-weight:900;font-size:1rem;font-style:italic;">"${eq2}"</span>`,2200),eq1?2900:500);}
+    if(!G._enterShown){
+      G._enterShown=true;
+      if(Math.random()<0.5){
+        const eq1=qGet(pk1.id,"enter");
+        const eq2=qGet(pk2.id,"enter");
+        if(eq1){setTimeout(()=>amsgPoke(true,`<span style="color:#FCD34D;font-weight:900;font-size:1rem;font-style:italic;">"${eq1}"</span>`,2200),600);}
+        if(eq2){setTimeout(()=>amsgPoke(false,`<span style="color:#93C5FD;font-weight:900;font-size:1rem;font-style:italic;">"${eq2}"</span>`,2200),eq1?3000:600);}
+      }
+    }
   },100);
   return`<div style="background:#000;display:flex;flex-direction:column;position:absolute;inset:0;overflow:hidden;">${sfTop}${arena}${tb}${ac}</div>`;
 },
@@ -1212,6 +1218,7 @@ function sBattle(){
     st:{moves:0,defeated:0},locked:false
   };
   G.pact=null;
+  G._enterShown=false;
   go("intro");  // show epic intro first
 }
 function bPh(p){G.bat.ph=p;render();}
@@ -1505,7 +1512,7 @@ function execAnim(a1,a2){
         if(atkQ){
           // Quote over attacker's head
           const atkIsP1=ev.ip;
-          if(Math.random()<0.45) amsgPoke(atkIsP1,`<span style="color:#FCD34D;font-weight:900;font-size:1.05rem;font-style:italic;">"${atkQ}"</span>`,1800);
+          if(Math.random()<0.33) amsgPoke(atkIsP1,`<span style="color:#FCD34D;font-weight:900;font-size:1.05rem;font-style:italic;">"${atkQ}"</span>`,1800);
           setTimeout(()=>amsg(`<span style="color:#fff;font-weight:900;font-size:1rem;">${ev.nm} usó <span style="color:${ev.col};font-size:1.2rem;text-shadow:0 0 10px ${ev.col};">${ev.mv.n}!</span></span>`,1600),1900);
         } else {
           amsg(`<span style="color:#fff;font-weight:900;font-size:1rem;">${ev.nm} usó <span style="color:${ev.col};font-size:1.25rem;text-shadow:0 0 10px ${ev.col};">${ev.mv.n}!</span></span>`,1800);
@@ -1522,11 +1529,11 @@ function execAnim(a1,a2){
           if(ev.fainted){
             const fQ=qGet(defId,"faint");
             sfxFaint();
-            if(fQ&&Math.random()<0.7) setTimeout(()=>amsgPoke(defIsP1,`<span style="color:#FCA5A5;font-weight:900;font-size:1rem;font-style:italic;">"${fQ}"</span>`,2000),400);
+            if(fQ) setTimeout(()=>amsgPoke(defIsP1,`<span style="color:#FCA5A5;font-weight:900;font-size:1rem;font-style:italic;">"${fQ}"</span>`,2000),400);
             setTimeout(()=>amsg(`<span style="font-size:1rem;font-weight:900;color:#FCA5A5;">😔 ¡${ev.defNm} se ha debilitado!</span>`,2000),fQ?2500:400);
           } else {
             const hitQ=qGet(defId,"hit");
-            if(hitQ&&Math.random()<0.4){setTimeout(()=>amsgPoke(defIsP1,`<span style="color:#FDA4AF;font-weight:900;font-size:1rem;font-style:italic;">"${hitQ}"</span>`,1800),300);}
+            if(hitQ&&Math.random()<0.33){setTimeout(()=>amsgPoke(defIsP1,`<span style="color:#FDA4AF;font-weight:900;font-size:1rem;font-style:italic;">"${hitQ}"</span>`,1800),300);}
           }
           if(ev.isS){sfxSuper();setTimeout(()=>amsg(`<span style="font-size:1.35rem;font-weight:900;color:#FCD34D;text-shadow:0 0 20px #F59E0B;">💥 ¡ES SÚPER EFECTIVO!</span>`,2000),ev.fainted?0:1200);}
           else if(ev.isW){sfxWeak();setTimeout(()=>amsg(`<span style="font-size:1rem;font-weight:800;color:#CBD5E1;">😕 No es muy efectivo...</span>`,2000),ev.fainted?0:1200);}
@@ -1567,7 +1574,7 @@ function placeSpriteNow(img, wrapId, shadowId, isP1, groundH){
 
   const groundY=Math.round(H*(100-groundH)/100);
   // SF-style: sprite width = 28% of arena width
-  const targetW=Math.min(260,Math.max(120,Math.round(W*0.25)));
+  const targetW=Math.min(220,Math.max(100,Math.round(W*0.20)));
 
   img.style.width=targetW+"px";
   img.style.height="auto";
@@ -1583,34 +1590,31 @@ function placeSpriteNow(img, wrapId, shadowId, isP1, groundH){
   const wrap=document.getElementById(wrapId);
   if(!wrap)return;
 
-  // Clamp rendH so sprites never take more than 50% of arena height
-  const maxH=Math.round(H*0.50);
-  if(rendH>maxH){
-    const scale=maxH/rendH;
-    rendH=maxH;
-    img.style.width=Math.round(targetW*scale)+"px";
-  }
+  // Use naturalHeight/naturalWidth for reliable ratio (not offsetHeight which can be 0)
+  const ratio = (img.naturalHeight&&img.naturalWidth) ? img.naturalHeight/img.naturalWidth : 1;
+  const finalW = Math.min(220, Math.max(100, Math.round(W*0.20)));
+  img.style.width = finalW+"px";
+  img.style.height = "auto";
+  const calcH = Math.round(finalW * ratio);
+  // Clamp to 48% of arena height
+  const clampH = Math.min(calcH, Math.round(H*0.48));
 
-  // Official artwork has ~10% transparent padding at bottom
-  // Push sprite down by that amount so feet touch the ground line
-  const footOffset=Math.round(rendH*0.08);
-
-  const padX=Math.round(W*0.05);
-  wrap.style.cssText="position:absolute;z-index:3;background:transparent;border:none;outline:none;box-shadow:none;overflow:visible;";
+  const padX = Math.round(W*0.05);
+  wrap.style.cssText = "position:absolute;z-index:3;background:transparent;border:none;outline:none;box-shadow:none;overflow:visible;width:"+finalW+"px;height:"+clampH+"px;";
   if(isP1){
-    wrap.style.left=padX+"px";
-    wrap.style.right="auto";
-    SP.p1cx=padX+targetW*0.5;
+    wrap.style.left = padX+"px";
+    wrap.style.right = "auto";
+    SP.p1cx = padX + finalW*0.5;
   } else {
-    wrap.style.right=padX+"px";
-    wrap.style.left="auto";
-    SP.p2cx=W-padX-targetW*0.5;
+    wrap.style.right = padX+"px";
+    wrap.style.left = "auto";
+    SP.p2cx = W - padX - finalW*0.5;
   }
-  // Position using bottom so feet always touch the ground line
-  wrap.style.top="auto";
-  wrap.style.bottom=(H-groundY)+"px";
+  // Place bottom of wrap exactly at ground line
+  wrap.style.top = (groundY - clampH)+"px";
+  wrap.style.bottom = "auto";
 
-  SP.sprH=rendH; SP.groundY=groundY; SP.W=W; SP.sprTop=groundY-rendH;
+  SP.sprH=clampH; SP.groundY=groundY; SP.W=W; SP.sprTop=groundY-clampH;
 
   // sfx center
   const sfx=document.getElementById("sfx-center");
