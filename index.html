@@ -457,25 +457,42 @@ const SCENARIOS=[
   }
 ];
 function buildSceneBg(sc) {
-  if (sc.useCanvas && window.FutbolBackground && sc.name === "futbol") {
+  // === NUEVO SISTEMA CANVAS ===
+  if (sc.useCanvas === true && sc.name === "futbol") {
     const container = document.createElement("div");
-    container.style.cssText = "position:absolute;inset:0;width:100%;height:100%;overflow:hidden;";
-    
+    container.style.cssText = "position:absolute;inset:0;width:100%;height:100%;overflow:hidden;z-index:1;";
+
     const bgCanvas = document.createElement("canvas");
     bgCanvas.id = "futbolBgCanvas";
     container.appendChild(bgCanvas);
-    
-    // Iniciar el fondo
+
+    // Iniciar el fondo animado
     setTimeout(() => {
-      const bg = new FutbolBackground();
-      bg.start();
-    }, 50);
-    
+      if (typeof FutbolBackground !== "undefined") {
+        const bg = new FutbolBackground();
+        bg.start();
+      } else {
+        console.error("FutbolBackground no está cargado");
+      }
+    }, 80);
+
     return container;
   }
-  
-  // Código antiguo (SVG) para los demás escenarios
-  // ... tu código actual con sceneSVG
+
+  // === SISTEMA ANTIGUO (SVG) para los demás escenarios ===
+  const container = document.createElement("div");
+  container.style.cssText = "position:absolute;inset:0;width:100%;height:100%;z-index:1;";
+
+  // Si tienes sceneSVG definida, úsala
+  if (typeof sceneSVG === "function") {
+    container.innerHTML = sceneSVG(sc, 100, 100);
+  } else {
+    // Fallback simple si sceneSVG no existe
+    container.style.background = sc.sky || "#1a3a6e";
+    container.innerHTML = `<div style="position:absolute;inset:0;background:${sc.ground || '#1a5c1a'};bottom:0;height:${sc.groundH || 42}%;"></div>`;
+  }
+
+  return container;
 }
 
 
@@ -1290,8 +1307,34 @@ battle(){
 
   // ── ARENA ─────────────────────────────────────────────────
   const scLabel=_scLabels[sc.name]||sc.name;
-  const arena=`<div id="arena" style="position:relative;overflow:hidden;flex:1;">
-    ${sceneSVG(sc,100,100)}
+  // ── ARENA ─────────────────────────────────────────────────
+  const scLabel = _scLabels?.[sc.name] || sc.name || "Arena";
+
+  const arena = `<div id="arena" style="position:relative;overflow:hidden;flex:1;">
+    ${buildSceneBg(sc).outerHTML}
+    
+    <!-- ground shadow overlay for depth -->
+    <div style="position:absolute;bottom:0;left:0;right:0;height:${(sc.groundH||42)+5}%;background:linear-gradient(0deg,rgba(0,0,0,.45) 0%,transparent 100%);pointer-events:none;z-index:2;"></div>
+    
+    <div style="position:absolute;top:8px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.65);color:rgba(255,255,255,.85);font-family:'Roboto',sans-serif;font-size:.65rem;font-weight:700;padding:4px 14px;border-radius:4px;z-index:10;letter-spacing:.08em;text-transform:uppercase;">${scLabel}</div>
+    
+    <!-- shadows -->
+    <div id="sh1" style="position:absolute;z-index:3;pointer-events:none;"></div>
+    <div id="sh2" style="position:absolute;z-index:3;pointer-events:none;"></div>
+    
+    <!-- P1 sprite -->
+    <div id="sp1wrap" style="position:absolute;z-index:4;left:0;bottom:0;">
+      <img id="sp1" src="${su(pk1.id)}" style="display:block;transform:scaleX(-1);${p1faint?"filter:grayscale(1) opacity(.25);":""}" onload="onSpriteLoad(this,'sp1wrap','sh1',true,${sc.groundH||42})">
+    </div>
+    
+    <!-- P2 sprite -->
+    <div id="sp2wrap" style="position:absolute;z-index:4;right:0;bottom:0;">
+      <img id="sp2" src="${su(pk2.id)}" style="display:block;${p2faint?"filter:grayscale(1) opacity(.25);":""}" onload="onSpriteLoad(this,'sp2wrap','sh2',false,${sc.groundH||42})">
+    </div>
+    
+    <div id="sfx-center" style="position:absolute;z-index:15;pointer-events:none;"></div>
+    <div id="amsg" style="position:absolute;z-index:20;pointer-events:none;display:none;"></div>
+  </div>`;
     <!-- ground shadow overlay for depth -->
     <div style="position:absolute;bottom:0;left:0;right:0;height:${sc.groundH+5}%;background:linear-gradient(0deg,rgba(0,0,0,.35) 0%,transparent 100%);pointer-events:none;z-index:1;"></div>
     <div style="position:absolute;top:8px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.6);color:rgba(255,255,255,.7);font-family:'Roboto',sans-serif;font-size:.62rem;font-weight:700;padding:3px 12px;border-radius:4px;z-index:5;letter-spacing:.08em;text-transform:uppercase;">${scLabel}</div>
