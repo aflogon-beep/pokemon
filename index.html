@@ -3,18 +3,27 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
-<title>PokéBattle v9.0.2</title>
+<title>PokéBattle v9.0.5</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Nunito:wght@400;600;700;800;900&family=Press+Start+2P&display=swap" rel="stylesheet">
 <style>
-*{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',system-ui,sans-serif;-webkit-tap-highlight-color:transparent;}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Nunito',system-ui,sans-serif;-webkit-tap-highlight-color:transparent;font-size:14px;}
 html,body{height:100%;overflow:hidden;background:#000;}
+/* Font roles:
+   Nunito     → body, descriptions, labels, UI text (12-16px)
+   Rajdhani   → section titles, trainer names, headers
+   Impact     → combat labels, HP bars, K.O. (legacy, loud)
+   Press Start 2P → damage numbers, pixel effects
+*/
 #app{position:fixed;inset:0;overflow:hidden;}
 /* SF-style HP bar */
 .sf-hpbar-wrap{flex:1;height:22px;background:#1a0000;border:2px solid rgba(255,255,255,.2);border-radius:3px;overflow:hidden;position:relative;box-shadow:inset 0 2px 4px rgba(0,0,0,.5);}
 .sf-hpbar-fill{position:absolute;top:0;bottom:0;height:100%;border-radius:2px;transition:width .6s cubic-bezier(.4,0,.2,1);}
 .sf-hpbar-fill.r{right:0;left:auto;}
-.sf-name{font-family:Impact,Arial Black,sans-serif;font-size:min(1rem,2.8vw);letter-spacing:.05em;text-transform:uppercase;}
+.sf-name{font-family:'Rajdhani',Impact,sans-serif;font-size:min(1rem,2.8vw);letter-spacing:.08em;text-transform:uppercase;font-weight:700;}
 /* Move buttons SF style */
-.mv-btn{border:none;cursor:pointer;font-weight:900;text-align:left;color:#fff;position:relative;overflow:hidden;transition:filter .1s,transform .1s;border-radius:6px;}
+.mv-btn{border:none;cursor:pointer;font-family:'Nunito',sans-serif;font-weight:900;text-align:left;color:#fff;position:relative;overflow:hidden;transition:filter .1s,transform .1s;border-radius:6px;}
 .mv-btn:active{transform:scale(.93);filter:brightness(.8);}
 .mv-btn[disabled]{opacity:.35;cursor:not-allowed;filter:saturate(.1);}
 
@@ -54,7 +63,8 @@ html,body{height:100%;overflow:hidden;background:#000;}
 @keyframes sfRecoil{0%,100%{transform:scaleX(-1) translateX(0)}30%{transform:scaleX(-1) translateX(22px)}}
 @keyframes sfRecoil2{0%,100%{transform:translateX(0)}30%{transform:translateX(-22px)}}
 
-.btn{border:none;border-radius:16px;font-weight:800;font-size:1.05rem;padding:15px;cursor:pointer;min-height:54px;width:100%;color:#fff;transition:transform .12s,filter .12s;line-height:1.3;display:block;text-align:center;}
+.btn{border:none;border-radius:16px;font-family:'Nunito',sans-serif;font-weight:800;font-size:1.05rem;padding:15px;cursor:pointer;min-height:54px;width:100%;color:#fff;transition:transform .12s,filter .12s;line-height:1.3;display:block;text-align:center;}
+.px{font-family:'Press Start 2P',monospace;}
 .btn:active{transform:scale(.92);filter:brightness(.82);}
 .btn[disabled]{background:#1E293B!important;color:#475569!important;cursor:not-allowed;transform:none;}
 .bdg{display:inline-block;padding:3px 9px;border-radius:999px;font-size:.62rem;font-weight:800;margin-right:3px;text-transform:uppercase;letter-spacing:.03em;}
@@ -676,8 +686,8 @@ title(){
   return`<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(160deg,#0F172A,#1E3A5F,#1E40AF);overflow:hidden;">${stars}
     <div style="display:flex;flex-direction:column;align-items:center;z-index:1;padding:0 28px;width:100%;max-width:400px;">
       <div style="animation:spin 12s linear infinite;margin-bottom:14px;">${POKEBALL}</div>
-      <h1 style="font-weight:900;font-size:clamp(2rem,7vw,3.6rem);background:linear-gradient(90deg,#FCD34D,#F97316,#EC4899,#60A5FA,#34D399);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:0 0 4px;line-height:1;text-align:center;">⚡ POKÉBATTLE ⚡</h1>
-      <p style="color:#93C5FD;font-weight:700;letter-spacing:.25em;font-size:.9rem;margin-bottom:32px;">GENERACIÓN 1</p>
+      <h1 style="font-family:'Rajdhani',Impact,sans-serif;font-weight:700;font-size:clamp(2.2rem,8vw,4rem);background:linear-gradient(90deg,#FCD34D,#F97316,#EC4899,#60A5FA,#34D399);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:0 0 4px;line-height:1;text-align:center;letter-spacing:.08em;">⚡ POKÉBATTLE ⚡</h1>
+      <p style="font-family:'Rajdhani',sans-serif;color:#93C5FD;font-weight:600;letter-spacing:.3em;font-size:1rem;margin-bottom:32px;">GENERACIÓN 1</p>
       <div style="display:flex;flex-direction:column;gap:14px;width:100%;">
         <button class="btn" style="background:linear-gradient(135deg,#3B82F6,#1D4ED8);font-size:1.15rem;padding:18px;box-shadow:0 4px 20px rgba(59,130,246,.5);" onclick="sfxMenu();go('mode')">🎮 Nueva Partida</button>
         <button class="btn" style="background:${hs?"linear-gradient(135deg,#8B5CF6,#6D28D9)":"#1E293B"};" onclick="sfxMenu();oSaves('load')" ${hs?"":"disabled"}>💾 Cargar Partida</button>
@@ -691,7 +701,7 @@ title(){
             ${CFG.sfx?"🔊":"🔕"} Efectos
           </button>
         </div>
-        <div style="text-align:center;margin-top:8px;color:rgba(255,255,255,.25);font-size:.7rem;letter-spacing:.1em;font-family:monospace;">v9.0.3</div>
+        <div style="text-align:center;margin-top:8px;color:rgba(255,255,255,.25);font-size:.7rem;letter-spacing:.15em;font-family:'Nunito',monospace;font-weight:700;">v9.0.5</div>
       </div>
     </div>
   </div>`;
@@ -711,7 +721,7 @@ mode(){
         <!-- Title -->
         <div style="text-align:center;margin-bottom:32px;">
           <div style="font-size:min(64px,18vw);line-height:1;margin-bottom:12px;filter:drop-shadow(0 0 24px #EF4444);">⚔️</div>
-          <div style="font-family:Impact,Arial Black,sans-serif;font-size:min(2rem,7vw);color:#fff;letter-spacing:.12em;text-shadow:0 0 30px rgba(239,68,68,.6);">MODO DE JUEGO</div>
+          <div style="font-family:'Rajdhani',Impact,sans-serif;font-size:min(2.2rem,7.5vw);color:#fff;font-weight:700;letter-spacing:.12em;text-shadow:0 0 30px rgba(239,68,68,.6);">MODO DE JUEGO</div>
           <div style="width:80px;height:3px;background:linear-gradient(90deg,#EF4444,#F59E0B);margin:10px auto 0;border-radius:2px;box-shadow:0 0 12px #EF4444;"></div>
         </div>
         <!-- Buttons -->
@@ -773,7 +783,7 @@ create(){
         <!-- Avatar big display -->
         <div style="text-align:center;margin-bottom:20px;">
           <div style="font-size:min(72px,18vw);line-height:1;margin-bottom:8px;filter:drop-shadow(0 0 20px ${accentCol});">${A[av]}</div>
-          <div style="font-family:Impact,Arial Black,sans-serif;font-size:min(1.4rem,5vw);color:#fff;letter-spacing:.12em;text-shadow:0 0 20px ${accentCol};">${title}</div>
+          <div style="font-family:'Rajdhani',Impact,sans-serif;font-size:min(1.5rem,5.5vw);color:#fff;font-weight:700;letter-spacing:.12em;text-shadow:0 0 20px ${accentCol};">${title}</div>
           <div style="width:60px;height:3px;background:${accentCol};margin:8px auto 0;box-shadow:0 0 12px ${accentCol};border-radius:2px;"></div>
         </div>
         <!-- Name input -->
@@ -980,13 +990,13 @@ battle(){
     <div id="sh1" style="position:absolute;z-index:2;pointer-events:none;"></div>
     <div id="sh2" style="position:absolute;z-index:2;pointer-events:none;"></div>
     <!-- P1 sprite — left side, mirrored to face right -->
-<div id="sp1wrap" style="position:absolute;z-index:3;">
+    <div id="sp1wrap" style="position:absolute;z-index:3;left:0;bottom:0;">
       <img id="sp1" src="${su(pk1.id)}"
         style="display:block;transform:scaleX(-1);${p1faint?"filter:grayscale(1) opacity(.25);":""}"
         onload="onSpriteLoad(this,'sp1wrap','sh1',true,${sc.groundH})">
     </div>
     <!-- P2 sprite — right side -->
-<div id="sp2wrap" style="position:absolute;z-index:3;">
+    <div id="sp2wrap" style="position:absolute;z-index:3;right:0;bottom:0;">
       <img id="sp2" src="${su(pk2.id)}"
         style="display:block;${p2faint?"filter:grayscale(1) opacity(.25);":""}"
         onload="onSpriteLoad(this,'sp2wrap','sh2',false,${sc.groundH})">
@@ -1000,8 +1010,8 @@ battle(){
   if(!b.locked){
     if(b.ph==="action"){
       ac=`<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;background:#0a0a0a;border-top:2px solid #222;flex-shrink:0;">
-        <button class="btn" style="background:linear-gradient(180deg,#C0392B,#7B241C);border-radius:0;border-right:1px solid #333;font-family:Impact,sans-serif;font-size:1.1rem;letter-spacing:.05em;padding:16px 8px;" onclick="sfxMenu();bPh('attack')">⚔ ATACAR</button>
-        <button class="btn" style="background:linear-gradient(180deg,#1565C0,#0D47A1);border-radius:0;border-right:1px solid #333;font-family:Impact,sans-serif;font-size:1.1rem;letter-spacing:.05em;padding:16px 8px;" onclick="sfxMenu();bPh('switch')">↕ CAMBIAR</button>
+        <button class="btn" style="background:linear-gradient(180deg,#C0392B,#7B241C);border-radius:0;border-right:1px solid #333;font-family:'Rajdhani',Impact,sans-serif;font-size:1.15rem;font-weight:700;letter-spacing:.08em;padding:16px 8px;" onclick="sfxMenu();bPh('attack')">⚔ ATACAR</button>
+        <button class="btn" style="background:linear-gradient(180deg,#1565C0,#0D47A1);border-radius:0;border-right:1px solid #333;font-family:'Rajdhani',Impact,sans-serif;font-size:1.15rem;font-weight:700;letter-spacing:.08em;padding:16px 8px;" onclick="sfxMenu();bPh('switch')">↕ CAMBIAR</button>
         <button class="btn" onclick="dSave()" style="background:linear-gradient(180deg,#1a1a1a,#111);border-radius:0;font-size:.85rem;padding:16px 8px;color:#666;">💾 GUARDAR</button>
       </div>`;
     } else if(b.ph==="attack"){
@@ -1066,8 +1076,8 @@ victory(){
   return`<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(ellipse at center,#1a0505 0%,#000 100%);overflow:hidden;">
     ${cf}
     <div style="position:relative;z-index:1;text-align:center;padding:20px;">
-      <div style="font-family:Impact,Arial Black,sans-serif;font-size:min(4rem,12vw);color:#F59E0B;text-shadow:0 0 40px rgba(245,158,11,.8),0 4px 0 #7c3e00;letter-spacing:.1em;line-height:1;animation:vsSlam .6s cubic-bezier(.175,.885,.32,1.275) both;">K.O.!</div>
-      <div style="font-family:Impact,Arial Black,sans-serif;font-size:min(1.8rem,5vw);color:#fff;letter-spacing:.15em;margin:8px 0 20px;text-shadow:0 2px 10px rgba(0,0,0,.8);">${A[winner.avatar]} ${winner.name.toUpperCase()} WINS!</div>
+      <div style="font-family:'Press Start 2P',monospace;font-size:min(2.8rem,9vw);color:#F59E0B;text-shadow:0 0 40px rgba(245,158,11,.8),0 4px 0 #7c3e00;letter-spacing:.08em;line-height:1.2;animation:vsSlam .6s cubic-bezier(.175,.885,.32,1.275) both;">K.O.!</div>
+      <div style="font-family:'Rajdhani',Impact,sans-serif;font-size:min(2rem,6vw);color:#fff;font-weight:700;letter-spacing:.12em;margin:8px 0 20px;text-shadow:0 2px 10px rgba(0,0,0,.8);">${A[winner.avatar]} ${winner.name.toUpperCase()} WINS!</div>
       <div style="display:flex;gap:16px;justify-content:center;margin-bottom:24px;">
         <div style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:10px;padding:14px 20px;text-align:center;">
           <div style="font-family:Impact,sans-serif;font-size:2rem;color:#F59E0B;">${stats.moves}</div>
@@ -1107,43 +1117,112 @@ saves(){
 },
 scenepick(){
   const SC_INFO=[
-    {idx:0,emoji:"🌿",name:"Campo",desc:"Hierba, árboles y cielo soleado",gr:"linear-gradient(135deg,#166534,#15803D)",sky:"linear-gradient(180deg,#87CEEB,#C8EBFF)"},
-    {idx:1,emoji:"🌌",name:"Galaxia",desc:"Espacio profundo y nebulosas",gr:"linear-gradient(135deg,#1E0A3C,#4C1D95)",sky:"linear-gradient(180deg,#020618,#2d1060)"},
-    {idx:2,emoji:"⚡",name:"Estadio",desc:"Arena oficial Pokémon con focos",gr:"linear-gradient(135deg,#1E3A5F,#1D4ED8)",sky:"linear-gradient(180deg,#1a1a2e,#0f3460)"},
-    {idx:3,emoji:"⚽",name:"Fútbol",desc:"Estadio con gradas llenas de fans",gr:"linear-gradient(135deg,#14532D,#166534)",sky:"linear-gradient(180deg,#4A90D9,#2D7A2D)"},
+    {
+      idx:0,name:"Campo",
+      tagline:"HIERBA Y NATURALEZA",
+      desc:"Batalla bajo el sol entre árboles y praderas",
+      emoji:"🌿",
+      accent:"#22C55E",
+      glow:"rgba(34,197,94,.6)",
+      bg:"linear-gradient(135deg,#052e16,#14532d,#166534)",
+      sky:"linear-gradient(180deg,#87CEEB,#B0E0FF,#8DB96A)",
+      icon:"🌳"
+    },
+    {
+      idx:1,name:"Galaxia",
+      tagline:"ESPACIO PROFUNDO",
+      desc:"Las estrellas y nebulosas serán testigos",
+      emoji:"🌌",
+      accent:"#A855F7",
+      glow:"rgba(168,85,247,.6)",
+      bg:"linear-gradient(135deg,#0d0020,#1E0A3C,#4C1D95)",
+      sky:"linear-gradient(180deg,#020618,#0B1A3E,#1a0a3e)",
+      icon:"⭐"
+    },
+    {
+      idx:2,name:"Estadio",
+      tagline:"ARENA OFICIAL",
+      desc:"Focos encendidos, gradas rugiendo",
+      emoji:"⚡",
+      accent:"#3B82F6",
+      glow:"rgba(59,130,246,.6)",
+      bg:"linear-gradient(135deg,#0c1a2e,#1E3A5F,#1D4ED8)",
+      sky:"linear-gradient(180deg,#1a1a2e,#16213e,#0f3460)",
+      icon:"🏟️"
+    },
+    {
+      idx:3,name:"Fútbol",
+      tagline:"ESTADIO LLENO",
+      desc:"Fans enloquecidos, césped mojado",
+      emoji:"⚽",
+      accent:"#F59E0B",
+      glow:"rgba(245,158,11,.6)",
+      bg:"linear-gradient(135deg,#052e16,#14532D,#166534)",
+      sky:"linear-gradient(180deg,#1a4a8a,#4A90D9,#2D7A2D)",
+      icon:"🏆"
+    },
   ];
-  const p1t=G.p1.team||[];const p2t=G.p2.team||[];
-  return`<div style="position:absolute;inset:0;display:flex;flex-direction:column;background:linear-gradient(160deg,#0F172A,#1E3A5F);overflow:hidden;">
-    <div style="padding:16px 18px 8px;flex-shrink:0;background:rgba(0,0,0,.4);">
-      <h2 style="color:#fff;font-weight:900;font-size:1.5rem;text-align:center;margin:0 0 2px;">🗺️ Elige el Escenario</h2>
-      <p style="color:#94A3B8;text-align:center;font-size:.85rem;">¿Dónde quieres combatir?</p>
+
+  // Animated particles background
+  let sparks="";
+  for(let i=0;i<20;i++){
+    const x=Math.random()*100,y=Math.random()*100;
+    const s=1+Math.random()*2,d=2+Math.random()*5,dl=Math.random()*4;
+    const col=["#EF4444","#F59E0B","#A855F7","#3B82F6","#22C55E"][i%5];
+    sparks+=`<div style="position:absolute;left:${x}%;top:${y}%;width:${s}px;height:${s}px;background:${col};border-radius:50%;animation:twinkle ${d}s ease-in-out ${dl}s infinite;opacity:.4;pointer-events:none;"></div>`;
+  }
+
+  const cards=SC_INFO.map(si=>`
+    <button onclick="sfxSel();pickScene(${si.idx})"
+      style="border:none;cursor:pointer;padding:0;background:transparent;display:block;width:100%;border-radius:16px;overflow:hidden;
+             box-shadow:0 4px 24px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.06);
+             transition:transform .15s,box-shadow .15s;"
+      onpointerdown="this.style.transform='scale(.94)';this.style.boxShadow='0 2px 10px rgba(0,0,0,.8),0 0 0 2px ${si.accent}'"
+      onpointerup="this.style.transform='scale(1)';this.style.boxShadow='0 4px 24px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.06)'"
+      onmouseenter="this.style.boxShadow='0 8px 32px ${si.glow},0 0 0 2px ${si.accent}'"
+      onmouseleave="this.style.boxShadow='0 4px 24px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.06)'">
+      <!-- Preview sky -->
+      <div style="height:min(100px,22vw);background:${si.sky};position:relative;overflow:hidden;">
+        <!-- Decorative shine -->
+        <div style="position:absolute;top:-30%;left:-10%;width:120%;height:80%;background:radial-gradient(ellipse at 50% 0%,rgba(255,255,255,.18) 0%,transparent 70%);pointer-events:none;"></div>
+        <!-- Big emoji center -->
+        <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:min(3.2rem,10vw);filter:drop-shadow(0 4px 12px rgba(0,0,0,.5));">${si.icon}</div>
+        <!-- Bottom fade -->
+        <div style="position:absolute;bottom:0;left:0;right:0;height:40%;background:linear-gradient(0deg,rgba(0,0,0,.7),transparent);"></div>
+        <!-- Tag top-right -->
+        <div style="position:absolute;top:8px;right:8px;background:rgba(0,0,0,.6);color:${si.accent};font-family:Impact,sans-serif;font-size:min(.6rem,2.2vw);letter-spacing:.12em;padding:3px 8px;border-radius:4px;border:1px solid ${si.accent}44;">${si.tagline}</div>
+      </div>
+      <!-- Info strip -->
+      <div style="background:${si.bg};padding:10px 14px 12px;text-align:left;position:relative;">
+        <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,${si.accent},transparent);opacity:.7;"></div>
+        <div style="font-family:Impact,Arial Black,sans-serif;font-size:min(1.05rem,3.5vw);color:#fff;letter-spacing:.06em;">${si.emoji} ${si.name.toUpperCase()}</div>
+        <div style="font-size:min(.7rem,2.4vw);color:rgba(255,255,255,.55);margin-top:3px;font-weight:600;">${si.desc}</div>
+        <!-- Arrow -->
+        <div style="position:absolute;right:12px;bottom:50%;transform:translateY(50%);color:${si.accent};font-size:1.2rem;opacity:.7;">›</div>
+      </div>
+    </button>`).join("");
+
+  return`<div style="position:absolute;inset:0;display:flex;flex-direction:column;background:radial-gradient(ellipse at 50% 0%,#1a0a30 0%,#000 70%);overflow:hidden;">
+    ${sparks}
+    <!-- Header -->
+    <div style="position:relative;z-index:2;padding:min(20px,4%) min(20px,4%) min(12px,3%);flex-shrink:0;text-align:center;">
+      <div style="font-size:min(2.4rem,8vw);line-height:1;margin-bottom:8px;filter:drop-shadow(0 0 20px #F59E0B);">🗺️</div>
+      <div style="font-family:'Rajdhani',Impact,sans-serif;font-size:min(1.8rem,6.5vw);color:#fff;font-weight:700;letter-spacing:.12em;text-shadow:0 0 30px rgba(245,158,11,.5);">ELIGE EL ESCENARIO</div>
+      <div style="color:rgba(255,255,255,.4);font-size:min(.8rem,3vw);font-weight:700;letter-spacing:.08em;margin-top:4px;">¿DÓNDE COMBATIRÁN ${G.p1.name.toUpperCase()} Y ${(G.p2.isCPU?"LA CPU":G.p2.name.toUpperCase())}?</div>
+      <div style="width:60px;height:2px;background:linear-gradient(90deg,#EF4444,#F59E0B,#EF4444);margin:10px auto 0;border-radius:2px;box-shadow:0 0 10px #F59E0B;"></div>
     </div>
-    <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 16px;background:rgba(0,0,0,.3);flex-shrink:0;">
-      <div style="display:flex;gap:4px;align-items:center;">
-        <span style="font-size:1.1rem;">${A[G.p1.avatar]}</span>
-        ${p1t.map(pk=>`<img src="${su(pk.id)}" width="32" height="32" style="object-fit:contain;">`).join("")}
+    <!-- Grid -->
+    <div style="position:relative;z-index:2;flex:1;overflow-y:auto;padding:0 min(16px,4%) min(14px,3%);">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:min(12px,2.5vw);margin-bottom:min(12px,2.5vw);">
+        ${cards}
       </div>
-      <span style="color:#F59E0B;font-weight:900;font-size:.9rem;">⚔️ VS ⚔️</span>
-      <div style="display:flex;gap:4px;align-items:center;">
-        ${p2t.map(pk=>`<img src="${su(pk.id)}" width="32" height="32" style="object-fit:contain;">`).join("")}
-        <span style="font-size:1.1rem;">${A[G.p2.avatar]}</span>
-      </div>
-    </div>
-    <div style="flex:1;overflow-y:auto;padding:14px;">
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-        ${SC_INFO.map(si=>`<button onclick="sfxSel();pickScene(${si.idx})" style="border:none;cursor:pointer;border-radius:20px;overflow:hidden;padding:0;transition:transform .15s;box-shadow:0 4px 16px rgba(0,0,0,.4);display:block;width:100%;" onpointerdown="this.style.transform='scale(.94)'" onpointerup="this.style.transform='scale(1)'">
-          <div style="height:85px;background:${si.sky};position:relative;overflow:hidden;">
-            <div style="position:absolute;bottom:0;left:0;right:0;height:35%;background:rgba(0,0,0,.2);"></div>
-            <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:2.5rem;opacity:.7;">${si.emoji}</div>
-          </div>
-          <div style="background:${si.gr};padding:10px 12px;text-align:left;">
-            <div style="font-weight:900;font-size:.95rem;color:#fff;">${si.emoji} ${si.name}</div>
-            <div style="font-size:.7rem;color:rgba(255,255,255,.75);margin-top:2px;">${si.desc}</div>
-          </div>
-        </button>`).join("")}
-      </div>
-      <button onclick="sfxSel();pickScene(-1)" class="btn" style="background:linear-gradient(135deg,#F59E0B,#D97706);margin-top:12px;font-size:1rem;">
-        🎲 ¡Sorpréndeme! (Aleatorio)
+      <!-- Random button -->
+      <button onclick="sfxSel();pickScene(-1)"
+        style="width:100%;border:none;cursor:pointer;background:linear-gradient(135deg,#92400E,#F59E0B,#D97706);color:#fff;font-family:Impact,Arial Black,sans-serif;font-size:min(1.1rem,4vw);letter-spacing:.1em;padding:min(16px,4%) 20px;border-radius:12px;box-shadow:0 4px 24px rgba(245,158,11,.5);transition:transform .1s,filter .1s;display:flex;align-items:center;justify-content:center;gap:12px;"
+        onpointerdown="this.style.transform='scale(.97)';this.style.filter='brightness(.9)'"
+        onpointerup="this.style.transform='scale(1)';this.style.filter='brightness(1)'">
+        <span style="font-size:min(1.4rem,5vw);">🎲</span>
+        <span>¡SORPRÉNDEME! (ALEATORIO)</span>
       </button>
     </div>
   </div>`;
@@ -1280,31 +1359,15 @@ function amsg(html,dur=2000){
 
 // -- Effects ----------------------------------------------------
 function spawnDmg(wrapId,dmg,color,isS){
-  const arena=document.getElementById("arena");
-  if(!arena)return;
-
+  const arena=document.getElementById("arena");if(!arena)return;
   const W=arena.offsetWidth||SP.W||300;
-  const H=arena.offsetHeight||300;
+  const H=arena.offsetHeight||SP.groundY*1.5||200;
   const isP1=wrapId==="sp1wrap";
-
-  const cx=SP.W>0 ? (isP1 ? SP.p1cx : SP.p2cx) : (isP1 ? W*0.18 : W*0.82);
-  const cy=SP.groundY>0 ? (SP.groundY - SP.sprH*0.72) : H*0.45;
-
+  // Use SP if available, else fallback to % of arena
+  const cx=SP.W>0?(isP1?SP.p1cx:SP.p2cx):(isP1?W*0.22:W*0.78);
+  const cy=SP.groundY>0?(SP.groundY-SP.sprH*0.6):(H*0.4);
   const d=document.createElement("div");
-  d.style.cssText=`
-    position:absolute;
-    left:${cx}px;
-    top:${cy}px;
-    transform:translateX(-50%);
-    font-weight:900;
-    font-size:${isS?"min(2.8rem,8vw)":"min(2.2rem,6.5vw)"};
-    color:${isS?"#FCD34D":color};
-    text-shadow:0 3px 14px rgba(0,0,0,.95),0 0 30px ${color};
-    pointer-events:none;
-    animation:dmgFloat 1.3s ease-out forwards;
-    z-index:100;
-    white-space:nowrap;
-  `;
+  d.style.cssText=`position:absolute;left:${cx}px;top:${cy}px;transform:translateX(-50%);font-family:'Press Start 2P',monospace;font-weight:900;font-size:${isS?"min(1.4rem,4vw)":"min(1.1rem,3.2vw)"};color:${isS?"#FCD34D":color};text-shadow:0 3px 14px rgba(0,0,0,.95),0 0 20px ${color};pointer-events:none;animation:dmgFloat 1.3s ease-out forwards;z-index:100;white-space:nowrap;`;
   d.textContent=(isS?"★":"")+"-"+dmg;
   arena.appendChild(d);
   setTimeout(()=>d.remove(),2000);
@@ -1377,58 +1440,37 @@ function sfxBurst(isSuper,color){
 function jsLunge(el,isP1,onImpact){
   const wrapEl=document.getElementById(isP1?"sp1wrap":"sp2wrap");
   if(!wrapEl)return;
-
   const arena=document.getElementById("arena");
-  const W=arena ? arena.offsetWidth : SP.W || 800;
-
-  // Embestida corta y seca, más arcade
-  const dist=Math.round(W*0.10);
-
-  const offsets=[0, dist*0.45, dist, dist*0.25, 0];
-  const times=[0, 90, 100, 90, 160];
-
+  const W=arena?arena.offsetWidth:SP.W||800;
+  const dist=Math.round(W*0.18);
+  // P1 faces right (scaleX-1), lunges toward p2 = move right = left increases
+  // P2 faces left, lunges toward p1 = move left = right decreases (or left set)
+  const offsets=[0, dist*0.2*(isP1?1:-1), dist*(isP1?1:-1), dist*0.3*(isP1?1:-1), 0];
+  const times=[0,200,160,120,280];
   let step=0;
-
   const origLeft=wrapEl.style.left;
   const origRight=wrapEl.style.right;
-  const origTop=wrapEl.style.top;
-
   const origLeftPx=parseInt(origLeft)||0;
   const origRightPx=parseInt(origRight)||0;
-  const origTopPx=parseInt(origTop)||0;
-
   function next(){
     if(step>=offsets.length){
       wrapEl.style.transition="";
-      wrapEl.style.top=origTop;
-      if(isP1){
-        wrapEl.style.left=origLeft;
-      }else{
-        wrapEl.style.right=origRight;
-      }
+      if(isP1)wrapEl.style.left=origLeft;
+      else wrapEl.style.right=origRight;
       return;
     }
-
-    const travel=offsets[step];
-    const hop = step === 2 ? -10 : step === 3 ? -4 : 0;
-    const spd=step===0 ? 0.01 : 0.09;
-
-    wrapEl.style.transition=`all ${spd}s ease-out`;
-
+    const spd=step===0?0.01:step===2?0.13:0.22;
     if(isP1){
-      wrapEl.style.left=(origLeftPx + travel)+"px";
-    }else{
-      wrapEl.style.right=(origRightPx - travel)+"px";
+      wrapEl.style.transition=`left ${spd}s ease`;
+      wrapEl.style.left=(origLeftPx+offsets[step])+"px";
+    } else {
+      wrapEl.style.transition=`right ${spd}s ease`;
+      wrapEl.style.right=(origRightPx-offsets[step])+"px";
     }
-
-    wrapEl.style.top=(origTopPx + hop)+"px";
-
     if(step===2&&onImpact)onImpact();
-
     setTimeout(next,times[step]);
     step++;
   }
-
   next();
 }
 
@@ -1609,13 +1651,8 @@ function placeSpriteNow(img, wrapId, shadowId, isP1, groundH){
   const W=arena.offsetWidth, H=arena.offsetHeight;
   if(!W||!H)return;
 
-  // Horizonte visual del escenario
   const horizonY=Math.round(H*(100-groundH)/100);
-
-  // Suelo REAL de combate, más abajo, estilo fighter 2D
   const fighterGroundY=Math.round(H*0.90);
-
-  // Sprites más grandes y con más presencia
   const targetW=Math.min(380, Math.max(190, Math.round(W*0.28)));
 
   img.style.width=targetW+"px";
@@ -1623,75 +1660,44 @@ function placeSpriteNow(img, wrapId, shadowId, isP1, groundH){
   img.style.display="block";
 
   const ratio=(img.naturalHeight&&img.naturalWidth)
-    ? img.naturalHeight/img.naturalWidth
-    : 1;
-
+    ? img.naturalHeight/img.naturalWidth : 1;
   let spriteH=Math.round(targetW*ratio);
   spriteH=Math.min(spriteH, Math.round(H*0.46));
 
   const wrap=document.getElementById(wrapId);
   if(!wrap)return;
 
-  // Más cerca de las esquinas, menos "centrados en el aire"
   const sidePad=Math.round(W*0.08);
+  wrap.style.cssText=[
+    "position:absolute","z-index:3","background:transparent",
+    "border:none","outline:none","box-shadow:none","overflow:visible",
+    `width:${targetW}px`,`height:${spriteH}px`,
+    `top:${fighterGroundY-spriteH}px`,"bottom:auto",
+    isP1?`left:${sidePad}px`:`right:${sidePad}px`
+  ].join(";")+";";
 
-  wrap.style.cssText = [
-    "position:absolute",
-    "z-index:3",
-    "background:transparent",
-    "border:none",
-    "outline:none",
-    "box-shadow:none",
-    "overflow:visible",
-    `width:${targetW}px`,
-    `height:${spriteH}px`,
-    `top:${fighterGroundY - spriteH}px`,
-    "bottom:auto",
-    isP1 ? `left:${sidePad}px` : `right:${sidePad}px`
-  ].join(";") + ";";
+  if(isP1){wrap.style.right="auto";SP.p1cx=sidePad+targetW*0.5;}
+  else{wrap.style.left="auto";SP.p2cx=W-sidePad-targetW*0.5;}
 
-  if(isP1){
-    wrap.style.right="auto";
-    SP.p1cx = sidePad + targetW * 0.5;
-  }else{
-    wrap.style.left="auto";
-    SP.p2cx = W - sidePad - targetW * 0.5;
-  }
-
-  SP.sprH = spriteH;
-  SP.groundY = fighterGroundY;
-  SP.horizonY = horizonY;
-  SP.W = W;
-  SP.sprTop = fighterGroundY - spriteH;
+  SP.sprH=spriteH; SP.groundY=fighterGroundY; SP.horizonY=horizonY;
+  SP.W=W; SP.sprTop=fighterGroundY-spriteH;
 
   const sfx=document.getElementById("sfx-center");
-  if(sfx){
-    sfx.style.left = Math.round(W*0.5)+"px";
-    sfx.style.top = Math.round(fighterGroundY - spriteH*0.55)+"px";
-  }
+  if(sfx){sfx.style.left=Math.round(W*0.5)+"px";sfx.style.top=Math.round(fighterGroundY-spriteH*0.55)+"px";}
 
   const sh=document.getElementById(shadowId);
   if(sh){
     const shW=Math.round(targetW*0.55);
-    const shH=Math.max(10, Math.round(shW*0.14));
-    const shX=isP1 ? (sidePad + targetW*0.5) : (W - sidePad - targetW*0.5);
-
-    sh.style.cssText = [
-      "position:absolute",
-      `left:${shX}px`,
-      `top:${fighterGroundY - shH/2}px`,
-      `width:${shW}px`,
-      `height:${shH}px`,
-      "transform:translateX(-50%)",
-      "background:rgba(0,0,0,.42)",
-      "border-radius:50%",
-      "filter:blur(10px)",
-      "pointer-events:none",
-      "z-index:2"
-    ].join(";") + ";";
+    const shH=Math.max(10,Math.round(shW*0.14));
+    const shX=isP1?(sidePad+targetW*0.5):(W-sidePad-targetW*0.5);
+    sh.style.cssText=[
+      "position:absolute",`left:${shX}px`,`top:${fighterGroundY-shH/2}px`,
+      `width:${shW}px`,`height:${shH}px`,"transform:translateX(-50%)",
+      "background:rgba(0,0,0,.42)","border-radius:50%","filter:blur(10px)",
+      "pointer-events:none","z-index:2"
+    ].join(";")+";";
   }
 }
-
 
 
 function onSpriteLoad(img, wrapId, shadowId, isP1, groundH){
