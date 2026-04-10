@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
-<title>PokéBattle v9.0.7</title>
+<title>PokéBattle v9.1.0</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Roboto:wght@400;500;700;900&family=Press+Start+2P&display=swap" rel="stylesheet">
@@ -60,6 +60,19 @@ html,body{height:100%;overflow:hidden;background:#000;}
 @keyframes sfSlash{0%{transform:scaleX(0);opacity:1}100%{transform:scaleX(1.5);opacity:0}}
 @keyframes sfShock{0%,100%{opacity:0}10%,30%,50%,70%,90%{opacity:1}20%,40%,60%,80%{opacity:.3}}
 
+@keyframes pkSlideInLeft{0%{transform:scaleX(-1) translateX(-120px);opacity:0}60%{transform:scaleX(-1) translateX(10px);opacity:1}80%{transform:scaleX(-1) translateX(-5px)}100%{transform:scaleX(-1) translateX(0);opacity:1}}
+@keyframes pkSlideInRight{0%{transform:translateX(120px);opacity:0}60%{transform:translateX(-10px);opacity:1}80%{transform:translateX(5px)}100%{transform:translateX(0);opacity:1}}
+@keyframes pkFlashIn{0%{filter:brightness(8) saturate(0)}30%{filter:brightness(3) saturate(.5)}100%{filter:brightness(1) saturate(1)}}
+@keyframes pkBounce{0%,100%{transform:scaleX(-1) translateY(0)}50%{transform:scaleX(-1) translateY(-7px)}}
+@keyframes pkBounce2{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+@keyframes splashSpin{0%{transform:rotate(0) scale(1)}50%{transform:rotate(180deg) scale(1.1)}100%{transform:rotate(360deg) scale(1)}}
+@keyframes splashFadeIn{0%{opacity:0;transform:scale(.8)}100%{opacity:1;transform:scale(1)}}
+@keyframes splashFadeOut{0%{opacity:1}100%{opacity:0;pointer-events:none}}
+@keyframes battleLogSlide{from{transform:translateY(-20px);opacity:0}to{transform:translateY(0);opacity:1}}
+@keyframes pulseGlow{0%,100%{box-shadow:0 0 8px rgba(59,130,246,.4)}50%{box-shadow:0 0 22px rgba(59,130,246,.9),0 0 40px rgba(59,130,246,.4)}}
+@keyframes idleBreath{0%,100%{transform:scaleX(-1) scale(1)}50%{transform:scaleX(-1) scale(1.03)}}
+@keyframes idleBreath2{0%,100%{transform:scale(1)}50%{transform:scale(1.03)}}
+
 @keyframes sfRecoil{0%,100%{transform:scaleX(-1) translateX(0)}30%{transform:scaleX(-1) translateX(22px)}}
 @keyframes sfRecoil2{0%,100%{transform:translateX(0)}30%{transform:translateX(-22px)}}
 
@@ -108,7 +121,23 @@ function sfxWeak(){if(!CFG.sfx)return;note(220,.15,"triangle",.12,.01,.3);}
 function sfxFaint(){if(!CFG.sfx)return;[300,250,180,120,80].forEach((f,i)=>setTimeout(()=>note(f,.15,"sawtooth",.18,.01,.18),i*80));}
 function sfxMenu(){if(!CFG.sfx)return;note(660,.03,"square",.1,.005,.06);}
 function sfxSel(){if(!CFG.sfx)return;note(880,.04,"square",.12,.005,.05);setTimeout(()=>note(1100,.04,"square",.1,.005,.05),50);}
-function sfxVic(){if(!CFG.sfx)return;const mel=[523,523,523,415,523,659,622];mel.forEach((f,i)=>setTimeout(()=>note(f,.18,"square",.2,.01,.15),i*160));}
+function sfxVic(){
+  if(!CFG.sfx)return;
+  // Dramatic victory fanfare — builds up then resolves
+  const seq=[
+    {f:523,t:0,d:.12,v:.25,tp:"square"},{f:523,t:130,d:.12,v:.25,tp:"square"},
+    {f:523,t:260,d:.25,v:.3,tp:"square"},{f:415,t:390,d:.15,v:.2,tp:"square"},
+    {f:523,t:520,d:.15,v:.25,tp:"square"},{f:659,t:700,d:.2,v:.3,tp:"square"},
+    {f:784,t:900,d:.4,v:.3,tp:"square"},
+    // Crash chord
+    {f:523,t:1000,d:.5,v:.15,tp:"sawtooth"},{f:659,t:1000,d:.5,v:.15,tp:"sawtooth"},{f:784,t:1000,d:.5,v:.1,tp:"square"},
+    // Resolution
+    {f:1047,t:1400,d:.6,v:.25,tp:"square"},
+  ];
+  seq.forEach(s=>setTimeout(()=>note(s.f,s.d,s.tp,s.v,.01,s.d*.8),s.t));
+  // Bass boom on KO
+  setTimeout(()=>{note(80,.3,"sine",.4,.005,.4);note(120,.2,"sine",.3,.005,.3);},0);
+}
 
 // -- EPIC BATTLE MUSIC -----------------------------------------
 // Settings: persist in localStorage
@@ -286,27 +315,119 @@ const SCENARIOS=[
     p1ground:"74%",p2ground:"74%",
     msgBg:"rgba(0,20,60,.9)",msgBorder:"#3B82F6"
   },
-  // 4. Campo de f-tbol
+  // 4. Campo de fútbol — mejorado
   {
     name:"futbol",
-    sky:`linear-gradient(180deg,#4A90D9 0%,#87CEEB 40%,#B0E0FF 70%,#C8EBFF 100%)`,
+    sky:`linear-gradient(180deg,#1a3a6e 0%,#2e6db4 30%,#5ba3e0 60%,#87CEEB 100%)`,
     clouds:true,
-    ground:`linear-gradient(180deg,#2D7A2D 0%,#1A5C1A 50%,#0F3D0F 100%)`,
-    groundH:40,
+    ground:`linear-gradient(180deg,#1a5c1a 0%,#2d7a2d 30%,#1a5c1a 60%,#0f3d0f 100%)`,
+    groundH:42,
     groundDeco:`<g>
-      <rect x="5%" y="68%" width="90%" height="1.5%" fill="rgba(255,255,255,.2)"/>
-      <rect x="5%" y="76%" width="90%" height="1.5%" fill="rgba(255,255,255,.2)"/>
-      <rect x="5%" y="84%" width="90%" height="1.5%" fill="rgba(255,255,255,.2)"/>
-      <rect x="5%" y="67%" width="1%" height="25%" fill="rgba(255,255,255,.2)"/>
-      <rect x="50%" y="67%" width="1%" height="25%" fill="rgba(255,255,255,.4)"/>
-      <rect x="94%" y="67%" width="1%" height="25%" fill="rgba(255,255,255,.2)"/>
-      <ellipse cx="50%" cy="78%" rx="12%" ry="5%" fill="none" stroke="rgba(255,255,255,.3)" stroke-width="1.5"/>
-      <rect x="15%" y="67%" width="15%" height="10%" fill="none" stroke="rgba(255,255,255,.25)" stroke-width="1.2"/>
-      <rect x="70%" y="67%" width="15%" height="10%" fill="none" stroke="rgba(255,255,255,.25)" stroke-width="1.2"/>
+      <rect x="0%" y="58%" width="100%" height="1%" fill="rgba(255,255,255,.3)"/>
+      <rect x="0%" y="66%" width="100%" height="1%" fill="rgba(255,255,255,.2)"/>
+      <rect x="0%" y="74%" width="100%" height="1%" fill="rgba(255,255,255,.15)"/>
+      <rect x="0%" y="82%" width="100%" height="1%" fill="rgba(255,255,255,.1)"/>
+      <rect x="49.5%" y="58%" width="1%" height="35%" fill="rgba(255,255,255,.5)"/>
+      <ellipse cx="50%" cy="75%" rx="14%" ry="6%" fill="none" stroke="rgba(255,255,255,.4)" stroke-width="1.5"/>
+      <rect x="8%" y="58%" width="16%" height="12%" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="1.5"/>
+      <rect x="76%" y="58%" width="16%" height="12%" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="1.5"/>
+      <rect x="14%" y="58%" width="4%" height="6%" fill="none" stroke="rgba(255,255,255,.25)" stroke-width="1"/>
+      <rect x="82%" y="58%" width="4%" height="6%" fill="none" stroke="rgba(255,255,255,.25)" stroke-width="1"/>
     </g>`,
     fans:true,
     p1ground:"73%",p2ground:"73%",
     msgBg:"rgba(0,60,0,.88)",msgBorder:"#22C55E"
+  },
+  // 5. Cueva
+  {
+    name:"cueva",
+    sky:`linear-gradient(180deg,#0a0a0a 0%,#1a1008 40%,#2d1f05 70%,#3d2a08 100%)`,
+    clouds:false,
+    ground:`linear-gradient(180deg,#3d2a08 0%,#2d1f05 40%,#1a1008 100%)`,
+    groundH:40,
+    groundDeco:`<g>
+      <polygon points="0,58 8,45 16,58" fill="#2a1f0a" stroke="#1a1008" stroke-width=".5"/>
+      <polygon points="12,58 22,38 32,58" fill="#1f1608" stroke="#1a1008" stroke-width=".5"/>
+      <polygon points="60,58 72,42 84,58" fill="#2a1f0a" stroke="#1a1008" stroke-width=".5"/>
+      <polygon points="78,58 86,48 94,58" fill="#1f1608" stroke="#1a1008" stroke-width=".5"/>
+      <polygon points="88,58 96,44 100,58" fill="#2a1f0a" stroke="#1a1008" stroke-width=".5"/>
+      <!-- stalactites top -->
+      <polygon points="5,0 8,12 11,0" fill="#1a1008"/>
+      <polygon points="25,0 29,18 33,0" fill="#1a1008"/>
+      <polygon points="55,0 58,10 61,0" fill="#1a1008"/>
+      <polygon points="75,0 79,15 83,0" fill="#1a1008"/>
+      <!-- glowing crystals -->
+      <ellipse cx="20%" cy="50%" rx="2%" ry="3%" fill="rgba(100,200,255,.15)" filter="url(#glow)"/>
+      <ellipse cx="70%" cy="52%" rx="1.5%" ry="2.5%" fill="rgba(150,100,255,.15)"/>
+      <ellipse cx="45%" cy="48%" rx="1%" ry="2%" fill="rgba(100,255,150,.1)"/>
+      <!-- lava pools -->
+      <ellipse cx="15%" cy="92%" rx="8%" ry="3%" fill="rgba(255,80,0,.4)"/>
+      <ellipse cx="80%" cy="95%" rx="6%" ry="2.5%" fill="rgba(255,100,0,.35)"/>
+    </g>`,
+    p1ground:"74%",p2ground:"74%",
+    msgBg:"rgba(10,5,0,.9)",msgBorder:"#F59E0B"
+  },
+  // 6. Playa
+  {
+    name:"playa",
+    sky:`linear-gradient(180deg,#FF6B35 0%,#FF8C42 15%,#FFB347 30%,#87CEEB 55%,#4AA8D8 100%)`,
+    clouds:true,
+    ground:`linear-gradient(180deg,#C4A882 0%,#D4B896 30%,#E8D5B0 60%,#F0E0C0 100%)`,
+    groundH:38,
+    groundDeco:`<g>
+      <!-- Sun setting -->
+      <circle cx="75%" cy="35%" r="6%" fill="#FFD700" opacity=".9" filter="blur(2px)"/>
+      <circle cx="75%" cy="35%" r="5%" fill="#FFF176" opacity=".95"/>
+      <!-- Waves -->
+      <path d="M0,72 Q5,69 10,72 Q15,75 20,72 Q25,69 30,72 Q35,75 40,72 Q45,69 50,72 Q55,75 60,72 Q65,69 70,72 Q75,75 80,72 Q85,69 90,72 Q95,75 100,72" fill="none" stroke="rgba(100,180,255,.6)" stroke-width="1.5"/>
+      <path d="M0,76 Q5,73 10,76 Q15,79 20,76 Q25,73 30,76 Q35,79 40,76 Q45,73 50,76 Q55,79 60,76 Q65,73 70,76 Q75,79 80,76 Q85,73 90,76 Q95,79 100,76" fill="none" stroke="rgba(100,180,255,.4)" stroke-width="1"/>
+      <!-- Water reflection -->
+      <rect x="0%" y="58%" width="100%" height="6%" fill="rgba(70,150,255,.25)"/>
+      <!-- Palm tree left -->
+      <rect x="3%" y="32%" width="1.5%" height="28%" fill="#8B6914"/>
+      <ellipse cx="5.5%" cy="32%" rx="8%" ry="5%" fill="#2d7a2d" transform="rotate(-15,5.5,32)"/>
+      <ellipse cx="3%" cy="30%" rx="7%" ry="4%" fill="#22C55E" transform="rotate(10,3,30)"/>
+      <!-- Palm right -->
+      <rect x="92%" y="35%" width="1.5%" height="26%" fill="#8B6914"/>
+      <ellipse cx="90%" cy="35%" rx="7%" ry="4.5%" fill="#2d7a2d" transform="rotate(15,90,35)"/>
+      <ellipse cx="93.5%" cy="33%" rx="6%" ry="3.5%" fill="#22C55E" transform="rotate(-10,93.5,33)"/>
+    </g>`,
+    p1ground:"74%",p2ground:"74%",
+    msgBg:"rgba(0,40,80,.85)",msgBorder:"#60A5FA"
+  },
+  // 7. Noche
+  {
+    name:"noche",
+    sky:`linear-gradient(180deg,#000510 0%,#020c1b 40%,#041628 70%,#0a1f35 100%)`,
+    clouds:false,
+    stars:true,
+    ground:`linear-gradient(180deg,#0a1f10 0%,#061408 50%,#030d05 100%)`,
+    groundH:38,
+    groundDeco:`<g>
+      <!-- Full moon -->
+      <circle cx="80%" cy="18%" r="7%" fill="#FFF9E6" opacity=".95"/>
+      <circle cx="80%" cy="18%" r="7%" fill="none" stroke="rgba(255,240,150,.4)" stroke-width="2"/>
+      <!-- Moon glow -->
+      <circle cx="80%" cy="18%" r="11%" fill="rgba(255,240,150,.08)"/>
+      <!-- Silhouette trees -->
+      <rect x="0%" y="48%" width="3%" height="30%" fill="#030d05"/>
+      <polygon points="1.5,48 -2,62 5,62" fill="#041408"/>
+      <polygon points="1.5,42 -3,58 6,58" fill="#030d05"/>
+      <rect x="5%" y="50%" width="2.5%" height="28%" fill="#030d05"/>
+      <polygon points="6.25,50 3,64 9.5,64" fill="#041408"/>
+      <rect x="88%" y="46%" width="3%" height="32%" fill="#030d05"/>
+      <polygon points="89.5,46 86,62 93,62" fill="#041408"/>
+      <polygon points="89.5,40 86,56 93,56" fill="#030d05"/>
+      <rect x="93%" y="50%" width="2.5%" height="28%" fill="#030d05"/>
+      <!-- Fireflies -->
+      <circle cx="25%" cy="55%" r=".8%" fill="rgba(200,255,100,.6)" opacity=".7"/>
+      <circle cx="60%" cy="52%" r=".6%" fill="rgba(150,255,100,.6)" opacity=".6"/>
+      <circle cx="40%" cy="58%" r=".7%" fill="rgba(180,255,120,.5)" opacity=".8"/>
+      <!-- Moon reflection on ground -->
+      <ellipse cx="80%" cy="70%" rx="15%" ry="3%" fill="rgba(255,240,150,.06)"/>
+    </g>`,
+    p1ground:"74%",p2ground:"74%",
+    msgBg:"rgba(2,5,15,.92)",msgBorder:"#818CF8"
   }
 ];
 
@@ -609,6 +730,20 @@ function spawnZzz(wrapId){
 function gs(){try{return JSON.parse(localStorage.getItem("pb8")||"[]");}catch{return[];}}
 function ps(s){try{localStorage.setItem("pb8",JSON.stringify(s));}catch{}}
 function go(s){if(G.scr==="battle"&&s!=="battle")stopMusic();G.scr=s;render();}
+function showSplash(){
+  const app=document.getElementById("app");
+  app.innerHTML=`<div id="splash" style="position:absolute;inset:0;background:linear-gradient(160deg,#0F172A,#1E3A5F);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;animation:splashFadeIn .4s ease both;">
+    <div style="animation:splashSpin 1.2s ease-in-out;margin-bottom:20px;">${POKEBALL}</div>
+    <h1 style="font-family:'Rajdhani',Impact,sans-serif;font-weight:700;font-size:clamp(2rem,8vw,3.5rem);background:linear-gradient(90deg,#FCD34D,#F97316,#EC4899,#60A5FA);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:.1em;animation:splashFadeIn .6s ease .3s both;">⚡ POKÉBATTLE ⚡</h1>
+    <p style="font-family:'Roboto',sans-serif;color:#60A5FA;font-size:.9rem;font-weight:600;letter-spacing:.3em;margin-top:8px;animation:splashFadeIn .6s ease .6s both;">GENERACIÓN 1</p>
+    <div style="margin-top:28px;width:48px;height:4px;background:linear-gradient(90deg,#3B82F6,#60A5FA);border-radius:2px;animation:splashFadeIn .5s ease .8s both;"></div>
+  </div>`;
+  setTimeout(()=>{
+    const el=document.getElementById("splash");
+    if(el){el.style.animation="splashFadeOut .4s ease forwards";}
+    setTimeout(()=>render(),400);
+  },1600);
+}
 function render(){document.getElementById("app").innerHTML=SCREENS[G.scr]?SCREENS[G.scr]():`<div style="color:#fff;padding:20px;">Error: ${G.scr}</div>`;}
 
 const POKEBALL=`<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" width="110" height="110"><circle cx="100" cy="100" r="95" fill="white" stroke="#1E293B" stroke-width="6"/><path d="M 10 100 A 90 90 0 0 1 190 100 Z" fill="#EF4444"/><line x1="10" y1="100" x2="190" y2="100" stroke="#1E293B" stroke-width="6"/><circle cx="100" cy="100" r="22" fill="white" stroke="#1E293B" stroke-width="6"/><circle cx="100" cy="100" r="10" fill="#E2E8F0"/></svg>`;
@@ -638,7 +773,7 @@ intro(){
     <div style="position:relative;z-index:2;flex:1;display:flex;flex-direction:column;justify-content:space-between;padding:min(16px,3%) min(12px,2%);">
       <!-- Title -->
       <div style="text-align:center;flex-shrink:0;">
-        <div style="display:inline-block;background:linear-gradient(135deg,#EF4444,#B91C1C);color:#fff;font-family:'Roboto',sans-serif;font-weight:700;font-size:min(.95rem,4vmin);padding:7px 20px;border-radius:999px;letter-spacing:.15em;box-shadow:0 4px 20px rgba(239,68,68,.6);">⚡ ¡COMBATE POKÉMON! ⚡</div>
+        <div style="display:inline-block;background:linear-gradient(135deg,#F59E0B,#D97706);color:#fff;font-family:'Roboto',sans-serif;font-weight:700;font-size:min(.95rem,4vmin);padding:7px 20px;border-radius:999px;letter-spacing:.15em;box-shadow:0 4px 20px rgba(245,158,11,.6);">⚡ ¡COMBATE POKÉMON! ⚡</div>
       </div>
       <!-- Cards — column on portrait, row on landscape -->
       <div style="display:flex;flex-direction:${window.innerWidth<window.innerHeight?"column":"row"};align-items:stretch;flex:1;margin:min(10px,2%) 0;min-height:0;gap:${window.innerWidth<window.innerHeight?"8px":"0"};">
@@ -701,7 +836,7 @@ title(){
             ${CFG.sfx?"🔊":"🔕"} Efectos
           </button>
         </div>
-        <div style="text-align:center;margin-top:8px;color:rgba(255,255,255,.25);font-size:.7rem;letter-spacing:.15em;font-family:'Roboto',monospace;font-weight:700;">v9.0.8</div>
+        <div style="text-align:center;margin-top:8px;color:rgba(255,255,255,.25);font-size:.7rem;letter-spacing:.15em;font-family:'Roboto',monospace;font-weight:700;">v9.1.0</div>
       </div>
     </div>
   </div>`;
@@ -720,20 +855,20 @@ mode(){
       <div style="width:100%;max-width:380px;">
         <!-- Title -->
         <div style="text-align:center;margin-bottom:32px;">
-          <div style="font-size:min(64px,18vw);line-height:1;margin-bottom:12px;filter:drop-shadow(0 0 24px #EF4444);">⚔️</div>
+          <div style="font-size:min(64px,18vw);line-height:1;margin-bottom:12px;filter:drop-shadow(0 0 24px #3B82F6);">⚔️</div>
           <div style="font-family:'Rajdhani',Impact,sans-serif;font-size:min(2.2rem,7.5vw);color:#fff;font-weight:700;letter-spacing:.12em;text-shadow:0 0 30px rgba(239,68,68,.6);">MODO DE JUEGO</div>
-          <div style="width:80px;height:3px;background:linear-gradient(90deg,#EF4444,#F59E0B);margin:10px auto 0;border-radius:2px;box-shadow:0 0 12px #EF4444;"></div>
+          <div style="width:80px;height:3px;background:linear-gradient(90deg,#3B82F6,#60A5FA);margin:10px auto 0;border-radius:2px;box-shadow:0 0 12px #3B82F6;"></div>
         </div>
         <!-- Buttons -->
         <div style="display:flex;flex-direction:column;gap:12px;">
           <!-- CPU -->
-          <button onclick="sfxMenu();sMode('cpu')" style="border:none;cursor:pointer;background:rgba(255,255,255,.04);border:1px solid rgba(239,68,68,.4);border-radius:14px;padding:20px 20px;text-align:left;display:flex;align-items:center;gap:16px;transition:all .15s;box-shadow:0 0 0 rgba(239,68,68,0);" onpointerdown="this.style.background='rgba(239,68,68,.15)';this.style.boxShadow='0 0 30px rgba(239,68,68,.3)'" onpointerup="this.style.background='rgba(255,255,255,.04)';this.style.boxShadow='none'">
-            <div style="font-size:min(2.8rem,10vw);flex-shrink:0;filter:drop-shadow(0 0 10px #EF4444);">🤖</div>
+          <button onclick="sfxMenu();sMode('cpu')" style="border:none;cursor:pointer;background:rgba(255,255,255,.04);border:1px solid rgba(59,130,246,.4);border-radius:14px;padding:20px 20px;text-align:left;display:flex;align-items:center;gap:16px;transition:all .15s;box-shadow:0 0 0 rgba(59,130,246,0);" onpointerdown="this.style.background='rgba(59,130,246,.15)';this.style.boxShadow='0 0 30px rgba(59,130,246,.3)'" onpointerup="this.style.background='rgba(255,255,255,.04)';this.style.boxShadow='none'">
+            <div style="font-size:min(2.8rem,10vw);flex-shrink:0;filter:drop-shadow(0 0 10px #3B82F6);">🤖</div>
             <div>
               <div style="font-family:'Roboto',sans-serif;font-size:min(1.1rem,4.5vw);color:#fff;font-weight:700;letter-spacing:.06em;">VS CPU</div>
               <div style="font-size:min(.8rem,3vw);color:rgba(255,255,255,.45);margin-top:3px;font-weight:600;">Desafía a la Inteligencia Artificial</div>
               <div style="margin-top:6px;display:flex;gap:4px;">
-                <span style="background:rgba(239,68,68,.25);color:#EF4444;font-family:'Roboto',sans-serif;font-size:.6rem;font-weight:700;padding:2px 8px;border-radius:4px;letter-spacing:.04em;border:1px solid rgba(239,68,68,.3);">1 JUGADOR</span>
+                <span style="background:rgba(59,130,246,.25);color:#60A5FA;font-family:'Roboto',sans-serif;font-size:.6rem;font-weight:700;padding:2px 8px;border-radius:4px;letter-spacing:.04em;border:1px solid rgba(59,130,246,.3);">1 JUGADOR</span>
               </div>
             </div>
             <div style="margin-left:auto;color:rgba(255,255,255,.3);font-size:1.4rem;">›</div>
@@ -758,9 +893,9 @@ mode(){
 create(){
   const s=G.cstep,av=s===1?G.av1:G.av2;
   const isP2=s===2;
-  const accentCol=isP2?"#A855F7":"#EF4444";
-  const accentGlow=isP2?"rgba(168,85,247,.6)":"rgba(239,68,68,.6)";
-  const accentGrad=isP2?"linear-gradient(135deg,#A855F7,#6D28D9)":"linear-gradient(135deg,#EF4444,#991B1B)";
+  const accentCol=isP2?'#818CF8':'#3B82F6';
+  const accentGlow=isP2?'rgba(129,140,248,.6)':'rgba(59,130,246,.6)';
+  const accentGrad=isP2?'linear-gradient(135deg,#818CF8,#4F46E5)':'linear-gradient(135deg,#3B82F6,#1D4ED8)';
   const title=G.mode==="cpu"?"ELIGE TU ENTRENADOR":`JUGADOR ${s}`;
   const btnLabel=s===1&&G.mode==="pvp"?"JUGADOR 2 →":"ELEGIR POKÉMON";
   const avs=A.map((a,i)=>{
@@ -842,8 +977,8 @@ select(){
   const grid=filtered.map(pk=>{
     const iS=!!G.sel.find(s=>s.id===pk.id);
     const iD=G.sel.length>=3&&!iS;
-    return`<div onclick="${iD?"":"G.modal="+pk.id+";render()"}" style="background:${iS?"rgba(255,255,255,.1)":"rgba(255,255,255,.04)"};border-radius:10px;padding:7px 4px 6px;border:2px solid ${iS?acc:"rgba(255,255,255,.07)"};cursor:${iD?"not-allowed":"pointer"};text-align:center;opacity:${iD?.3:1};box-shadow:${iS?"0 0 12px "+accG:"none"};position:relative;">
-      ${iS?`<div style="position:absolute;top:4px;right:4px;background:${acc};border-radius:50%;width:14px;height:14px;font-size:8px;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;">✓</div>`:""}
+    return`<div onclick="${iD?"":"G.modal="+pk.id+";render()"}" style="background:${iS?"rgba(59,130,246,.15)":"rgba(255,255,255,.04)"};border-radius:10px;padding:7px 4px 6px;border:${iS?"3px":"2px"} solid ${iS?acc:"rgba(255,255,255,.07)"};cursor:${iD?"not-allowed":"pointer"};text-align:center;opacity:${iD?.3:1};box-shadow:${iS?"0 0 16px "+accG+",0 0 4px "+accG:"none"};position:relative;transform:${iS?"scale(1.04)":"scale(1)"};transition:all .12s;">
+      ${iS?`<div style="position:absolute;top:-6px;right:-6px;background:${acc};border-radius:50%;width:22px;height:22px;font-size:13px;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;box-shadow:0 0 10px ${acc},0 0 20px ${acc}44;">✓</div>`:""}
       <img src="${su(pk.id)}" style="width:min(66px,17vw);height:min(66px,17vw);object-fit:contain;display:block;margin:0 auto;">
       <div style="font-weight:800;font-size:min(.68rem,2.3vw);color:${iS?"#fff":"rgba(255,255,255,.6)"};margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${pk.name}</div>
       <div style="margin-top:2px;display:flex;flex-wrap:wrap;justify-content:center;gap:2px;">${pk.types.map(t=>bdg(t)).join("")}</div>
@@ -890,7 +1025,7 @@ select(){
   const n=G.sel.length,ready=n===3;
   return`<div style="background:radial-gradient(ellipse at 50% 0%,${isP2?'#1a0a3e':'#0F172A'} 0%,#1E3A5F 80%);display:flex;flex-direction:column;position:absolute;inset:0;overflow:hidden;">
     <!-- Header -->
-    <div style="padding:10px 12px 8px;flex-shrink:0;background:rgba(0,0,0,.6);border-bottom:1px solid rgba(255,255,255,.08);">
+    <div style="padding:10px 12px 8px;flex-shrink:0;background:rgba(15,23,42,.85);border-bottom:1px solid rgba(59,130,246,.15);">
       <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px;">
         <div style="font-family:'Rajdhani',sans-serif;font-weight:700;font-size:min(1.2rem,5vw);color:${acc};letter-spacing:.08em;white-space:nowrap;">${A[pl.avatar]} ${pl.name.toUpperCase()}</div>
         <div style="display:flex;gap:5px;flex-shrink:0;">${slots}</div>
@@ -902,11 +1037,11 @@ select(){
     </div>
     <!-- Grid -->
     <div style="flex:1;overflow-y:auto;padding:8px 8px 2px;">
-      ${filtered.length?`<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:7px;">${grid}</div>`:`<div style="text-align:center;padding:40px 20px;font-family:'Roboto',sans-serif;font-weight:700;font-size:1rem;color:rgba(255,255,255,.3);">SIN RESULTADOS</div>`}
+      ${filtered.length?`<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:7px;">${grid}</div>`:`<div style="text-align:center;padding:40px 20px;font-family:'Roboto',sans-serif;font-weight:700;font-size:1rem;color:rgba(96,165,250,.5);">SIN RESULTADOS</div>`}
     </div>
     <!-- Bottom bar -->
     <div style="display:grid;grid-template-columns:auto 1fr;gap:0;background:#0a0a0a;border-top:2px solid #222;flex-shrink:0;">
-      <button onclick="sfxMenu();go('create')" style="background:#111;border:none;border-right:1px solid #333;font-family:'Roboto',sans-serif;font-size:min(.9rem,3.8vw);font-weight:700;color:#888;er-spacing:.08em;padding:16px 18px;cursor:pointer;">← ATRÁS</button>
+      <button onclick="sfxMenu();go('create')" style="background:#111;border:none;border-right:1px solid #333;font-family:'Roboto',sans-serif;font-size:min(.9rem,3.8vw);font-weight:700;color:#60A5FA;background:rgba(59,130,246,.12);border:1px solid rgba(59,130,246,.3);padding:8px 16px;border-radius:6px;cursor:pointer;">← ATRÁS</button>
       <button onclick="if(${ready}){sfxMenu();cSel();}" style="background:${ready?"linear-gradient(180deg,#15803D,#0f5f2e)":"#0a0a0a"};border:none;color:${ready?"#fff":"rgba(255,255,255,.2)"};font-family:'Roboto',sans-serif;font-size:min(1rem,4vw);font-weight:700;letter-spacing:.06em;padding:16px;cursor:${ready?"pointer":"not-allowed"};">
         ${ready?"⚔  ¡A COMBATIR!":"SELECCIONA "+(3-n)+" MÁS..."}
       </button>
@@ -935,7 +1070,7 @@ fswitch(){
     <div style="font-size:.72rem;color:${d?"rgba(255,255,255,.2)":"#64748B"};">${pk.currentHp}/${pk.hp}</div>
   </button>`;}).join("");
   return`<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(160deg,#0F172A,#1E3A5F 80%);padding:0 20px;text-align:center;">
-    <div style="font-size:56px;margin-bottom:10px;">😔</div>
+    <div style="font-size:56px;margin-bottom:10px;filter:drop-shadow(0 0 16px #3B82F6);">😔</div>
     <h2 style="color:#fff;font-weight:900;font-size:1.4rem;margin:0 0 6px;">${A[pl.avatar]} ${pl.name}</h2>
     <p style="color:#FCD34D;font-weight:700;margin-bottom:28px;font-size:.95rem;">¡Tu Pokémon se ha debilitado!<br>Elige el siguiente</p>
     <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;">${pks}</div>
@@ -950,7 +1085,7 @@ battle(){
   const p1faint=pk1.currentHp<=0,p2faint=pk2.currentHp<=0;
 
   // ── SF-STYLE TOP BAR ──────────────────────────────────────
-  const sfTop=`<div id="sfbar" style="padding:8px 12px 6px;background:rgba(0,0,0,.92);flex-shrink:0;border-bottom:2px solid #222;">
+  const sfTop=`<div id="sfbar" style="padding:8px 12px 6px;background:rgba(10,18,36,.95);flex-shrink:0;border-bottom:1px solid rgba(59,130,246,.2);">
     <div style="display:flex;align-items:center;gap:10px;">
       <!-- P1 side (left) -->
       <div style="flex:1;min-width:0;">
@@ -1009,11 +1144,12 @@ battle(){
   let ac="";
   if(!b.locked){
     if(b.ph==="action"){
-      ac=`<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:0;background:#0a0a0a;border-top:2px solid #222;flex-shrink:0;">
-        <button class="btn" style="background:linear-gradient(180deg,#C0392B,#7B241C);border-radius:0;border-right:1px solid #333;font-family:'Roboto',sans-serif;font-size:1rem;font-weight:700;letter-spacing:.06em;padding:16px 8px;" onclick="sfxMenu();bPh('attack')">⚔ ATACAR</button>
+      const turnBanner=G.mode==="cpu"&&!b.locked?`<div style="text-align:center;padding:4px 0;background:linear-gradient(90deg,transparent,rgba(59,130,246,.15),transparent);animation:pulseGlow 1.5s ease-in-out infinite;border-top:1px solid rgba(59,130,246,.2);flex-shrink:0;"><span style="font-family:'Roboto',sans-serif;font-size:.72rem;font-weight:700;color:#60A5FA;letter-spacing:.12em;">⚔ TU TURNO — ${G.p1.name.toUpperCase()}</span></div>`:"";
+      ac=(turnBanner||"")+`<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:0;background:rgba(10,18,36,.98);border-top:1px solid rgba(59,130,246,.2);flex-shrink:0;">
+        <button class="btn" style="background:linear-gradient(180deg,#C0392B,#7B241C);border-radius:0;border-right:1px solid #333;font-family:'Roboto',sans-serif;font-size:1rem;font-weight:700;letter-spacing:.06em;padding:16px 8px;background:linear-gradient(180deg,#2563EB,#1D4ED8);" onclick="sfxMenu();bPh('attack')">⚔ ATACAR</button>
         <button class="btn" style="background:linear-gradient(180deg,#1565C0,#0D47A1);border-radius:0;border-right:1px solid #333;font-family:'Roboto',sans-serif;font-size:1rem;font-weight:700;letter-spacing:.06em;padding:16px 8px;" onclick="sfxMenu();bPh('switch')">↕ CAMBIAR</button>
-        <button class="btn" onclick="dSave()" style="background:linear-gradient(180deg,#1a1a1a,#111);border-radius:0;border-right:1px solid #222;font-size:.85rem;padding:16px 8px;color:#666;">💾 GUARDAR</button>
-        <button id="exit-confirm" data-step="0" class="btn" onclick="exitBattle()" style="background:linear-gradient(180deg,#1a1a1a,#111);border-radius:0;font-size:.85rem;padding:16px 8px;color:#666;">🚪 SALIR</button>
+        <button class="btn" onclick="dSave()" style="background:rgba(15,23,42,.9);border-radius:0;border-right:1px solid rgba(59,130,246,.15);font-size:.85rem;padding:16px 8px;color:rgba(255,255,255,.35);">💾 GUARDAR</button>
+        <button id="exit-confirm" data-step="0" class="btn" onclick="exitBattle()" style="background:rgba(15,23,42,.9);border-radius:0;font-size:.85rem;padding:16px 8px;color:rgba(255,255,255,.35);">🚪 SALIR</button>
       </div>`;
     } else if(b.ph==="attack"){
       const ms=apk.moves.map((m,i)=>{
@@ -1027,7 +1163,7 @@ battle(){
       }).join("");
       ac=`<div style="background:#0a0a0a;border-top:2px solid #222;flex-shrink:0;padding:8px 10px;">
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px;">${ms}</div>
-        <button class="btn" onclick="sfxMenu();bPh('action')" style="background:#1a1a1a;border:1px solid #333;font-size:.85rem;padding:10px;border-radius:6px;color:#888;">← ATRÁS</button>
+        <button class="btn" onclick="sfxMenu();bPh('action')" style="background:rgba(15,23,42,.9);border:1px solid rgba(59,130,246,.2);font-size:.85rem;padding:10px;border-radius:6px;color:#60A5FA;background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.2);">← ATRÁS</button>
       </div>`;
     } else if(b.ph==="switch"){
       const pks=at.map((pk,i)=>{
@@ -1040,13 +1176,14 @@ battle(){
       }).join("");
       ac=`<div style="background:#0a0a0a;border-top:2px solid #222;flex-shrink:0;padding:8px 10px;">
         <div style="display:flex;gap:6px;margin-bottom:6px;">${pks}</div>
-        <button class="btn" onclick="sfxMenu();bPh('action')" style="background:#1a1a1a;border:1px solid #333;font-size:.85rem;padding:10px;border-radius:6px;color:#888;">← ATRÁS</button>
+        <button class="btn" onclick="sfxMenu();bPh('action')" style="background:rgba(15,23,42,.9);border:1px solid rgba(59,130,246,.2);font-size:.85rem;padding:10px;border-radius:6px;color:#60A5FA;background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.2);">← ATRÁS</button>
       </div>`;
     }
   } else {
-    ac=`<div style="padding:14px;background:#0a0a0a;border-top:2px solid #222;text-align:center;flex-shrink:0;"><span style="font-family:'Roboto',sans-serif;color:#444;font-size:.9rem;font-weight:700;letter-spacing:.1em;">COMBATIENDO...</span></div>`;
+    ac=`<div style="padding:14px;background:#0a0a0a;border-top:2px solid #222;text-align:center;flex-shrink:0;"><span style="font-family:'Roboto',sans-serif;color:rgba(96,165,250,.4);font-size:.9rem;font-weight:700;letter-spacing:.1em;">COMBATIENDO...</span></div>`;
   }
 
+  const blogPanel=`<div id="blog" style="background:rgba(5,10,25,.92);border-top:1px solid rgba(59,130,246,.15);padding:6px 10px;display:flex;flex-direction:column;gap:3px;min-height:32px;max-height:90px;overflow:hidden;flex-shrink:0;"></div>`;
   const tb=G.mode==="pvp"&&!b.locked?`<div style="text-align:center;padding:4px;background:#0a0a0a;"><span style="background:#F59E0B;color:#000;font-family:'Roboto',sans-serif;font-size:.85rem;font-weight:700;padding:3px 16px;border-radius:3px;letter-spacing:.06em;">TURNO: ${G[b.ct==="p1"?"p1":"p2"].name.toUpperCase()}</span></div>`:"";
 
   // Show enter quotes ONCE per battle (not on every render)
@@ -1062,7 +1199,7 @@ battle(){
       }
     }
   },100);
-  return`<div style="background:#000;display:flex;flex-direction:column;position:absolute;inset:0;overflow:hidden;">${sfTop}${arena}${tb}${ac}</div>`;
+  return`<div style="background:#000;display:flex;flex-direction:column;position:absolute;inset:0;overflow:hidden;">${sfTop}${arena}${blogPanel}${tb}${ac}</div>`;
 },
 
 victory(){
@@ -1080,11 +1217,11 @@ victory(){
       <div style="font-family:'Press Start 2P',monospace;font-size:min(2.8rem,9vw);color:#F59E0B;text-shadow:0 0 40px rgba(245,158,11,.8),0 4px 0 #7c3e00;letter-spacing:.08em;line-height:1.2;animation:vsSlam .6s cubic-bezier(.175,.885,.32,1.275) both;">K.O.!</div>
       <div style="font-family:'Rajdhani',Impact,sans-serif;font-size:min(2rem,6vw);color:#fff;font-weight:700;letter-spacing:.12em;margin:8px 0 20px;text-shadow:0 2px 10px rgba(0,0,0,.8);">${A[winner.avatar]} ${winner.name.toUpperCase()} WINS!</div>
       <div style="display:flex;gap:16px;justify-content:center;margin-bottom:24px;">
-        <div style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:10px;padding:14px 20px;text-align:center;">
+        <div style="background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.25);border-radius:10px;padding:14px 20px;text-align:center;">
           <div style="font-family:'Rajdhani',sans-serif;font-weight:700;font-size:2rem;color:#F59E0B;">${stats.moves}</div>
           <div style="font-family:'Roboto',sans-serif;font-size:.75rem;color:#888;font-weight:700;letter-spacing:.06em;">MOVIMIENTOS</div>
         </div>
-        <div style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:10px;padding:14px 20px;text-align:center;">
+        <div style="background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.25);border-radius:10px;padding:14px 20px;text-align:center;">
           <div style="font-family:'Rajdhani',sans-serif;font-weight:700;font-size:2rem;color:#EF4444;">${stats.defeated}</div>
           <div style="font-family:'Roboto',sans-serif;font-size:.75rem;color:#888;font-weight:700;letter-spacing:.06em;">DERROTADOS</div>
         </div>
@@ -1092,7 +1229,7 @@ victory(){
       <div style="display:flex;flex-direction:column;gap:10px;width:min(280px,90vw);">
         <button class="btn" style="background:linear-gradient(135deg,#EF4444,#7B241C);font-family:'Roboto',sans-serif;font-weight:700;font-size:1rem;letter-spacing:.04em;border-radius:6px;" onclick="sfxMenu();doRm()">⟳ REVANCHA</button>
         <button class="btn" style="background:linear-gradient(135deg,#F59E0B,#7c3e00);font-family:'Roboto',sans-serif;font-weight:700;font-size:1rem;letter-spacing:.04em;border-radius:6px;" onclick="sfxMenu();go('mode')">◉ NUEVA PARTIDA</button>
-        <button class="btn" style="background:#111;border:1px solid #333;font-family:'Roboto',sans-serif;font-weight:700;font-size:.95rem;letter-spacing:.04em;border-radius:6px;color:#666;" onclick="sfxMenu();go('title')">← INICIO</button>
+        <button class="btn" style="background:rgba(15,23,42,.9);border:1px solid rgba(59,130,246,.2);font-family:'Roboto',sans-serif;font-weight:700;font-size:.95rem;letter-spacing:.04em;border-radius:6px;color:rgba(255,255,255,.4);" onclick="sfxMenu();go('title')">← INICIO</button>
       </div>
     </div>
   </div>`;
@@ -1109,8 +1246,8 @@ saves(){
       ${m==="load"?`<button class="btn" onclick="sfxMenu();lSave(${s.id})" style="background:linear-gradient(135deg,#22C55E,#15803D);padding:10px;font-size:.9rem;">▶ Cargar</button>`:`<button class="btn" onclick="dSaveItem(${s.id},this)" style="background:linear-gradient(135deg,#EF4444,#B91C1C);padding:10px;font-size:.9rem;" data-c="0">🗑️ Borrar</button>`}
     </div>`).join("");
   return`<div style="position:absolute;inset:0;display:flex;flex-direction:column;background:linear-gradient(160deg,#0F172A,#1E3A5F 80%);">
-    <div style="display:flex;align-items:center;gap:12px;padding:20px 18px 14px;flex-shrink:0;background:rgba(0,0,0,.3);">
-      <button onclick="sfxMenu();go('title')" style="background:rgba(255,255,255,.1);border:none;color:#fff;font-size:.9rem;cursor:pointer;font-weight:800;padding:8px 14px;border-radius:12px;">← ATRÁS</button>
+    <div style="display:flex;align-items:center;gap:12px;padding:20px 18px 14px;flex-shrink:0;background:rgba(15,23,42,.7);">
+      <button onclick="sfxMenu();go('title')" style="background:rgba(59,130,246,.15);border:1px solid rgba(59,130,246,.3);color:#60A5FA;font-family:'Roboto',sans-serif;font-size:.85rem;cursor:pointer;font-weight:700;padding:8px 14px;border-radius:6px;letter-spacing:.04em;">← ATRÁS</button>
       <h2 style="color:#fff;font-weight:900;font-size:1.3rem;margin:0;">${m==="load"?"💾 Cargar":"🗑️ Borrar"} Partidas</h2>
     </div>
     <div style="flex:1;overflow-y:auto;padding:12px 14px 16px;">${list}</div>
@@ -1118,50 +1255,13 @@ saves(){
 },
 scenepick(){
   const SC_INFO=[
-    {
-      idx:0,name:"Campo",
-      tagline:"HIERBA Y NATURALEZA",
-      desc:"Batalla bajo el sol entre árboles y praderas",
-      emoji:"🌿",
-      accent:"#22C55E",
-      glow:"rgba(34,197,94,.6)",
-      bg:"linear-gradient(135deg,#052e16,#14532d,#166534)",
-      sky:"linear-gradient(180deg,#87CEEB,#B0E0FF,#8DB96A)",
-      icon:"🌳"
-    },
-    {
-      idx:1,name:"Galaxia",
-      tagline:"ESPACIO PROFUNDO",
-      desc:"Las estrellas y nebulosas serán testigos",
-      emoji:"🌌",
-      accent:"#A855F7",
-      glow:"rgba(168,85,247,.6)",
-      bg:"linear-gradient(135deg,#0d0020,#1E0A3C,#4C1D95)",
-      sky:"linear-gradient(180deg,#020618,#0B1A3E,#1a0a3e)",
-      icon:"⭐"
-    },
-    {
-      idx:2,name:"Estadio",
-      tagline:"ARENA OFICIAL",
-      desc:"Focos encendidos, gradas rugiendo",
-      emoji:"⚡",
-      accent:"#3B82F6",
-      glow:"rgba(59,130,246,.6)",
-      bg:"linear-gradient(135deg,#0c1a2e,#1E3A5F,#1D4ED8)",
-      sky:"linear-gradient(180deg,#1a1a2e,#16213e,#0f3460)",
-      icon:"🏟️"
-    },
-    {
-      idx:3,name:"Fútbol",
-      tagline:"ESTADIO LLENO",
-      desc:"Fans enloquecidos, césped mojado",
-      emoji:"⚽",
-      accent:"#F59E0B",
-      glow:"rgba(245,158,11,.6)",
-      bg:"linear-gradient(135deg,#052e16,#14532D,#166534)",
-      sky:"linear-gradient(180deg,#1a4a8a,#4A90D9,#2D7A2D)",
-      icon:"🏆"
-    },
+    {idx:0,name:"Campo",tagline:"HIERBA Y NATURALEZA",desc:"Batalla bajo el sol entre árboles",emoji:"🌿",accent:"#22C55E",glow:"rgba(34,197,94,.6)",bg:"linear-gradient(135deg,#052e16,#14532d,#166534)",sky:"linear-gradient(180deg,#4AA8D8,#87CEEB,#B0E0FF,#8DB96A)",icon:"🌳"},
+    {idx:1,name:"Galaxia",tagline:"ESPACIO PROFUNDO",desc:"Las estrellas serán testigos",emoji:"🌌",accent:"#A855F7",glow:"rgba(168,85,247,.6)",bg:"linear-gradient(135deg,#0d0020,#1E0A3C,#4C1D95)",sky:"linear-gradient(180deg,#020618,#0B1A3E,#1a0a3e)",icon:"⭐"},
+    {idx:2,name:"Estadio",tagline:"ARENA OFICIAL",desc:"Focos encendidos, gradas rugiendo",emoji:"⚡",accent:"#3B82F6",glow:"rgba(59,130,246,.6)",bg:"linear-gradient(135deg,#0c1a2e,#1E3A5F,#1D4ED8)",sky:"linear-gradient(180deg,#1a1a2e,#16213e,#0f3460)",icon:"🏟️"},
+    {idx:3,name:"Fútbol",tagline:"ESTADIO LLENO",desc:"Fans enloquecidos, césped mojado",emoji:"⚽",accent:"#F59E0B",glow:"rgba(245,158,11,.6)",bg:"linear-gradient(135deg,#052e16,#14532D,#166534)",sky:"linear-gradient(180deg,#1a3a6e,#2e6db4,#5ba3e0,#87CEEB)",icon:"🏆"},
+    {idx:4,name:"Cueva",tagline:"LAS PROFUNDIDADES",desc:"Piedra, lava y cristales brillantes",emoji:"🦇",accent:"#F59E0B",glow:"rgba(245,158,11,.5)",bg:"linear-gradient(135deg,#1a0f00,#2d1f05,#3d2a08)",sky:"linear-gradient(180deg,#0a0a0a,#1a1008,#2d1f05)",icon:"🔥"},
+    {idx:5,name:"Playa",tagline:"ATARDECER TROPICAL",desc:"Olas, palmeras y sol poniente",emoji:"🌊",accent:"#60A5FA",glow:"rgba(96,165,250,.6)",bg:"linear-gradient(135deg,#0a2a4a,#1a4a7a,#2a6aaa)",sky:"linear-gradient(180deg,#FF6B35,#FFB347,#87CEEB,#4AA8D8)",icon:"🌅"},
+    {idx:6,name:"Noche",tagline:"BAJO LA LUNA LLENA",desc:"Estrellas, luna y luciérnagas",emoji:"🌙",accent:"#818CF8",glow:"rgba(129,140,248,.6)",bg:"linear-gradient(135deg,#05051a,#0a0a2e,#10104a)",sky:"linear-gradient(180deg,#000510,#020c1b,#041628)",icon:"🌕"},
   ];
 
   // Animated particles background
@@ -1206,13 +1306,13 @@ scenepick(){
   return`<div style="position:absolute;inset:0;display:flex;flex-direction:column;background:radial-gradient(ellipse at 50% 0%,#0F172A 0%,#1E3A5F 80%);overflow:hidden;">
     ${sparks}
     <!-- Back button -->
-    <button onclick="sfxMenu();go('select')" style="position:absolute;top:14px;left:14px;z-index:10;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.7);font-family:'Roboto',sans-serif;font-size:.85rem;cursor:pointer;font-weight:700;padding:8px 16px;border-radius:6px;letter-spacing:.04em;">← ATRÁS</button>
+    <button onclick="sfxMenu();go('select')" style="position:absolute;top:14px;left:14px;z-index:10;background:rgba(59,130,246,.12);border:1px solid rgba(59,130,246,.3);color:#60A5FA;font-family:'Roboto',sans-serif;font-size:.85rem;cursor:pointer;font-weight:700;padding:8px 16px;border-radius:6px;letter-spacing:.04em;">← ATRÁS</button>
     <!-- Header -->
     <div style="position:relative;z-index:2;padding:min(20px,4%) min(20px,4%) min(12px,3%);flex-shrink:0;text-align:center;">
       <div style="font-size:min(2.4rem,8vw);line-height:1;margin-bottom:8px;filter:drop-shadow(0 0 20px #F59E0B);">🗺️</div>
       <div style="font-family:'Rajdhani',Impact,sans-serif;font-size:min(1.8rem,6.5vw);color:#fff;font-weight:700;letter-spacing:.12em;text-shadow:0 0 30px rgba(245,158,11,.5);">ELIGE EL ESCENARIO</div>
       <div style="color:rgba(255,255,255,.4);font-size:min(.8rem,3vw);font-weight:700;letter-spacing:.08em;margin-top:4px;">¿DÓNDE COMBATIRÁN ${G.p1.name.toUpperCase()} Y ${(G.p2.isCPU?"LA CPU":G.p2.name.toUpperCase())}?</div>
-      <div style="width:60px;height:2px;background:linear-gradient(90deg,#EF4444,#F59E0B,#EF4444);margin:10px auto 0;border-radius:2px;box-shadow:0 0 10px #F59E0B;"></div>
+      <div style="width:60px;height:2px;background:linear-gradient(90deg,#3B82F6,#60A5FA,#3B82F6);margin:10px auto 0;border-radius:2px;box-shadow:0 0 10px #3B82F6;"></div>
     </div>
     <!-- Grid -->
     <div style="position:relative;z-index:2;flex:1;overflow-y:auto;padding:0 min(16px,4%) min(14px,3%);">
@@ -1357,6 +1457,18 @@ function amsgPoke(isP1, html, dur=1800){
   },dur);
 }
 
+// Battle log — keeps last 3 messages
+const BLOG=[];
+function updateBattleLog(){
+  const el=document.getElementById("blog");
+  if(!el)return;
+  el.innerHTML=BLOG.slice(-3).map((h,i)=>`<div style="padding:5px 12px;background:rgba(5,5,20,${.55+i*.15});border-left:2px solid rgba(59,130,246,${.3+i*.2});border-radius:0 6px 6px 0;animation:battleLogSlide .25s ease;font-size:.78rem;line-height:1.4;">${h}</div>`).join("");
+}
+function blogPush(html){
+  BLOG.push(html);
+  if(BLOG.length>3)BLOG.shift();
+  updateBattleLog();
+}
 function amsg(html,dur=2000){
   const el=document.getElementById("amsg");if(!el)return;
   const arena=document.getElementById("arena");
@@ -1372,6 +1484,7 @@ function amsg(html,dur=2000){
     el.style.position="absolute";
   }
   el.innerHTML=`<div style="background:rgba(5,5,20,.92);backdrop-filter:blur(12px);border:2px solid rgba(255,255,255,.25);border-radius:14px;padding:10px 18px;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,.8);">${html}</div>`;
+  blogPush(html);
   el.style.display="block";
   el.style.animation="none";void el.offsetWidth;
   el.style.animation="msgPop .3s cubic-bezier(.175,.885,.32,1.275) forwards";
@@ -1716,6 +1829,13 @@ function placeSpriteNow(img, wrapId, shadowId, isP1, groundH){
   SP.sprH=spriteH; SP.groundY=fighterGroundY; SP.horizonY=horizonY;
   SP.W=W; SP.sprTop=fighterGroundY-spriteH;
 
+  // Entry animation: slide in from edge + flash
+  img.style.animation=isP1?"pkSlideInLeft .5s cubic-bezier(.175,.885,.32,1.275) forwards":"pkSlideInRight .5s cubic-bezier(.175,.885,.32,1.275) forwards";
+  setTimeout(()=>{
+    // Flash effect
+    img.style.animation=isP1?"pkFlashIn .4s ease forwards, idleBreath 2.5s ease-in-out .5s infinite":"pkFlashIn .4s ease forwards, idleBreath2 2.5s ease-in-out .5s infinite";
+  },520);
+
   const sfx=document.getElementById("sfx-center");
   if(sfx){sfx.style.left=Math.round(W*0.5)+"px";sfx.style.top=Math.round(fighterGroundY-spriteH*0.55)+"px";}
 
@@ -1784,7 +1904,7 @@ function positionSprites(groundH){
   });
 }
 
-render();
+showSplash();
 </script>
 </body>
 </html>
