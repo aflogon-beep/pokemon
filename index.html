@@ -701,7 +701,7 @@ title(){
             ${CFG.sfx?"🔊":"🔕"} Efectos
           </button>
         </div>
-        <div style="text-align:center;margin-top:8px;color:rgba(255,255,255,.25);font-size:.7rem;letter-spacing:.15em;font-family:'Roboto',monospace;font-weight:700;">v9.0.7</div>
+        <div style="text-align:center;margin-top:8px;color:rgba(255,255,255,.25);font-size:.7rem;letter-spacing:.15em;font-family:'Roboto',monospace;font-weight:700;">v9.0.8</div>
       </div>
     </div>
   </div>`;
@@ -1678,7 +1678,16 @@ function placeSpriteNow(img, wrapId, shadowId, isP1, groundH){
 
   const horizonY=Math.round(H*(100-groundH)/100);
   const fighterGroundY=Math.round(H*0.90);
-  const targetW=Math.min(380, Math.max(190, Math.round(W*0.28)));
+
+  // Portrait mobile: smaller sprites, more padding to avoid overlap
+  const isPortrait = W < H;
+  const maxPct   = isPortrait ? 0.20 : 0.28;   // sprite width % of arena
+  const minPx    = isPortrait ? 100  : 190;
+  const maxPx    = isPortrait ? 200  : 380;
+  const maxHpct  = isPortrait ? 0.38 : 0.46;   // max height % of arena
+  const padPct   = isPortrait ? 0.03 : 0.08;   // side padding
+
+  const targetW=Math.min(maxPx, Math.max(minPx, Math.round(W*maxPct)));
 
   img.style.width=targetW+"px";
   img.style.height="auto";
@@ -1687,12 +1696,12 @@ function placeSpriteNow(img, wrapId, shadowId, isP1, groundH){
   const ratio=(img.naturalHeight&&img.naturalWidth)
     ? img.naturalHeight/img.naturalWidth : 1;
   let spriteH=Math.round(targetW*ratio);
-  spriteH=Math.min(spriteH, Math.round(H*0.46));
+  spriteH=Math.min(spriteH, Math.round(H*maxHpct));
 
   const wrap=document.getElementById(wrapId);
   if(!wrap)return;
 
-  const sidePad=Math.round(W*0.08);
+  const sidePad=Math.round(W*padPct);
   wrap.style.cssText=[
     "position:absolute","z-index:3","background:transparent",
     "border:none","outline:none","box-shadow:none","overflow:visible",
