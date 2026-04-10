@@ -738,10 +738,11 @@ function animHpBar(id,cur,max,flip){
   const el=document.getElementById(id);
   if(!el)return;
   const p=Math.max(0,cur/max)*100;
-  const col=hc(cur/max);
+  const pct=cur/max;
+  const grad=pct>.5?(flip?"linear-gradient(270deg,#22C55E,#86efac,#22C55E)":"linear-gradient(90deg,#22C55E,#86efac,#22C55E)"):pct>.25?(flip?"linear-gradient(270deg,#EF4444,#f97316,#FCD34D)":"linear-gradient(90deg,#EF4444,#f97316,#FCD34D)"):(flip?"linear-gradient(270deg,#991B1B,#EF4444,#ff6b6b)":"linear-gradient(90deg,#991B1B,#EF4444,#ff6b6b)");
   el.style.width=p.toFixed(1)+"%";
-  el.style.background=col;
-  el.style.boxShadow=`0 0 8px ${col}88`;
+  el.style.background=grad;
+  el.style.boxShadow=`0 0 8px rgba(34,197,94,.5)`;
 }
 function statusBadge(st){if(!st)return"";const s=STATUS[st];return`<span style="display:inline-block;background:${s.bg};color:${s.color};border:1px solid ${s.color};border-radius:999px;font-size:.6rem;font-weight:800;padding:1px 6px;margin-left:4px;animation:statusBadge .4s ease;">${s.icon} ${s.label}</span>`;}
 function applyStatusAnimation(spId, status){
@@ -883,7 +884,7 @@ title(){
             ${CFG.sfx?"🔊":"🔕"} Efectos
           </button>
         </div>
-        <div style="text-align:center;margin-top:8px;color:rgba(255,255,255,.25);font-size:.7rem;letter-spacing:.15em;font-family:'Roboto',monospace;font-weight:700;">v9.3.2</div>
+        <div style="text-align:center;margin-top:8px;color:rgba(255,255,255,.25);font-size:.7rem;letter-spacing:.15em;font-family:'Roboto',monospace;font-weight:700;">v9.3.4</div>
       </div>
     </div>
   </div>`;
@@ -1182,33 +1183,90 @@ battle(){
   const p1faint=pk1.currentHp<=0,p2faint=pk2.currentHp<=0;
 
   // ── SF-STYLE TOP BAR ──────────────────────────────────────
-  const sfTop=`<div id="sfbar" style="padding:8px 12px 6px;background:rgba(10,18,36,.95);flex-shrink:0;border-bottom:1px solid rgba(59,130,246,.2);">
-    <div style="display:flex;align-items:center;gap:10px;">
-      <!-- P1 side (left) -->
-      <div style="flex:1;min-width:0;">
-        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;">
-          <span class="sf-name" style="color:#FCD34D;">${G.p1.name}</span>
-          <span style="font-size:.7rem;color:#94A3B8;font-weight:700;">${pk1.shiny?"✨ ":""}${pk1.name} · ${pk1.currentHp}/${pk1.hp}${statusBadge(pk1.status)}</span>
+  // ── STREET FIGHTER IV STYLE HUD ──────────────────────────
+  const hp1pct=Math.max(0,pk1.currentHp/pk1.hp*100);
+  const hp2pct=Math.max(0,pk2.currentHp/pk2.hp*100);
+  // SF4 bar: yellow→orange→red gradient that shrinks from outside in
+  const barGrad1=hp1pct>50?"linear-gradient(90deg,#22C55E,#86efac,#22C55E)":hp1pct>25?"linear-gradient(90deg,#EF4444,#f97316,#FCD34D)":"linear-gradient(90deg,#991B1B,#EF4444,#ff6b6b)";
+  const barGrad2=hp2pct>50?"linear-gradient(270deg,#22C55E,#86efac,#22C55E)":hp2pct>25?"linear-gradient(270deg,#EF4444,#f97316,#FCD34D)":"linear-gradient(270deg,#991B1B,#EF4444,#ff6b6b)";
+  const sfTop=`<div id="sfbar" style="flex-shrink:0;background:linear-gradient(180deg,#1a0a00,#0d0500);border-bottom:3px solid #000;position:relative;overflow:hidden;">
+    <!-- Top metallic trim -->
+    <div style="height:3px;background:linear-gradient(90deg,#2a1500,#8B4513,#CD853F,#8B4513,#2a1500);"></div>
+    <!-- Main HUD -->
+    <div style="display:flex;align-items:center;padding:5px 6px 4px;gap:0;">
+
+      <!-- P1 portrait -->
+      <div style="width:min(44px,11vw);height:min(44px,11vw);flex-shrink:0;border:2px solid #8B4513;border-radius:3px;overflow:hidden;background:#000;position:relative;">
+        <img src="${su(pk1.id)}" style="width:130%;height:130%;object-fit:cover;object-position:center top;transform:translateX(-10%) scaleX(-1);filter:contrast(1.1) saturate(1.2);">
+        <div style="position:absolute;inset:0;box-shadow:inset 0 0 8px rgba(0,0,0,.8);"></div>
+      </div>
+
+      <!-- P1 HP section -->
+      <div style="flex:1;padding:0 5px;min-width:0;">
+        <!-- Name SF style: italic, gold -->
+        <div style="font-family:'Rajdhani',sans-serif;font-weight:700;font-size:min(.85rem,3.5vw);color:#FCD34D;font-style:italic;letter-spacing:.06em;text-shadow:1px 1px 0 #000,-1px -1px 0 #000,0 0 8px rgba(252,211,77,.4);white-space:nowrap;overflow:hidden;margin-bottom:3px;">${G.p1.name.toUpperCase()}</div>
+        <!-- HP bar container SF4 style -->
+        <div style="position:relative;height:min(13px,3.5vw);background:#111;border:1px solid #444;border-radius:2px;overflow:hidden;box-shadow:inset 0 2px 4px rgba(0,0,0,.8);">
+          <!-- Dark backing -->
+          <div style="position:absolute;inset:0;background:linear-gradient(180deg,#1a0000,#000);"></div>
+          <!-- HP fill — grows LEFT to RIGHT -->
+          <div id="hpbar1" style="position:absolute;left:0;top:0;bottom:0;width:${hp1pct.toFixed(1)}%;background:${barGrad1};transition:width .5s cubic-bezier(.4,0,.2,1),background .4s ease;box-shadow:0 0 8px rgba(34,197,94,.5);">
+            <!-- Shine -->
+            <div style="position:absolute;top:0;left:0;right:0;height:40%;background:linear-gradient(180deg,rgba(255,255,255,.3),transparent);border-radius:2px 2px 0 0;"></div>
+          </div>
+          <!-- HP text overlay -->
+          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:flex-end;padding-right:4px;">
+            <span style="font-family:'Press Start 2P',monospace;font-size:min(.45rem,1.5vw);color:rgba(255,255,255,.9);text-shadow:1px 1px 2px #000;">${pk1.currentHp}</span>
+          </div>
         </div>
-        ${mkBar(pk1.currentHp,pk1.hp,false,"hpbar1")}
-        <div style="display:flex;gap:3px;margin-top:3px;">
-          ${b.t1.map((pk,i)=>`<div style="width:10px;height:10px;border-radius:50%;background:${pk.currentHp>0?(pk.status&&STATUS[pk.status]?STATUS[pk.status].color:"#22C55E"):"#333"};outline:${i===b.a1?"2px solid #FCD34D":"none"};outline-offset:1px;"></div>`).join("")}
+        <!-- Pokemon name + status + dots -->
+        <div style="display:flex;align-items:center;gap:4px;margin-top:2px;">
+          <span style="font-family:'Press Start 2P',monospace;font-size:min(.38rem,1.2vw);color:rgba(255,255,255,.5);letter-spacing:.02em;">${pk1.shiny?"✨":""}${pk1.name.slice(0,9).toUpperCase()}</span>
+          ${statusBadge(pk1.status)}
+          <div style="display:flex;gap:2px;margin-left:auto;">
+            ${b.t1.map((pk,i)=>`<div style="width:8px;height:8px;border-radius:50%;background:${pk.currentHp>0?"#22C55E":"#333"};outline:${i===b.a1?"1.5px solid #FCD34D":"1px solid #444"};outline-offset:1px;"></div>`).join("")}
+          </div>
         </div>
       </div>
-      <!-- VS center badge -->
-      <div style="background:linear-gradient(135deg,#F59E0B,#EF4444);padding:5px 10px;border-radius:6px;font-family:'Roboto',sans-serif;font-size:.95rem;font-weight:700;color:#fff;flex-shrink:0;letter-spacing:.05em;box-shadow:0 2px 10px rgba(245,158,11,.5);">VS</div>
-      <!-- P2 side (right) -->
-      <div style="flex:1;min-width:0;">
-        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;">
-          <span style="font-size:.7rem;color:#94A3B8;font-weight:700;">${statusBadge(pk2.status)}${pk2.shiny?"✨ ":""}${pk2.name} · ${pk2.currentHp}/${pk2.hp}</span>
-          <span class="sf-name" style="color:#93C5FD;">${G.p2.name}</span>
+
+      <!-- CENTER: round timer + KO counter -->
+      <div style="flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:center;width:min(42px,10vw);gap:1px;">
+        <div style="background:linear-gradient(180deg,#8B4513,#5C2A00);border:2px solid #CD853F;border-radius:4px;width:100%;text-align:center;padding:2px 0;box-shadow:0 2px 8px rgba(0,0,0,.6);">
+          <div style="font-family:'Press Start 2P',monospace;font-size:min(.9rem,3vw);color:#FF6B00;text-shadow:0 0 10px #FF6B00,1px 1px 0 #000;line-height:1;">${b.st?b.st.moves:0}</div>
         </div>
-        ${mkBar(pk2.currentHp,pk2.hp,true,"hpbar2")}
-        <div style="display:flex;gap:3px;margin-top:3px;justify-content:flex-end;">
-          ${b.t2.map((pk,i)=>`<div style="width:10px;height:10px;border-radius:50%;background:${pk.currentHp>0?(pk.status&&STATUS[pk.status]?STATUS[pk.status].color:"#22C55E"):"#333"};outline:${i===b.a2?"2px solid #93C5FD":"none"};outline-offset:1px;"></div>`).join("")}
+        <div style="font-family:'Rajdhani',sans-serif;font-size:min(.5rem,1.8vw);color:#8B4513;font-weight:700;letter-spacing:.06em;">K·B</div>
+      </div>
+
+      <!-- P2 HP section (mirrored) -->
+      <div style="flex:1;padding:0 5px;min-width:0;">
+        <div style="font-family:'Rajdhani',sans-serif;font-weight:700;font-size:min(.85rem,3.5vw);color:#93C5FD;font-style:italic;letter-spacing:.06em;text-shadow:1px 1px 0 #000,-1px -1px 0 #000,0 0 8px rgba(147,197,253,.4);white-space:nowrap;overflow:hidden;text-align:right;margin-bottom:3px;">${G.p2.name.toUpperCase()}</div>
+        <div style="position:relative;height:min(13px,3.5vw);background:#111;border:1px solid #444;border-radius:2px;overflow:hidden;box-shadow:inset 0 2px 4px rgba(0,0,0,.8);">
+          <div style="position:absolute;inset:0;background:linear-gradient(180deg,#1a0000,#000);"></div>
+          <!-- HP fill — grows RIGHT to LEFT for P2 -->
+          <div id="hpbar2" style="position:absolute;right:0;top:0;bottom:0;width:${hp2pct.toFixed(1)}%;background:${barGrad2};transition:width .5s cubic-bezier(.4,0,.2,1),background .4s ease;box-shadow:0 0 8px rgba(34,197,94,.5);">
+            <div style="position:absolute;top:0;left:0;right:0;height:40%;background:linear-gradient(180deg,rgba(255,255,255,.3),transparent);border-radius:2px 2px 0 0;"></div>
+          </div>
+          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:flex-start;padding-left:4px;">
+            <span style="font-family:'Press Start 2P',monospace;font-size:min(.45rem,1.5vw);color:rgba(255,255,255,.9);text-shadow:1px 1px 2px #000;">${pk2.currentHp}</span>
+          </div>
         </div>
+        <div style="display:flex;align-items:center;gap:4px;margin-top:2px;flex-direction:row-reverse;">
+          <span style="font-family:'Press Start 2P',monospace;font-size:min(.38rem,1.2vw);color:rgba(255,255,255,.5);letter-spacing:.02em;">${pk2.shiny?"✨":""}${pk2.name.slice(0,9).toUpperCase()}</span>
+          ${statusBadge(pk2.status)}
+          <div style="display:flex;gap:2px;margin-right:auto;">
+            ${b.t2.map((pk,i)=>`<div style="width:8px;height:8px;border-radius:50%;background:${pk.currentHp>0?"#22C55E":"#333"};outline:${i===b.a2?"1.5px solid #93C5FD":"1px solid #444"};outline-offset:1px;"></div>`).join("")}
+          </div>
+        </div>
+      </div>
+
+      <!-- P2 portrait -->
+      <div style="width:min(44px,11vw);height:min(44px,11vw);flex-shrink:0;border:2px solid #8B4513;border-radius:3px;overflow:hidden;background:#000;position:relative;">
+        <img src="${su(pk2.id)}" style="width:130%;height:130%;object-fit:cover;object-position:center top;transform:translateX(-10%);filter:contrast(1.1) saturate(1.2);">
+        <div style="position:absolute;inset:0;box-shadow:inset 0 0 8px rgba(0,0,0,.8);"></div>
       </div>
     </div>
+    <!-- Bottom metallic trim -->
+    <div style="height:2px;background:linear-gradient(90deg,#2a1500,#6B3A1F,#8B4513,#6B3A1F,#2a1500);"></div>
   </div>`;
 
   // ── ARENA ─────────────────────────────────────────────────
