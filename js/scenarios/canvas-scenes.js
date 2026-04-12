@@ -627,42 +627,6 @@ class ScenaNoche extends ScenarioCanvas {
 // ══════════════════════════════════════════════════════════
 // Dispatcher
 // ══════════════════════════════════════════════════════════
-const CANVAS_SCENES = {
-  campo: ScenaCampo,
-  galaxia: ScenaGalaxia,
-  estadio: ScenaEstadio,
-  futbol: ScenaFutbol,
-  cueva: ScenaCueva,
-  playa: ScenaPlaya,
-  noche: ScenaNoche,
-  reves: ScenaReves,
-  nieve: ScenaNieve,
-  lavanda: ScenaLavanda,
-};
-
-let _activeScene = null;
-
-function initCanvasScene(sceneName, canvasId) {
-  if (_activeScene) { _activeScene.destroy(); _activeScene = null; }
-  const Cls = CANVAS_SCENES[sceneName];
-  if (!Cls) return;
-  const id = canvasId || 'scene-canvas';
-  _activeScene = new Cls(id, {});
-  // Retry until canvas has dimensions
-  let tries = 0;
-  const go = () => {
-    const c = document.getElementById(id);
-    const hasSize = c && (c.offsetWidth > 0 || (c.parentElement && c.parentElement.offsetWidth > 0));
-    if (hasSize || tries++ > 10) { if (_activeScene) _activeScene.init(); }
-    else setTimeout(go, 60);
-  };
-  setTimeout(go, 30);
-}
-
-function destroyCanvasScene() {
-  if (_activeScene) { _activeScene.destroy(); _activeScene = null; }
-}
-
 // ══════════════════════════════════════════════════════════
 // MUNDO DEL REVÉS — Stranger Things
 // Cielo rojo carmesí, árboles retorcidos negros, partículas
@@ -1357,5 +1321,41 @@ class ScenaLavanda extends ScenarioCanvas {
     ctx.ellipse(moonX, gY + H*0.03, W*0.25, H*0.04, 0, 0, Math.PI*2);
     ctx.fill();
   }
+}
+
+const CANVAS_SCENES = {
+  campo: ScenaCampo,
+  galaxia: ScenaGalaxia,
+  estadio: ScenaEstadio,
+  futbol: ScenaFutbol,
+  cueva: ScenaCueva,
+  playa: ScenaPlaya,
+  noche: ScenaNoche,
+  reves: ScenaReves,
+  nieve: ScenaNieve,
+  lavanda: ScenaLavanda,
+};
+
+let _activeScene = null;
+
+function initCanvasScene(sceneName, canvasId) {
+  if (_activeScene) { _activeScene.destroy(); _activeScene = null; }
+  const Cls = CANVAS_SCENES[sceneName];
+  if (!Cls) return;
+  const id = canvasId || 'scene-canvas';
+  _activeScene = new Cls(id, {});
+  // Retry until canvas has dimensions
+  let tries = 0;
+  const go = () => {
+    const c = document.getElementById(id);
+    const hasSize = c && (c.offsetWidth > 0 || (c.parentElement && c.parentElement.offsetWidth > 0));
+    if (hasSize || tries++ > 10) { if (_activeScene) _activeScene.init(); }
+    else setTimeout(go, 60);
+  };
+  setTimeout(go, 30);
+}
+
+function destroyCanvasScene() {
+  if (_activeScene) { _activeScene.destroy(); _activeScene = null; }
 }
 
