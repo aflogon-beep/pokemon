@@ -481,7 +481,7 @@ battle(){
   if(typeof initCanvasScene==='function'){
     setTimeout(()=>initCanvasScene(sc.name),30);
   }
-  const arena=`<div id="arena" style="position:relative;overflow:hidden;flex:1;min-height:140px;">
+  const arena=`<div id="arena" style="position:relative;overflow:hidden;flex:1;min-height:0;height:44vh;">
     <canvas id="scene-canvas" style="position:absolute;inset:0;width:100%;height:100%;display:block;min-height:0;"></canvas>
     <!-- ground shadow overlay for depth -->
     <div style="position:absolute;bottom:0;left:0;right:0;height:${sc.groundH+5}%;background:linear-gradient(0deg,rgba(0,0,0,.35) 0%,transparent 100%);pointer-events:none;z-index:1;"></div>
@@ -491,13 +491,13 @@ battle(){
     <div id="sh2" style="position:absolute;z-index:2;pointer-events:none;"></div>
     <!-- P1 sprite — left side, mirrored to face right -->
     <div id="sp1wrap" style="position:absolute;z-index:3;left:0;bottom:0;">
-      <img id="sp1" src="${su(pk1.id)}"
+      <img id="sp1" src="${suStatic(pk1.id)}"
         style="display:block;transform:scaleX(-1);${p1faint?"filter:grayscale(1) opacity(.25);":""}"
         onload="onSpriteLoad(this,'sp1wrap','sh1',true,${sc.groundH})">
     </div>
     <!-- P2 sprite — right side -->
     <div id="sp2wrap" style="position:absolute;z-index:3;right:0;bottom:0;">
-      <img id="sp2" src="${su(pk2.id)}"
+      <img id="sp2" src="${suStatic(pk2.id)}"
         style="display:block;${p2faint?"filter:grayscale(1) opacity(.25);":""}"
         onload="onSpriteLoad(this,'sp2wrap','sh2',false,${sc.groundH})">
     </div>
@@ -589,13 +589,13 @@ battle(){
       // Header showing who's attacking vs who's defending
       const atkHeader=`<div style="display:flex;align-items:center;justify-content:space-between;padding:5px 10px 3px;background:rgba(5,10,25,.8);border-bottom:1px solid rgba(59,130,246,.15);">
         <div style="display:flex;align-items:center;gap:5px;">
-          <img src="${su(apk.id)}" width="24" height="24" style="object-fit:contain;filter:drop-shadow(0 0 5px ${(TC[apk.types[0]]||TC.normal).bg});">
+          <img src="${suStatic(apk.id)}" width="24" height="24" style="object-fit:contain;filter:drop-shadow(0 0 5px ${(TC[apk.types[0]]||TC.normal).bg});">
           <span style="font-family:'Rajdhani',sans-serif;font-size:min(.9rem,3.5vw);font-weight:700;color:#fff;">${apk.name.toUpperCase()}</span>
           <span style="font-size:.6rem;color:rgba(255,255,255,.3);font-family:'Roboto',sans-serif;">— elige ataque</span>
         </div>
         <div style="display:flex;align-items:center;gap:4px;opacity:.55;">
           <span style="font-size:.55rem;color:rgba(255,255,255,.4);">VS</span>
-          <img src="${su(defPk.id)}" width="20" height="20" style="object-fit:contain;filter:grayscale(.4);">
+          <img src="${suStatic(defPk.id)}" width="20" height="20" style="object-fit:contain;filter:grayscale(.4);">
           <span style="font-family:'Roboto',sans-serif;font-size:min(.6rem,2.5vw);color:rgba(255,255,255,.4);">${defPk.name}</span>
         </div>
       </div>`;
