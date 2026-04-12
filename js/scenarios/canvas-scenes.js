@@ -635,6 +635,9 @@ const CANVAS_SCENES = {
   cueva: ScenaCueva,
   playa: ScenaPlaya,
   noche: ScenaNoche,
+  reves: ScenaReves,
+  nieve: ScenaNieve,
+  lavanda: ScenaLavanda,
 };
 
 let _activeScene = null;
@@ -659,3 +662,700 @@ function initCanvasScene(sceneName, canvasId) {
 function destroyCanvasScene() {
   if (_activeScene) { _activeScene.destroy(); _activeScene = null; }
 }
+
+// ══════════════════════════════════════════════════════════
+// MUNDO DEL REVÉS — Stranger Things
+// Cielo rojo carmesí, árboles retorcidos negros, partículas
+// de Polvo de Arriba, relámpagos violetas, niebla roja
+// ══════════════════════════════════════════════════════════
+class ScenaReves extends ScenarioCanvas {
+  setupParticles() {
+    const W = this.W || 400, H = this.H || 500;
+    // Upside-down ash/spore particles floating
+    this.spores = Array.from({length:80}, () => ({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      r: 0.8 + Math.random() * 2.5,
+      vx: (Math.random() - 0.5) * 0.4,
+      vy: -0.15 - Math.random() * 0.35, // float upward
+      ph: Math.random() * Math.PI * 2,
+      type: Math.random() < 0.6 ? 'spore' : 'ash',
+      alpha: 0.3 + Math.random() * 0.6,
+    }));
+    // Lightning bolts
+    this.bolts = [];
+    this.nextBolt = 60 + Math.random() * 120;
+    // Twisted trees
+    this.trees = [
+      { x: 0.04, lean: 0.12 },
+      { x: 0.12, lean: -0.08 },
+      { x: 0.82, lean: 0.09 },
+      { x: 0.91, lean: -0.11 },
+      { x: 0.72, lean: 0.06 },
+    ];
+    // Fog layers
+    this.fogs = Array.from({length:5}, (_, i) => ({
+      x: (i / 5) * W * 2,
+      y: H * (0.55 + i * 0.05),
+      w: W * (0.8 + Math.random() * 0.8),
+      h: H * (0.06 + Math.random() * 0.08),
+      speed: 0.25 + Math.random() * 0.3,
+      alpha: 0.08 + Math.random() * 0.12,
+    }));
+    // Pulsating veins on ground
+    this.veins = Array.from({length:8}, () => ({
+      x: Math.random(),
+      pulse: Math.random() * Math.PI * 2,
+    }));
+  }
+
+  draw() {
+    const { ctx, W, H, t } = this;
+    if (!ctx || !W || !H) return;
+
+    // ── Sky: deep crimson gradient with red pulse ─────────
+    const pulse = 0.5 + Math.sin(t * 0.4) * 0.5;
+    const sky = ctx.createLinearGradient(0, 0, 0, H);
+    sky.addColorStop(0, `rgba(${Math.round(40+pulse*15)},0,0,1)`);
+    sky.addColorStop(0.3, `rgba(${Math.round(85+pulse*20)},5,8,1)`);
+    sky.addColorStop(0.6, `rgba(${Math.round(110+pulse*15)},10,15,1)`);
+    sky.addColorStop(1, `rgba(60,0,5,1)`);
+    ctx.fillStyle = sky;
+    ctx.fillRect(0, 0, W, H);
+
+    // ── Blood-red atmospheric glow ────────────────────────
+    const glow = ctx.createRadialGradient(W*0.5, H*0.25, 0, W*0.5, H*0.25, W*0.7);
+    glow.addColorStop(0, `rgba(180,0,20,${0.06+pulse*0.04})`);
+    glow.addColorStop(0.5, `rgba(120,0,10,0.03)`);
+    glow.addColorStop(1, 'transparent');
+    ctx.fillStyle = glow;
+    ctx.fillRect(0, 0, W, H);
+
+    // ── Cracked ground veins pulsing red ──────────────────
+    const gY = H * 0.60;
+    this.veins.forEach(v => {
+      v.pulse += 0.025;
+      const vAlpha = 0.15 + Math.sin(v.pulse) * 0.12;
+      ctx.strokeStyle = `rgba(220,30,30,${vAlpha})`;
+      ctx.lineWidth = 1.2;
+      ctx.shadowColor = `rgba(255,50,50,${vAlpha * 1.5})`;
+      ctx.shadowBlur = 6;
+      ctx.beginPath();
+      const x0 = v.x * W;
+      ctx.moveTo(x0, gY);
+      ctx.bezierCurveTo(
+        x0 + (Math.random()-0.5)*30, gY + 15,
+        x0 + (Math.random()-0.5)*20, gY + 30,
+        x0 + (Math.random()-0.5)*40, H
+      );
+      ctx.stroke();
+    });
+    ctx.shadowBlur = 0;
+
+    // ── Ground: dark reddish earth ────────────────────────
+    const gr = ctx.createLinearGradient(0, gY, 0, H);
+    gr.addColorStop(0, '#2a0505');
+    gr.addColorStop(0.4, '#1a0303');
+    gr.addColorStop(1, '#0d0101');
+    ctx.fillStyle = gr;
+    ctx.fillRect(0, gY, W, H - gY);
+
+    // ── Twisted trees ─────────────────────────────────────
+    this.trees.forEach(tree => {
+      const tx = tree.x * W;
+      const sway = Math.sin(t * 0.5 + tree.lean * 10) * 2;
+      ctx.strokeStyle = '#0d0000';
+      ctx.lineWidth = 8;
+      ctx.lineCap = 'round';
+      // Trunk
+      ctx.beginPath();
+      ctx.moveTo(tx, gY + 5);
+      ctx.bezierCurveTo(
+        tx + sway + tree.lean * W * 0.12, gY - H * 0.1,
+        tx + sway * 1.5 + tree.lean * W * 0.18, gY - H * 0.22,
+        tx + sway * 2 + tree.lean * W * 0.22, gY - H * 0.35
+      );
+      ctx.stroke();
+      // Twisted branches
+      const bx = tx + sway * 2 + tree.lean * W * 0.22;
+      const by = gY - H * 0.35;
+      [[0.12, -0.08], [-0.1, -0.06], [0.07, -0.12], [-0.14, -0.1]].forEach(([dx, dy]) => {
+        ctx.lineWidth = 3.5;
+        ctx.beginPath();
+        ctx.moveTo(bx, by);
+        ctx.quadraticCurveTo(
+          bx + dx * W * 0.5 + sway, by + dy * H * 0.5,
+          bx + dx * W + sway * 1.5, by + dy * H
+        );
+        ctx.stroke();
+        // Sub-branches
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(bx + dx * W * 0.5, by + dy * H * 0.5);
+        ctx.lineTo(bx + (dx + 0.07) * W * 0.5, by + (dy - 0.06) * H * 0.5);
+        ctx.stroke();
+      });
+    });
+
+    // ── Fog layers drifting ───────────────────────────────
+    this.fogs.forEach(f => {
+      f.x -= f.speed;
+      if (f.x + f.w < 0) f.x = W + 10;
+      const fg = ctx.createRadialGradient(
+        f.x + f.w / 2, f.y + f.h / 2, 0,
+        f.x + f.w / 2, f.y + f.h / 2, f.w / 1.5
+      );
+      fg.addColorStop(0, `rgba(180,20,20,${f.alpha})`);
+      fg.addColorStop(0.5, `rgba(120,10,10,${f.alpha * 0.5})`);
+      fg.addColorStop(1, 'transparent');
+      ctx.fillStyle = fg;
+      ctx.beginPath();
+      ctx.ellipse(f.x + f.w / 2, f.y + f.h / 2, f.w / 2, f.h / 2, 0, 0, Math.PI * 2);
+      ctx.fill();
+    });
+
+    // ── Lightning bolts ───────────────────────────────────
+    this.nextBolt--;
+    if (this.nextBolt <= 0) {
+      this.nextBolt = 80 + Math.random() * 150;
+      const bx = W * (0.1 + Math.random() * 0.8);
+      this.bolts.push({ x: bx, life: 1.0, segs: this._makeBolt(bx, 0, bx + (Math.random()-0.5)*60, H*0.55) });
+    }
+    this.bolts = this.bolts.filter(b => {
+      b.life -= 0.08;
+      if (b.life <= 0) return false;
+      ctx.strokeStyle = `rgba(180,0,255,${b.life * 0.9})`;
+      ctx.shadowColor = `rgba(200,50,255,${b.life})`;
+      ctx.shadowBlur = 20;
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      b.segs.forEach((pt, i) => i === 0 ? ctx.moveTo(pt[0], pt[1]) : ctx.lineTo(pt[0], pt[1]));
+      ctx.stroke();
+      // Screen flash on fresh bolt
+      if (b.life > 0.85) {
+        ctx.fillStyle = `rgba(120,0,180,${(b.life-0.85)*0.3})`;
+        ctx.fillRect(0, 0, W, H);
+      }
+      return true;
+    });
+    ctx.shadowBlur = 0;
+
+    // ── Floating spores / ash ─────────────────────────────
+    this.spores.forEach(s => {
+      s.x += s.vx + Math.sin(t * 0.8 + s.ph) * 0.5;
+      s.y += s.vy;
+      s.ph += 0.01;
+      if (s.y < -10) { s.y = H + 5; s.x = Math.random() * W; }
+      if (s.x < -5) s.x = W + 5;
+      if (s.x > W + 5) s.x = -5;
+      if (s.type === 'spore') {
+        const sg = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, s.r * 3);
+        sg.addColorStop(0, `rgba(255,60,60,${s.alpha})`);
+        sg.addColorStop(0.4, `rgba(200,20,20,${s.alpha * 0.4})`);
+        sg.addColorStop(1, 'transparent');
+        ctx.fillStyle = sg;
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r * 3, 0, Math.PI * 2);
+        ctx.fill();
+      } else {
+        ctx.fillStyle = `rgba(80,10,10,${s.alpha * 0.7})`;
+        ctx.save();
+        ctx.translate(s.x, s.y);
+        ctx.rotate(t + s.ph);
+        ctx.fillRect(-s.r, -s.r * 0.4, s.r * 2, s.r * 0.8);
+        ctx.restore();
+      }
+    });
+
+    // ── Demogorgon eye glow ambient (subtle) ─────────────
+    const eyeA = 0.04 + Math.sin(t * 0.3) * 0.03;
+    const eye = ctx.createRadialGradient(W * 0.5, gY - H * 0.1, 0, W * 0.5, gY - H * 0.1, W * 0.4);
+    eye.addColorStop(0, `rgba(255,0,0,${eyeA})`);
+    eye.addColorStop(1, 'transparent');
+    ctx.fillStyle = eye;
+    ctx.fillRect(0, 0, W, H);
+  }
+
+  _makeBolt(x1, y1, x2, y2) {
+    const segs = [[x1, y1]];
+    const steps = 8 + Math.floor(Math.random() * 6);
+    for (let i = 1; i <= steps; i++) {
+      const p = i / steps;
+      const mx = x1 + (x2 - x1) * p + (Math.random() - 0.5) * 40;
+      const my = y1 + (y2 - y1) * p;
+      segs.push([mx, my]);
+    }
+    segs.push([x2, y2]);
+    return segs;
+  }
+}
+
+// ══════════════════════════════════════════════════════════
+// MONTE CORONA — Sinnoh peaks
+// Amanecer épico, aurora boreal, nieve cayendo, lago helado
+// picos nevados, nubes volumétricas
+// ══════════════════════════════════════════════════════════
+class ScenaNieve extends ScenarioCanvas {
+  setupParticles() {
+    const W = this.W || 400, H = this.H || 500;
+    // Snowflakes
+    this.snow = Array.from({length:120}, () => ({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      r: 0.8 + Math.random() * 2.2,
+      vx: (Math.random() - 0.5) * 0.5,
+      vy: 0.4 + Math.random() * 0.9,
+      ph: Math.random() * Math.PI * 2,
+      alpha: 0.5 + Math.random() * 0.5,
+      spin: (Math.random()-0.5)*0.04,
+      rot: Math.random()*Math.PI*2,
+    }));
+    // Aurora ribbons
+    this.auroras = Array.from({length:4}, (_, i) => ({
+      ph: i * Math.PI * 0.5,
+      color: ['rgba(0,255,180,', 'rgba(100,200,255,', 'rgba(180,100,255,', 'rgba(0,220,150,'][i],
+      amp: 30 + i * 15,
+      speed: 0.4 + i * 0.15,
+      y: H * (0.08 + i * 0.04),
+      alpha: 0.08 + Math.random() * 0.1,
+    }));
+    // Clouds
+    this.clouds = Array.from({length:6}, (_, i) => ({
+      x: (i / 6) * W * 1.5,
+      y: H * (0.05 + Math.random() * 0.12),
+      w: W * (0.25 + Math.random() * 0.3),
+      speed: 0.2 + Math.random() * 0.25,
+      alpha: 0.7 + Math.random() * 0.25,
+    }));
+    // Lake sparkles
+    this.sparkles = Array.from({length:25}, () => ({
+      x: W * (0.15 + Math.random() * 0.7),
+      y: H * (0.72 + Math.random() * 0.1),
+      ph: Math.random() * Math.PI * 2,
+      size: 1 + Math.random() * 2,
+    }));
+  }
+
+  draw() {
+    const { ctx, W, H, t } = this;
+    if (!ctx || !W || !H) return;
+
+    const gY = H * 0.62;
+    const lakeY = H * 0.70;
+
+    // ── Sky: dawn over snowy peaks ────────────────────────
+    const sky = ctx.createLinearGradient(0, 0, 0, H * 0.65);
+    const dawnCycle = (Math.sin(t * 0.08) + 1) * 0.5; // slow day cycle
+    sky.addColorStop(0, `rgba(5,8,30,1)`);
+    sky.addColorStop(0.25, `rgba(${Math.round(15+dawnCycle*40)},${Math.round(10+dawnCycle*20)},${Math.round(60+dawnCycle*30)},1)`);
+    sky.addColorStop(0.5, `rgba(${Math.round(80+dawnCycle*100)},${Math.round(40+dawnCycle*80)},${Math.round(100+dawnCycle*60)},1)`);
+    sky.addColorStop(0.8, `rgba(${Math.round(200+dawnCycle*50)},${Math.round(120+dawnCycle*80)},${Math.round(80+dawnCycle*60)},1)`);
+    sky.addColorStop(1, `rgba(${Math.round(220+dawnCycle*30)},${Math.round(160+dawnCycle*60)},${Math.round(100+dawnCycle*40)},1)`);
+    ctx.fillStyle = sky;
+    ctx.fillRect(0, 0, W, H);
+
+    // ── Aurora borealis ribbons ───────────────────────────
+    this.auroras.forEach(a => {
+      const aAlpha = a.alpha * (0.6 + Math.sin(t * a.speed + a.ph) * 0.4);
+      ctx.beginPath();
+      ctx.moveTo(0, a.y);
+      for (let x = 0; x <= W; x += 8) {
+        const y = a.y + Math.sin(x / (W / 4) + t * a.speed + a.ph) * a.amp
+                  + Math.sin(x / (W / 8) + t * a.speed * 1.3) * (a.amp * 0.3);
+        x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+      }
+      ctx.lineTo(W, 0);
+      ctx.lineTo(0, 0);
+      ctx.closePath();
+      ctx.fillStyle = a.color + aAlpha + ')';
+      ctx.fill();
+    });
+
+    // ── Stars ─────────────────────────────────────────────
+    if (!this._stars) {
+      this._stars = Array.from({length:80}, () => ({
+        x: Math.random() * W, y: Math.random() * H * 0.4,
+        r: 0.5 + Math.random() * 1.2, ph: Math.random() * Math.PI * 2
+      }));
+    }
+    this._stars.forEach(s => {
+      const a = 0.4 + Math.sin(t * 1.5 + s.ph) * 0.3;
+      ctx.fillStyle = `rgba(255,255,255,${a})`;
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fill();
+    });
+
+    // ── Distant mountain peaks ────────────────────────────
+    // Far peaks (lighter, foggy)
+    const peaksFar = [
+      [W*-0.05, gY-H*0.45], [W*0.15, gY-H*0.55], [W*0.32, gY-H*0.48],
+      [W*0.5, gY-H*0.62], [W*0.68, gY-H*0.52], [W*0.85, gY-H*0.58],
+      [W*1.05, gY-H*0.44]
+    ];
+    ctx.beginPath();
+    ctx.moveTo(-10, gY + 10);
+    peaksFar.forEach(([px, py]) => ctx.lineTo(px, py));
+    ctx.lineTo(W + 10, gY + 10);
+    ctx.closePath();
+    const mFar = ctx.createLinearGradient(0, gY - H*0.65, 0, gY);
+    mFar.addColorStop(0, 'rgba(160,180,220,0.85)');
+    mFar.addColorStop(0.4, 'rgba(200,215,240,0.9)');
+    mFar.addColorStop(1, 'rgba(220,230,250,0.95)');
+    ctx.fillStyle = mFar;
+    ctx.fill();
+
+    // Snow caps on far peaks
+    peaksFar.slice(1,-1).forEach(([px, py]) => {
+      ctx.beginPath();
+      ctx.moveTo(px, py);
+      ctx.lineTo(px - W*0.06, py + H*0.06);
+      ctx.lineTo(px + W*0.06, py + H*0.06);
+      ctx.closePath();
+      ctx.fillStyle = 'rgba(240,248,255,0.95)';
+      ctx.fill();
+    });
+
+    // Near peaks (darker, detailed)
+    const peaksNear = [
+      [W*-0.1, gY-H*0.25], [W*0.08, gY-H*0.38], [W*0.22, gY-H*0.28],
+      [W*0.38, gY-H*0.42], [W*0.52, gY-H*0.32], [W*0.68, gY-H*0.38],
+      [W*0.82, gY-H*0.28], [W*0.95, gY-H*0.35], [W*1.1, gY-H*0.22]
+    ];
+    ctx.beginPath();
+    ctx.moveTo(-10, gY + 10);
+    peaksNear.forEach(([px, py]) => ctx.lineTo(px, py));
+    ctx.lineTo(W + 10, gY + 10);
+    ctx.closePath();
+    const mNear = ctx.createLinearGradient(0, gY - H*0.45, 0, gY);
+    mNear.addColorStop(0, '#3a4a6a');
+    mNear.addColorStop(0.35, '#4a5a80');
+    mNear.addColorStop(1, '#2a3550');
+    ctx.fillStyle = mNear;
+    ctx.fill();
+    // Snow on near peaks
+    peaksNear.forEach(([px, py]) => {
+      ctx.beginPath();
+      ctx.moveTo(px, py);
+      ctx.lineTo(px - W*0.05, py + H*0.05);
+      ctx.lineTo(px + W*0.05, py + H*0.05);
+      ctx.closePath();
+      ctx.fillStyle = 'rgba(235,245,255,0.92)';
+      ctx.fill();
+    });
+
+    // ── Frozen ground ─────────────────────────────────────
+    const groundG = ctx.createLinearGradient(0, gY, 0, H);
+    groundG.addColorStop(0, '#c8d8f0');
+    groundG.addColorStop(0.15, '#b0c4e8');
+    groundG.addColorStop(0.5, '#8aa8d8');
+    groundG.addColorStop(1, '#6888b8');
+    ctx.fillStyle = groundG;
+    ctx.fillRect(0, gY, W, H - gY);
+
+    // ── Frozen lake reflection ────────────────────────────
+    ctx.fillStyle = 'rgba(150,190,240,0.5)';
+    ctx.beginPath();
+    ctx.ellipse(W * 0.5, lakeY, W * 0.42, H * 0.065, 0, 0, Math.PI * 2);
+    ctx.fill();
+    // Lake shimmer
+    this.sparkles.forEach(s => {
+      s.ph += 0.04;
+      const a = Math.max(0, Math.sin(s.ph)) * 0.7;
+      ctx.fillStyle = `rgba(255,255,255,${a})`;
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.size * a, 0, Math.PI * 2);
+      ctx.fill();
+    });
+
+    // ── Clouds drifting ───────────────────────────────────
+    this.clouds.forEach(cl => {
+      cl.x -= cl.speed;
+      if (cl.x + cl.w < 0) cl.x = W + 20;
+      ctx.fillStyle = `rgba(240,245,255,${cl.alpha * 0.4})`;
+      ctx.beginPath();
+      ctx.ellipse(cl.x, cl.y, cl.w / 2, cl.w * 0.18, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.ellipse(cl.x - cl.w * 0.2, cl.y + 5, cl.w * 0.32, cl.w * 0.12, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.ellipse(cl.x + cl.w * 0.18, cl.y + 3, cl.w * 0.28, cl.w * 0.1, 0, 0, Math.PI * 2);
+      ctx.fill();
+    });
+
+    // ── Snowflakes ────────────────────────────────────────
+    this.snow.forEach(s => {
+      s.x += s.vx + Math.sin(t * 0.6 + s.ph) * 0.6;
+      s.y += s.vy;
+      s.rot += s.spin;
+      if (s.y > H + 5) { s.y = -5; s.x = Math.random() * W; }
+      if (s.x < -5) s.x = W + 5;
+      if (s.x > W + 5) s.x = -5;
+      ctx.save();
+      ctx.translate(s.x, s.y);
+      ctx.rotate(s.rot);
+      ctx.strokeStyle = `rgba(255,255,255,${s.alpha})`;
+      ctx.lineWidth = 0.8;
+      for (let a = 0; a < 6; a++) {
+        const angle = (a / 6) * Math.PI * 2;
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(Math.cos(angle) * s.r * 3, Math.sin(angle) * s.r * 3);
+        ctx.stroke();
+      }
+      ctx.fillStyle = `rgba(255,255,255,${s.alpha})`;
+      ctx.beginPath();
+      ctx.arc(0, 0, s.r, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    });
+  }
+}
+
+// ══════════════════════════════════════════════════════════
+// CIUDAD LAVANDA — Kanto ghost town
+// Noche morada, luna llena, niebla densa, lápidas, espíritus
+// fantasma flotantes, lluvia suave, truenos lejanos
+// ══════════════════════════════════════════════════════════
+class ScenaLavanda extends ScenarioCanvas {
+  setupParticles() {
+    const W = this.W || 400, H = this.H || 500;
+    // Mist/fog layers
+    this.mists = Array.from({length:8}, (_, i) => ({
+      x: Math.random() * W * 2,
+      y: H * (0.50 + i * 0.055),
+      w: W * (0.6 + Math.random() * 0.9),
+      h: H * (0.07 + Math.random() * 0.09),
+      speed: 0.15 + Math.random() * 0.25,
+      ph: Math.random() * Math.PI * 2,
+      alpha: 0.07 + Math.random() * 0.1,
+    }));
+    // Ghost orbs (Gastly-like)
+    this.ghosts = Array.from({length:6}, () => ({
+      x: W * (0.1 + Math.random() * 0.8),
+      y: H * (0.3 + Math.random() * 0.35),
+      r: 8 + Math.random() * 16,
+      vx: (Math.random() - 0.5) * 0.3,
+      vy: (Math.random() - 0.5) * 0.2,
+      ph: Math.random() * Math.PI * 2,
+      hue: 260 + Math.floor(Math.random() * 60),
+      alpha: 0.25 + Math.random() * 0.35,
+    }));
+    // Rain drops
+    this.rain = Array.from({length:80}, () => ({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      vy: 4 + Math.random() * 4,
+      len: 6 + Math.random() * 10,
+      alpha: 0.15 + Math.random() * 0.2,
+    }));
+    // Lightning timing
+    this.nextBolt = 120 + Math.random() * 200;
+    this.boltFlash = 0;
+    // Gravestones
+    this.stones = [
+      { x: 0.06, h: 0.09, w: 0.04 },
+      { x: 0.14, h: 0.07, w: 0.035 },
+      { x: 0.78, h: 0.08, w: 0.04 },
+      { x: 0.88, h: 0.10, w: 0.045 },
+      { x: 0.94, h: 0.07, w: 0.03 },
+    ];
+    // Tower silhouette segments
+    this.towerGlow = 0;
+  }
+
+  draw() {
+    const { ctx, W, H, t } = this;
+    if (!ctx || !W || !H) return;
+
+    const gY = H * 0.60;
+
+    // ── Lightning flash ───────────────────────────────────
+    this.nextBolt--;
+    if (this.nextBolt <= 0) {
+      this.nextBolt = 100 + Math.random() * 180;
+      this.boltFlash = 1.0;
+    }
+    if (this.boltFlash > 0) this.boltFlash -= 0.06;
+
+    // ── Sky: deep purple night ────────────────────────────
+    const flashAdd = Math.max(0, this.boltFlash) * 40;
+    const sky = ctx.createLinearGradient(0, 0, 0, H * 0.65);
+    sky.addColorStop(0, `rgba(${8+flashAdd},${4+flashAdd},${22+flashAdd},1)`);
+    sky.addColorStop(0.3, `rgba(${20+flashAdd},${8+flashAdd},${50+flashAdd},1)`);
+    sky.addColorStop(0.6, `rgba(${35+flashAdd},${12+flashAdd},${70+flashAdd},1)`);
+    sky.addColorStop(1, `rgba(${50+flashAdd},${18+flashAdd},${80+flashAdd},1)`);
+    ctx.fillStyle = sky;
+    ctx.fillRect(0, 0, W, H);
+
+    // ── Moon ──────────────────────────────────────────────
+    const moonX = W * 0.75, moonY = H * 0.14, moonR = W * 0.075;
+    // Moon glow
+    const moonGlow = ctx.createRadialGradient(moonX, moonY, 0, moonX, moonY, moonR * 4.5);
+    moonGlow.addColorStop(0, 'rgba(220,200,255,0.18)');
+    moonGlow.addColorStop(0.4, 'rgba(180,150,240,0.08)');
+    moonGlow.addColorStop(1, 'transparent');
+    ctx.fillStyle = moonGlow;
+    ctx.fillRect(0, 0, W, H);
+    // Moon body
+    const mg = ctx.createRadialGradient(moonX - moonR*0.2, moonY - moonR*0.2, 0, moonX, moonY, moonR);
+    mg.addColorStop(0, '#e8deff');
+    mg.addColorStop(0.7, '#c8b8f0');
+    mg.addColorStop(1, '#a090d8');
+    ctx.fillStyle = mg;
+    ctx.beginPath();
+    ctx.arc(moonX, moonY, moonR, 0, Math.PI * 2);
+    ctx.fill();
+    // Moon craters
+    [[0.3, -0.2, 0.12], [-0.3, 0.3, 0.08], [0.15, 0.35, 0.06]].forEach(([dx, dy, cr]) => {
+      ctx.fillStyle = 'rgba(150,130,200,0.3)';
+      ctx.beginPath();
+      ctx.arc(moonX + dx*moonR, moonY + dy*moonR, cr*moonR, 0, Math.PI*2);
+      ctx.fill();
+    });
+
+    // ── Stars ─────────────────────────────────────────────
+    if (!this._stars) {
+      this._stars = Array.from({length:100}, () => ({
+        x: Math.random() * W, y: Math.random() * H * 0.5,
+        r: 0.4 + Math.random() * 1.1, ph: Math.random() * Math.PI * 2
+      }));
+    }
+    this._stars.forEach(s => {
+      const a = 0.3 + Math.sin(t * 1.8 + s.ph) * 0.35;
+      ctx.fillStyle = `rgba(200,180,255,${a})`;
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fill();
+    });
+
+    // ── Lavender Tower silhouette ─────────────────────────
+    const twX = W * 0.48, twBase = gY + 5;
+    const twW = W * 0.10, twH = H * 0.42;
+    ctx.fillStyle = 'rgba(10,4,20,0.95)';
+    // Main tower
+    ctx.fillRect(twX - twW/2, twBase - twH, twW, twH);
+    // Tower top spire
+    ctx.beginPath();
+    ctx.moveTo(twX - twW/2, twBase - twH);
+    ctx.lineTo(twX, twBase - twH - H*0.08);
+    ctx.lineTo(twX + twW/2, twBase - twH);
+    ctx.closePath();
+    ctx.fill();
+    // Tower windows (glowing purple)
+    this.towerGlow = (Math.sin(t * 0.7) + 1) * 0.5;
+    for (let row = 0; row < 4; row++) {
+      for (let col = 0; col < 2; col++) {
+        const wx = twX - twW*0.25 + col * twW*0.5;
+        const wy = twBase - twH * 0.8 + row * twH * 0.18;
+        const wGlow = ctx.createRadialGradient(wx, wy, 0, wx, wy, 8);
+        const wAlpha = 0.4 + this.towerGlow * 0.35;
+        wGlow.addColorStop(0, `rgba(180,100,255,${wAlpha})`);
+        wGlow.addColorStop(0.5, `rgba(120,50,200,${wAlpha*0.4})`);
+        wGlow.addColorStop(1, 'transparent');
+        ctx.fillStyle = wGlow;
+        ctx.fillRect(wx - 8, wy - 8, 16, 16);
+        ctx.fillStyle = `rgba(200,150,255,${wAlpha})`;
+        ctx.fillRect(wx - 2.5, wy - 3.5, 5, 7);
+      }
+    }
+
+    // ── Ground: dark purple grass ─────────────────────────
+    const groundG = ctx.createLinearGradient(0, gY, 0, H);
+    groundG.addColorStop(0, '#1a0a28');
+    groundG.addColorStop(0.3, '#120720');
+    groundG.addColorStop(1, '#080412');
+    ctx.fillStyle = groundG;
+    ctx.fillRect(0, gY, W, H - gY);
+
+    // ── Gravestones ───────────────────────────────────────
+    this.stones.forEach(st => {
+      const sx = st.x * W, sy = gY - st.h * H;
+      const sw = st.w * W, sh = st.h * H;
+      ctx.fillStyle = 'rgba(15,8,30,0.92)';
+      // Body
+      ctx.fillRect(sx - sw/2, sy, sw, sh);
+      // Rounded top
+      ctx.beginPath();
+      ctx.arc(sx, sy + sw*0.55, sw*0.5, Math.PI, 0);
+      ctx.fill();
+      // Cross detail
+      ctx.strokeStyle = 'rgba(80,40,120,0.5)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(sx, sy + sh*0.25); ctx.lineTo(sx, sy + sh*0.7);
+      ctx.moveTo(sx - sw*0.3, sy + sh*0.42); ctx.lineTo(sx + sw*0.3, sy + sh*0.42);
+      ctx.stroke();
+      // Moss glow
+      ctx.fillStyle = 'rgba(80,0,120,0.15)';
+      ctx.fillRect(sx - sw/2, sy, sw, sh);
+    });
+
+    // ── Ghost orbs floating ───────────────────────────────
+    this.ghosts.forEach(g => {
+      g.ph += 0.018;
+      g.x += g.vx + Math.sin(t * 0.5 + g.ph) * 0.4;
+      g.y += g.vy + Math.cos(t * 0.4 + g.ph) * 0.3;
+      if (g.x < W*0.05) g.vx = Math.abs(g.vx);
+      if (g.x > W*0.95) g.vx = -Math.abs(g.vx);
+      if (g.y < H*0.2) g.vy = Math.abs(g.vy);
+      if (g.y > gY - 20) g.vy = -Math.abs(g.vy);
+      const pAlpha = g.alpha * (0.6 + Math.sin(g.ph * 2) * 0.4);
+      const gg = ctx.createRadialGradient(g.x, g.y, 0, g.x, g.y, g.r * 2.5);
+      gg.addColorStop(0, `hsla(${g.hue},80%,75%,${pAlpha})`);
+      gg.addColorStop(0.4, `hsla(${g.hue},70%,50%,${pAlpha*0.5})`);
+      gg.addColorStop(1, 'transparent');
+      ctx.fillStyle = gg;
+      ctx.beginPath();
+      ctx.arc(g.x, g.y, g.r * 2.5, 0, Math.PI * 2);
+      ctx.fill();
+      // Core
+      ctx.fillStyle = `hsla(${g.hue},90%,85%,${pAlpha * 1.2})`;
+      ctx.beginPath();
+      ctx.arc(g.x, g.y, g.r * 0.4, 0, Math.PI * 2);
+      ctx.fill();
+    });
+
+    // ── Fog rolling in ────────────────────────────────────
+    this.mists.forEach(m => {
+      m.x -= m.speed;
+      m.ph += 0.008;
+      if (m.x + m.w < 0) m.x = W + 20;
+      const mAlpha = m.alpha * (0.7 + Math.sin(m.ph) * 0.3);
+      const mG = ctx.createRadialGradient(
+        m.x + m.w/2, m.y, 0,
+        m.x + m.w/2, m.y + m.h/2, m.w/1.5
+      );
+      mG.addColorStop(0, `rgba(100,60,160,${mAlpha})`);
+      mG.addColorStop(0.5, `rgba(80,40,130,${mAlpha*0.5})`);
+      mG.addColorStop(1, 'transparent');
+      ctx.fillStyle = mG;
+      ctx.beginPath();
+      ctx.ellipse(m.x + m.w/2, m.y + m.h/2, m.w/2, m.h/2, 0, 0, Math.PI*2);
+      ctx.fill();
+    });
+
+    // ── Rain ──────────────────────────────────────────────
+    ctx.strokeStyle = 'rgba(180,150,255,0.18)';
+    ctx.lineWidth = 0.7;
+    this.rain.forEach(r => {
+      r.y += r.vy;
+      r.x -= 0.5;
+      if (r.y > H) { r.y = -10; r.x = Math.random() * W; }
+      ctx.globalAlpha = r.alpha;
+      ctx.beginPath();
+      ctx.moveTo(r.x, r.y);
+      ctx.lineTo(r.x - 1, r.y + r.len);
+      ctx.stroke();
+    });
+    ctx.globalAlpha = 1;
+
+    // ── Moon glow on ground ───────────────────────────────
+    ctx.fillStyle = `rgba(180,150,255,${0.04 + Math.sin(t*0.3)*0.02})`;
+    ctx.beginPath();
+    ctx.ellipse(moonX, gY + H*0.03, W*0.25, H*0.04, 0, 0, Math.PI*2);
+    ctx.fill();
+  }
+}
+

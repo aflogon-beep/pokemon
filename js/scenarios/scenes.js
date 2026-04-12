@@ -176,11 +176,57 @@ const SCENARIOS=[
     </g>`,
     p1ground:"74%",p2ground:"74%",
     msgBg:"rgba(2,5,15,.92)",msgBorder:"#818CF8"
-  }
+  },
+  // 8. Mundo del Revés — Stranger Things
+  {
+    name:"reves",
+    weather:"thunder",
+    sky:`linear-gradient(180deg,#2a0000 0%,#550808 40%,#6e1010 70%,#3d0505 100%)`,
+    clouds:false,
+    ground:`linear-gradient(180deg,#2a0505 0%,#1a0303 60%,#0d0101 100%)`,
+    groundH:40,
+    groundDeco:`<g>
+      <ellipse cx="20%" cy="75%" rx="12%" ry="3%" fill="rgba(180,20,20,.15)"/>
+      <ellipse cx="75%" cy="80%" rx="10%" ry="2.5%" fill="rgba(160,10,10,.12)"/>
+    </g>`,
+    p1ground:"74%",p2ground:"74%",
+    msgBg:"rgba(40,0,0,.92)",msgBorder:"#9333EA"
+  },
+  // 9. Monte Corona — Sinnoh
+  {
+    name:"nieve",
+    weather:"snow",
+    sky:`linear-gradient(180deg,#050820 0%,#0f1840 30%,#1e2a60 55%,#8a5030 80%,#c87040 100%)`,
+    clouds:true,
+    ground:`linear-gradient(180deg,#c8d8f0 0%,#a0b8e0 30%,#7898c8 70%,#5878a8 100%)`,
+    groundH:38,
+    groundDeco:`<g>
+      <ellipse cx="50%" cy="72%" rx="42%" ry="6%" fill="rgba(150,190,240,.5)"/>
+      <ellipse cx="50%" cy="72%" rx="20%" ry="2.5%" fill="rgba(200,220,255,.3)"/>
+    </g>`,
+    p1ground:"74%",p2ground:"74%",
+    msgBg:"rgba(5,10,40,.9)",msgBorder:"#60A5FA"
+  },
+  // 10. Ciudad Lavanda — Kanto ghost
+  {
+    name:"lavanda",
+    weather:"rain",
+    sky:`linear-gradient(180deg,#08040e 0%,#140828 30%,#200c3e 55%,#2e1050 80%,#3a1460 100%)`,
+    clouds:false,
+    stars:true,
+    ground:`linear-gradient(180deg,#1a0a28 0%,#120720 50%,#080412 100%)`,
+    groundH:40,
+    groundDeco:`<g>
+      <circle cx="75%" cy="14%" r="7%" fill="#c8b8f0" opacity=".9"/>
+      <circle cx="75%" cy="14%" r="11%" fill="rgba(180,150,255,.1)"/>
+    </g>`,
+    p1ground:"74%",p2ground:"74%",
+    msgBg:"rgba(10,4,25,.92)",msgBorder:"#A855F7"
+  },
 ];
 
 const _scLabels={
   campo:"CAMPO",galaxia:"GALAXIA",estadio:"ESTADIO",futbol:"FUTBOL",
-  playa:"PLAYA",volcan:"VOLCAN",noche:"NOCHE",nieve:"NIEVE",
-  ciudad:"CIUDAD",cueva:"CUEVA",dojo:"DOJO",templo:"TEMPLO"
+  playa:"PLAYA",noche:"NOCHE",cueva:"CUEVA",
+  reves:"MUNDO DEL REVÉS",nieve:"MONTE CORONA",lavanda:"C. LAVANDA"
 };
