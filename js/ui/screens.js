@@ -35,6 +35,7 @@ intro(){
       <!-- Title -->
       <div style="text-align:center;flex-shrink:0;">
         <div style="display:inline-block;background:linear-gradient(135deg,#F59E0B,#D97706);color:#fff;font-family:'Roboto',sans-serif;font-weight:700;font-size:min(.95rem,4vmin);padding:7px 20px;border-radius:999px;letter-spacing:.15em;box-shadow:0 4px 20px rgba(245,158,11,.6);">⚡ ¡COMBATE POKÉMON! ⚡</div>
+        ${G.mode==="cpu"&&typeof getRivalQuote==="function"?`<div style="margin-top:10px;background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.15);border-radius:10px;padding:10px 16px;max-width:280px;margin-left:auto;margin-right:auto;"><div style="font-family:'Roboto',sans-serif;font-size:.7rem;color:rgba(255,255,255,.5);margin-bottom:4px;letter-spacing:.06em;">😤 RIVAL DICE:</div><div style="font-family:'Roboto',sans-serif;font-size:.82rem;color:#fff;font-style:italic;line-height:1.4;">"${getRivalQuote('before')}"</div></div>`:""}
       </div>
       <!-- Cards — column on portrait, row on landscape -->
       <div style="display:flex;flex-direction:${window.innerWidth<window.innerHeight?"column":"row"};align-items:stretch;flex:1;margin:min(10px,2%) 0;min-height:0;gap:${window.innerWidth<window.innerHeight?"8px":"0"};">
@@ -201,6 +202,7 @@ mode(){
 },
 create(){
   const s=G.cstep,av=s===1?G.av1:G.av2;
+  const activeProf=typeof getActiveProfile==="function"?getActiveProfile():null;
   const isP2=s===2;
   const accentCol=isP2?'#818CF8':'#3B82F6';
   const accentGlow=isP2?'rgba(129,140,248,.6)':'rgba(59,130,246,.6)';
@@ -235,6 +237,7 @@ create(){
           <div style="font-family:'Roboto',sans-serif;font-weight:700;font-size:.75rem;color:${accentCol};letter-spacing:.1em;margin-bottom:6px;">NOMBRE DEL ENTRENADOR</div>
           <input id="cname" placeholder="Escribe tu nombre..." maxlength="12"
             style="width:100%;background:rgba(0,0,0,.4);border:2px solid rgba(255,255,255,.15);border-radius:8px;padding:13px 16px;font-size:1.05rem;font-weight:700;outline:none;font-family:inherit;color:#fff;letter-spacing:.02em;"
+            value="${activeProf&&G.cstep===1?activeProf.name:''}"
             onfocus="this.style.borderColor='${accentCol}';this.style.boxShadow='0 0 16px ${accentGlow}'"
             onblur="this.style.borderColor='rgba(255,255,255,.15)';this.style.boxShadow='none'">
         </div>
@@ -655,6 +658,8 @@ battle(){
 victory(){
   const{winner,loser,stats,isP1Win}=G.vd;
   const isWin=isP1Win!==false;
+  const rivalMsg = G.mode==="cpu"&&typeof getRivalQuote==="function"
+    ? getRivalQuote(isWin?'losing':'winning') : null;
   const rec=getRec();
 
   // MVP: pokemon that dealt most (approx by type usage)
@@ -708,7 +713,8 @@ victory(){
     ${fx}
     <div style="position:relative;z-index:1;text-align:center;padding:16px;width:min(340px,95vw);overflow-y:auto;max-height:100%;">
       <div style="font-family:'Press Start 2P',monospace;font-size:min(2rem,7vw);color:${isWin?'#F59E0B':'#6B7280'};text-shadow:0 0 40px ${isWin?'rgba(245,158,11,.8)':'rgba(100,100,150,.5)'},0 4px 0 ${isWin?'#7c3e00':'#333'};letter-spacing:.08em;line-height:1.2;animation:vsSlam .6s cubic-bezier(.175,.885,.32,1.275) both;">${isWin?'K.O.!':'DERROTA'}</div>
-      <div style="font-family:'Rajdhani',sans-serif;font-size:min(1.6rem,5.5vw);color:${isWin?'#fff':'#94A3B8'};font-weight:700;letter-spacing:.1em;margin:8px 0 16px;">${A[winner.avatar]} ${winner.name.toUpperCase()} ${isWin?'WINS!':'GANA'}</div>
+      <div style="font-family:'Rajdhani',sans-serif;font-size:min(1.6rem,5.5vw);color:${isWin?'#fff':'#94A3B8'};font-weight:700;letter-spacing:.1em;margin:8px 0 12px;">${A[winner.avatar]} ${winner.name.toUpperCase()} ${isWin?'WINS!':'GANA'}</div>
+      ${rivalMsg?`<div style="background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:10px 16px;margin:0 20px 16px;max-width:280px;margin-left:auto;margin-right:auto;"><div style="font-family:'Roboto',sans-serif;font-size:.62rem;color:rgba(255,255,255,.4);margin-bottom:3px;">😤 RIVAL:</div><div style="font-family:'Roboto',sans-serif;font-size:.8rem;color:#fff;font-style:italic;line-height:1.4;">"${rivalMsg}"</div></div>`:""}
       ${statsCards}
       <div style="display:flex;flex-direction:column;gap:8px;width:100%;">
         <button class="btn" style="background:linear-gradient(135deg,#3B82F6,#1D4ED8);font-family:'Roboto',sans-serif;font-weight:700;font-size:.95rem;letter-spacing:.04em;border-radius:6px;" onclick="sfxMenu();doRm()">⟳ REVANCHA</button>
@@ -814,6 +820,10 @@ scenepick(){
     </div>
   </div>`;
 }
+,
+profiles(){ return screenProfiles(); },
+newprofile(){ return screenNewProfile(); },
+viewprofile(){ return screenViewProfile(); }
 };
 
 // ========================================
