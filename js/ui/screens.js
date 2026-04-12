@@ -469,7 +469,7 @@ battle(){
       </div>
     </div>`;
   };
-  const sfTop=`<div id="sfbar" style="flex-shrink:0;background:#070710;border-bottom:1px solid rgba(255,255,255,.06);">
+  const sfTop=`<div id="sfbar" style="flex-shrink:0;background:#070710;border-bottom:1px solid rgba(255,255,255,.06);max-height:22vh;overflow:hidden;">
     ${hudRow("hpbar1",hp1pct,pk1,G.p1.name,false)}
     <div style="height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.07),transparent);margin:0 8px;"></div>
     ${hudRow("hpbar2",hp2pct,pk2,G.p2.isCPU?"CPU":G.p2.name,true)}
@@ -481,7 +481,7 @@ battle(){
   if(typeof initCanvasScene==='function'){
     setTimeout(()=>initCanvasScene(sc.name),30);
   }
-  const arena=`<div id="arena" style="position:relative;overflow:hidden;flex:1;min-height:0;">
+  const arena=`<div id="arena" style="position:relative;overflow:hidden;flex:1;min-height:150px;max-height:46vh;">
     <canvas id="scene-canvas" style="position:absolute;inset:0;width:100%;height:100%;display:block;min-height:0;"></canvas>
     <!-- ground shadow overlay for depth -->
     <div style="position:absolute;bottom:0;left:0;right:0;height:${sc.groundH+5}%;background:linear-gradient(0deg,rgba(0,0,0,.35) 0%,transparent 100%);pointer-events:none;z-index:1;"></div>
@@ -507,16 +507,18 @@ battle(){
 
   // ── ACTIONS ───────────────────────────────────────────────
   let ac="";
+  const bottomBar=`<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr;gap:0;background:rgba(10,18,36,.98);border-top:2px solid rgba(59,130,246,.2);flex-shrink:0;">
+    <button class="btn" style="background:${!b.locked&&b.ph==='action'?'linear-gradient(180deg,#2563EB,#1D4ED8)':'rgba(15,23,42,.7)'};border-radius:0;border-right:1px solid rgba(59,130,246,.2);font-family:'Roboto',sans-serif;font-size:.88rem;font-weight:700;padding:14px 4px;" onclick="${b.locked?'':'sfxMenu();bPh(\'attack\')'}" ${b.locked?'disabled':''}>⚔ ATACAR</button>
+    <button class="btn" style="background:${!b.locked&&b.ph==='switch'?'linear-gradient(180deg,#1565C0,#0D47A1)':'rgba(15,23,42,.7)'};border-radius:0;border-right:1px solid rgba(59,130,246,.2);font-family:'Roboto',sans-serif;font-size:.88rem;font-weight:700;padding:14px 4px;" onclick="${b.locked?'':'sfxMenu();bPh(\'switch\')'}" ${b.locked?'disabled':''}>↕ CAMBIAR</button>
+    <button class="btn" onclick="${b.locked||!b.potions1?'':'usePotion()'}" style="background:${b.potions1&&!b.locked?'linear-gradient(180deg,#065f46,#047857)':'rgba(15,23,42,.7)'};border-radius:0;border-right:1px solid rgba(59,130,246,.15);font-size:.78rem;font-weight:700;padding:14px 4px;color:${b.potions1&&!b.locked?'#4ade80':'rgba(255,255,255,.2)'};">💊${b.potions1?'':'✗'}</button>
+    <button class="btn" onclick="dSave()" style="background:rgba(15,23,42,.7);border-radius:0;border-right:1px solid rgba(59,130,246,.15);font-size:.75rem;padding:14px 4px;color:rgba(255,255,255,.35);">💾</button>
+    <button id="exit-confirm" data-step="0" class="btn" onclick="exitBattle()" style="background:rgba(15,23,42,.7);border-radius:0;font-size:.75rem;padding:14px 4px;color:rgba(255,255,255,.35);">🚪</button>
+  </div>`;
   if(!b.locked){
       const turnBanner=G.mode==="cpu"&&!b.locked?`<div style="text-align:center;padding:4px 0;background:linear-gradient(90deg,transparent,rgba(59,130,246,.15),transparent);animation:pulseGlow 1.5s ease-in-out infinite;border-top:1px solid rgba(59,130,246,.2);flex-shrink:0;"><span style="font-family:'Roboto',sans-serif;font-size:.72rem;font-weight:700;color:#60A5FA;letter-spacing:.12em;">⚔ TU TURNO — ${G.p1.name.toUpperCase()}</span></div>`:"";
     if(b.ph==="action"){
-      ac=(turnBanner||"")+`<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr;gap:0;background:rgba(10,18,36,.98);border-top:1px solid rgba(59,130,246,.2);flex-shrink:0;">
-        <button class="btn" style="background:linear-gradient(180deg,#2563EB,#1D4ED8);border-radius:0;border-right:1px solid rgba(59,130,246,.2);font-family:'Roboto',sans-serif;font-size:.9rem;font-weight:700;letter-spacing:.04em;padding:14px 4px;" onclick="sfxMenu();bPh('attack')">⚔ ATACAR</button>
-        <button class="btn" style="background:linear-gradient(180deg,#1565C0,#0D47A1);border-radius:0;border-right:1px solid rgba(59,130,246,.2);font-family:'Roboto',sans-serif;font-size:.9rem;font-weight:700;letter-spacing:.04em;padding:14px 4px;" onclick="sfxMenu();bPh('switch')">↕ CAMBIAR</button>
-        <button class="btn" onclick="usePotion()" style="background:${b.potions1?'linear-gradient(180deg,#065f46,#047857)':'rgba(15,23,42,.9)'};border-radius:0;border-right:1px solid rgba(59,130,246,.15);font-size:.78rem;font-weight:700;padding:14px 4px;color:${b.potions1?'#4ade80':'rgba(255,255,255,.2)'}" title="Poción: +30HP">💊${b.potions1?'':'✗'}</button>
-        <button class="btn" onclick="dSave()" style="background:rgba(15,23,42,.9);border-radius:0;border-right:1px solid rgba(59,130,246,.15);font-size:.75rem;padding:14px 4px;color:rgba(255,255,255,.35);">💾</button>
-        <button id="exit-confirm" data-step="0" class="btn" onclick="exitBattle()" style="background:rgba(15,23,42,.9);border-radius:0;font-size:.75rem;padding:14px 4px;color:rgba(255,255,255,.35);">🚪</button>
-      </div>`;
+      const turnBanner=G.mode==="cpu"&&!b.locked?`<div style="text-align:center;padding:5px;background:linear-gradient(90deg,transparent,rgba(59,130,246,.1),transparent);border-bottom:1px solid rgba(59,130,246,.15);"><span style="font-family:'Roboto',sans-serif;font-size:.7rem;font-weight:700;color:#60A5FA;letter-spacing:.1em;">⚔ TU TURNO — ${G.p1.name.toUpperCase()}</span></div>`:"";
+      ac="";
       const defPk=b.ct==="p1"?pk2:pk1;
       const effLabels={2:"▲ SÚPER EFECTIVO",0.5:"▼ POCO EFECTIVO",0:"✗ SIN EFECTO"};
       const effColors={2:"#FCD34D",0.5:"#93C5FD",0:"#6B7280"};
@@ -598,11 +600,10 @@ battle(){
         </div>
       </div>`;
 
-      ac=`<div style="background:rgba(5,10,25,.96);border-top:1px solid rgba(59,130,246,.2);flex-shrink:0;">
+      ac=`<div style="background:rgba(5,10,25,.96);border-top:1px solid rgba(59,130,246,.2);overflow-y:auto;flex:1;min-height:0;">
         ${atkHeader}
         <div style="padding:6px 8px;">
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px;">${ms}</div>
-          <button class="btn" onclick="sfxMenu();bPh('action')" style="background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.25);font-family:'Roboto',sans-serif;font-size:.85rem;font-weight:700;padding:9px;border-radius:7px;color:#60A5FA;">← ATRÁS</button>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">${ms}</div>
         </div>
       </div>`;
     } else if(b.ph==="switch"){
@@ -614,13 +615,13 @@ battle(){
           <div style="font-size:.6rem;color:${d?"#333":"#666"};">${pk.currentHp}/${pk.hp}</div>
         </button>`;
       }).join("");
-      ac=`<div style="background:#0a0a0a;border-top:2px solid #222;flex-shrink:0;padding:8px 10px;">
-        <div style="display:flex;gap:6px;margin-bottom:6px;">${pks}</div>
-        <button class="btn" onclick="sfxMenu();bPh('action')" style="background:rgba(15,23,42,.9);border:1px solid rgba(59,130,246,.2);font-size:.85rem;padding:10px;border-radius:6px;color:#60A5FA;">← ATRÁS</button>
+      ac=`<div style="background:#0a0a0a;border-top:2px solid #222;padding:8px 10px;overflow-y:auto;flex:1;min-height:0;">
+        <div style="font-family:'Roboto',sans-serif;font-size:.7rem;color:rgba(255,255,255,.4);margin-bottom:6px;letter-spacing:.06em;">↕ ELIGE POKÉMON</div>
+        <div style="display:flex;gap:6px;">${pks}</div>
       </div>`;
     }
   } else {
-    ac=`<div style="padding:14px;background:#0a0a0a;border-top:2px solid #222;text-align:center;flex-shrink:0;"><span style="font-family:'Roboto',sans-serif;color:rgba(96,165,250,.4);font-size:.9rem;font-weight:700;letter-spacing:.1em;">COMBATIENDO...</span></div>`;
+    ac=`<div style="padding:14px;background:#0a0a0a;border-top:2px solid #222;text-align:center;flex:1;"><span style="font-family:'Roboto',sans-serif;color:rgba(96,165,250,.4);font-size:.9rem;font-weight:700;letter-spacing:.1em;">COMBATIENDO...</span></div>`;
   }
 
   const blogPanel=`<div id="blog" style="background:rgba(5,10,25,.92);border-top:1px solid rgba(59,130,246,.15);padding:4px 8px;display:flex;flex-direction:column;gap:2px;min-height:28px;max-height:90px;overflow:hidden;flex-shrink:0;"></div>`;
@@ -640,7 +641,8 @@ battle(){
       }
     }
   },100);
-  return`<div style="background:#000;display:flex;flex-direction:column;position:absolute;inset:0;overflow:hidden;">${sfTop}${arena}${blogPanel}${tb}${ac}</div>`;
+  const contentZone=ac||`<div id="blog" style="background:rgba(5,10,25,.92);border-top:1px solid rgba(59,130,246,.15);padding:4px 8px;flex:1;min-height:60px;overflow-y:auto;"></div>`;
+  return`<div style="background:#000;display:flex;flex-direction:column;position:absolute;inset:0;overflow:hidden;">${sfTop}${arena}${tb}${turnBanner||""}${contentZone}${bottomBar}</div>`;
 },
 
 victory(){
