@@ -481,7 +481,7 @@ battle(){
   if(typeof initCanvasScene==='function'){
     setTimeout(()=>initCanvasScene(sc.name),30);
   }
-  const arena=`<div id="arena" style="position:relative;overflow:hidden;flex:1;min-height:150px;max-height:46vh;">
+  const arena=`<div id="arena" style="position:relative;overflow:hidden;flex:1;min-height:140px;">
     <canvas id="scene-canvas" style="position:absolute;inset:0;width:100%;height:100%;display:block;min-height:0;"></canvas>
     <!-- ground shadow overlay for depth -->
     <div style="position:absolute;bottom:0;left:0;right:0;height:${sc.groundH+5}%;background:linear-gradient(0deg,rgba(0,0,0,.35) 0%,transparent 100%);pointer-events:none;z-index:1;"></div>
@@ -556,7 +556,7 @@ battle(){
         // Glow border for super effective
         const border=eff>=2?"box-shadow:0 0 0 2px #FCD34D,0 0 16px rgba(252,211,77,.3);":isCd?"":"";
         return`<button onclick="${isCd?"":"sfxAtk();doAtk("+i+")"}"
-          style="border:none;cursor:${isCd?"not-allowed":"pointer"};border-radius:10px;overflow:hidden;text-align:left;padding:0;${isCd?"opacity:.4;filter:saturate(.2);":""}${border};transition:transform .1s,box-shadow .1s;"
+          style="border:none;cursor:${isCd?"not-allowed":"pointer"};border-radius:10px;overflow:hidden;text-align:left;padding:0;${isCd?"opacity:.4;filter:saturate(.2);":""}${border};transition:transform .1s,box-shadow .1s;flex-shrink:0;width:calc(50vw - 20px);min-width:140px;max-width:200px;scroll-snap-align:start;"
           ${isCd?"disabled":""}
           onpointerdown="if(!this.disabled){this.style.transform='scale(.94)';this.style.filter='brightness(.85)';}"
           onpointerup="this.style.transform='scale(1)';this.style.filter='';">
@@ -600,10 +600,15 @@ battle(){
         </div>
       </div>`;
 
-      ac=`<div style="background:rgba(5,10,25,.96);border-top:1px solid rgba(59,130,246,.2);overflow-y:auto;flex:1;min-height:0;">
+      ac=`<div style="background:rgba(5,10,25,.96);border-top:1px solid rgba(59,130,246,.2);flex-shrink:0;">
         ${atkHeader}
-        <div style="padding:6px 8px;">
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">${ms}</div>
+        <!-- Horizontal scroll carousel: 2 moves visible, snap scroll -->
+        <div style="display:flex;gap:8px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;padding:8px 12px 10px;scrollbar-width:none;">
+          ${ms}
+        </div>
+        <!-- Scroll hint dots -->
+        <div style="display:flex;justify-content:center;gap:5px;padding-bottom:6px;">
+          ${(apk.moves||[]).filter(m=>m&&m.n).map((_,i)=>`<div style="width:${i<2?'18px':'6px'};height:5px;border-radius:3px;background:${i<2?'rgba(59,130,246,.7)':'rgba(255,255,255,.2)'};transition:all .2s;"></div>`).join('')}
         </div>
       </div>`;
     } else if(b.ph==="switch"){
@@ -641,7 +646,9 @@ battle(){
       }
     }
   },100);
-  const contentZone=ac||`<div id="blog" style="background:rgba(5,10,25,.92);border-top:1px solid rgba(59,130,246,.15);padding:4px 8px;flex:1;min-height:60px;overflow-y:auto;"></div>`;
+  // Blog (battle log) is the default content zone when not attacking/switching
+  const blogDiv=`<div id="blog" style="background:rgba(5,10,25,.92);border-top:1px solid rgba(59,130,246,.15);padding:5px 10px;flex:1;min-height:55px;max-height:110px;overflow-y:auto;display:flex;flex-direction:column;gap:3px;"></div>`;
+  const contentZone=ac||blogDiv;
   return`<div style="background:#000;display:flex;flex-direction:column;position:absolute;inset:0;overflow:hidden;">${sfTop}${arena}${tb}${turnBanner||""}${contentZone}${bottomBar}</div>`;
 },
 
