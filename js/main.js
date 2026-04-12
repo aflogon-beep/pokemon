@@ -64,14 +64,21 @@ function getFavs(){try{return JSON.parse(localStorage.getItem("pb_favs")||"null"
 function saveFav(ids){try{localStorage.setItem("pb_favs",JSON.stringify(ids));}catch{}}
 // Records
 function getRec(){try{return JSON.parse(localStorage.getItem("pb_rec")||'{"wins":0,"losses":0,"streak":0,"bestStreak":0,"totalMoves":0,"games":0}');}catch{return{wins:0,losses:0,streak:0,bestStreak:0,totalMoves:0,games:0};}}
-function addRec(won,moves){
+function addRec(won,moves,battleStats,battleData){
   const r=getRec();r.games++;r.totalMoves+=moves;
   if(won){r.wins++;r.streak++;r.bestStreak=Math.max(r.bestStreak,r.streak);}
   else{r.losses++;r.streak=0;}
   try{localStorage.setItem("pb_rec",JSON.stringify(r));}catch{}
+  // Update profile
+  if(typeof updateProfileAfterBattle==="function"){
+    const result=updateProfileAfterBattle(won,Object.assign({moves},battleStats||{}),battleData||{});
+    if(result.levelUp||result.newMedals.length>0){
+      setTimeout(()=>showLevelUp(result.newMedals.length>0?result.newLevel:null,result.newMedals,result.xpGained),800);
+    }
+  }
 }
 function go(s){if(G.scr==="battle"&&s!=="battle")stopMusic();G.scr=s;render();}
-function showSplash(){
+function showSplash(onDone){
   const app=document.getElementById("app");
   app.innerHTML=`<div id="splash" style="position:absolute;inset:0;background:linear-gradient(160deg,#0F172A,#1E3A5F);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;animation:splashFadeIn .4s ease both;">
     <div style="animation:splashSpin 1.2s ease-in-out;margin-bottom:20px;">${POKEBALL}</div>
@@ -88,5 +95,16 @@ function showSplash(){
 function render(){document.getElementById("app").innerHTML=SCREENS[G.scr]?SCREENS[G.scr]():`<div style="color:#fff;padding:20px;">Error: ${G.scr}</div>`;}
 
 
-// Boot
-showSplash();
+// Boot — show profiles screen if needed
+function boot(){
+  const profiles = getProfiles();
+  const active = getActiveProfile();
+  if(!active) {
+    // No active profile — go to profiles screen after splash
+    showSplash(()=>go('profiles'));
+  } else {
+    // Has active profile — go to mode selection
+    showSplash(()=>go('mode'));
+  }
+}
+boot();

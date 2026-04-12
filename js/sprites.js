@@ -481,6 +481,15 @@ function execAnim(a1,a2){
     if(newStatus)def.status=newStatus;
     st.dmgDone=(st.dmgDone||0)+d;
     if(ip){st.dmgTypes=st.dmgTypes||{};st.dmgTypes[mv.t]=(st.dmgTypes[mv.t]||0)+1;}
+    // Track for profile medals
+    if(isCrit) st.critsInBattle=(st.critsInBattle||0)+1;
+    if(d>st.maxHit) st.maxHit=d;
+    st.typeKills=st.typeKills||{};
+    if(def.currentHp<=0){st.typeKills[def.types[0]]=(st.typeKills[def.types[0]]||0)+1;}
+    st.seenIds=st.seenIds||new Set();
+    st.seenIds.add(def.id);st.seenIds.add(atk.id);
+    st.gensUsed=st.gensUsed||new Set();
+    [atk.id,def.id].forEach(id=>{const gen=id<=151?1:id<=251?2:id<=386?3:id<=493?4:5;st.gensUsed.add(gen);});
     evs.push({type:"atk",nm,mv,ip,d,isS,isW,isN,isCrit,col:(TC[mv.t]||TC.fire).bg,fainted:def.currentHp<=0,defNm:def.name,newStatus});
     if(def.currentHp<=0)st.defeated++;
     // End-of-turn status damage
@@ -571,8 +580,23 @@ function execAnim(a1,a2){
     b.locked=false;
     const al1=nt1.every(p=>p.currentHp<=0),al2=nt2.every(p=>p.currentHp<=0);
     const ns1=nt1[na1].currentHp<=0&&!al1,ns2=nt2[na2].currentHp<=0&&!al2;
-    if(al1){G.vd={winner:G.p2,loser:G.p1,stats:b.st,isP1Win:false};addRec(false,b.st.moves);sfxDefeat();setTimeout(()=>go("victory"),600);return;}
-    if(al2){G.vd={winner:G.p1,loser:G.p2,stats:b.st,isP1Win:true};addRec(true,b.st.moves);sfxVic();setTimeout(()=>go("victory"),600);return;}
+    if(al1){G.vd={winner:G.p2,loser:G.p1,stats:b.st,isP1Win:false};(()=>{
+      const bStats={critsInBattle:b.st.critsInBattle||0,maxHit:b.st.maxHit||0,typeKills:b.st.typeKills||{}};
+      const seenArr=b.st.seenIds?Array.from(b.st.seenIds):[];
+      const gensArr=b.st.gensUsed?Array.from(b.st.gensUsed):[];
+      const shinyEnc=nt2.some(p=>p.shiny)||nt1.some(p=>p.shiny);
+      addRec(false,b.st.moves,bStats,{seenIds:seenArr,gensUsed:gensArr,shinyEncounter:shinyEnc});
+    })();sfxDefeat();setTimeout(()=>go("victory"),600);return;}
+    if(al2){G.vd={winner:G.p1,loser:G.p2,stats:b.st,isP1Win:true};(()=>{
+      const bStats={critsInBattle:b.st.critsInBattle||0,maxHit:b.st.maxHit||0,typeKills:b.st.typeKills||{}};
+      const seenArr=b.st.seenIds?Array.from(b.st.seenIds):[];
+      const gensArr=b.st.gensUsed?Array.from(b.st.gensUsed):[];
+      const p1alive=nt1.filter(p=>p.currentHp>0).length;
+      const p1lost=3-p1alive;
+      const legendKill=nt2.some(p=>[144,145,146,150,151,243,244,245,249,250,251,377,378,379,380,381,382,383,384,385,386,480,481,482,483,484,485,486,487,488,489,490,491,492,493].includes(p.id));
+      const shinyEnc=nt2.some(p=>p.shiny)||nt1.some(p=>p.shiny);
+      addRec(true,b.st.moves,bStats,{seenIds:seenArr,gensUsed:gensArr,perfectWin:p1lost===0,comeback:p1lost>=2,legendaryKill:legendKill,shinyEncounter:shinyEnc});
+    })();sfxVic();setTimeout(()=>go("victory"),600);return;}
     if(ns1){G.fsfor="p1";go("fswitch");return;}
     if(ns2){if(G.p2.isCPU){const nx=nt2.findIndex((pk,i)=>pk.currentHp>0&&i!==na2);if(nx!==-1)b.a2=nx;}else{G.fsfor="p2";go("fswitch");return;}b.ph="action";render();return;}
     b.ph="action";
