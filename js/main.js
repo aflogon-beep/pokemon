@@ -89,7 +89,7 @@ function showSplash(onDone){
   setTimeout(()=>{
     const el=document.getElementById("splash");
     if(el){el.style.animation="splashFadeOut .4s ease forwards";}
-    setTimeout(()=>render(),400);
+    setTimeout(()=>{if(onDone)onDone();else render();},400);
   },1600);
 }
 function render(){document.getElementById("app").innerHTML=SCREENS[G.scr]?SCREENS[G.scr]():`<div style="color:#fff;padding:20px;">Error: ${G.scr}</div>`;}
