@@ -332,10 +332,10 @@ select(){
             <div style="display:flex;gap:3px;flex-wrap:wrap;">${pk.types.map(t=>bdg(t)).join("")}${pk.shiny?'<span style="background:linear-gradient(135deg,#FFD700,#FFA500);color:#000;font-size:.52rem;font-weight:800;padding:2px 5px;border-radius:3px;">✨SHINY</span>':''}</div>
           </div>
           <!-- Image -->
-          <div style="background:linear-gradient(180deg,${tc0.bg}66,#f0e8d0);position:relative;height:min(170px,42vw);overflow:hidden;">
+          <div style="background:linear-gradient(180deg,${tc0.bg}99,#1a1a2e);position:relative;height:min(170px,42vw);overflow:hidden;">
             <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 40%,rgba(255,255,255,.5),transparent 65%);"></div>
-            <img src="${su(pk.id)}" style="width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 6px 12px rgba(0,0,0,.25))${pk.shiny?' drop-shadow(0 0 10px #FFD700)':''};">
-            <div style="position:absolute;bottom:4px;right:8px;font-family:'Roboto',sans-serif;font-size:.5rem;color:rgba(0,0,0,.35);">N°${String(pk.id).padStart(3,'0')} · Altura y Peso desconocidos</div>
+            <img src="${suStatic(pk.id)}" style="width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 6px 12px rgba(0,0,0,.25))${pk.shiny?' drop-shadow(0 0 10px #FFD700)':''};">
+            <div style="position:absolute;bottom:4px;right:8px;font-family:'Roboto',sans-serif;font-size:.5rem;color:rgba(255,255,255,.35);">N°${String(pk.id).padStart(3,'0')} · Altura y Peso desconocidos</div>
           </div>
           <!-- Body -->
           <div style="background:#1a1a2e;padding:10px 12px;">
@@ -363,7 +363,7 @@ select(){
             <!-- Buttons -->
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
               <button onclick="G.modal=null;render()" style="border:2px solid rgba(59,130,246,.4);cursor:pointer;background:rgba(15,23,42,.85);color:#60A5FA;font-family:'Roboto',sans-serif;font-size:.88rem;font-weight:700;padding:12px;border-radius:8px;letter-spacing:.04em;">✕ CERRAR</button>
-              <button onclick="${canAdd||iS?'modalAct('+pk.id+')':''}" style="border:none;cursor:${canAdd||iS?'pointer':'not-allowed'};background:${iS?'linear-gradient(135deg,#EF4444,#991B1B)':canAdd?'linear-gradient(135deg,#3B82F6,#1D4ED8)':'rgba(0,0,0,.15)'};color:${canAdd||iS?'#fff':'rgba(0,0,0,.3)'};font-family:'Roboto',sans-serif;font-size:.88rem;font-weight:700;padding:12px;border-radius:8px;letter-spacing:.04em;box-shadow:${canAdd?'0 4px 14px rgba(59,130,246,.4)':'none'};">
+              <button onclick="${canAdd||iS?'modalAct('+pk.id+')':''}" style="border:none;cursor:${canAdd||iS?'pointer':'not-allowed'};background:${iS?'linear-gradient(135deg,#EF4444,#991B1B)':canAdd?'linear-gradient(135deg,#3B82F6,#1D4ED8)':'rgba(255,255,255,.06)'};color:${canAdd||iS?'#fff':'rgba(255,255,255,.2)'};font-family:'Roboto',sans-serif;font-size:.88rem;font-weight:700;padding:12px;border-radius:8px;letter-spacing:.04em;box-shadow:${canAdd?'0 4px 14px rgba(59,130,246,.4)':'none'};">
                 ${iS?"✕ QUITAR":canAdd?"＋ AÑADIR":"EQUIPO LLENO"}
               </button>
             </div>
@@ -421,7 +421,7 @@ pass(){
 fswitch(){
   const b=G.bat,who=G.fsfor,tm=who==="p1"?b.t1:b.t2,pl=who==="p1"?G.p1:G.p2,ai=who==="p1"?b.a1:b.a2;
   const pks=tm.map((pk,i)=>{const d=pk.currentHp<=0||i===ai;return`<button ${d?"disabled":""} onclick="sfxSel();fsTo(${i})" style="background:${d?"rgba(255,255,255,.06)":"#fff"};border-radius:18px;padding:14px 10px;border:none;cursor:${d?"not-allowed":"pointer"};opacity:${d?.25:1};min-width:100px;text-align:center;transition:transform .1s;" onpointerdown="if(!this.disabled)this.style.transform='scale(.92)'" onpointerup="this.style.transform='scale(1)'">
-    <img src="${su(pk.id)}" width="72" height="72" style="margin:0 auto;object-fit:contain;${pk.currentHp<=0?"filter:grayscale(1) opacity(.25);":""}">
+    <img src="${suStatic(pk.id)}" width="72" height="72" style="margin:0 auto;object-fit:contain;${pk.currentHp<=0?"filter:grayscale(1) opacity(.25);":""}">
     <div style="font-weight:800;font-size:.82rem;color:${d?"rgba(255,255,255,.3)":"#1E293B"};margin-top:4px;">${pk.name}</div>
     <div style="font-size:.72rem;color:${d?"rgba(255,255,255,.2)":"#64748B"};">${pk.currentHp}/${pk.hp}</div>
   </button>`;}).join("");
@@ -450,7 +450,7 @@ battle(){
     const teamDots=(isP2?b.t2:b.t1).map((p,i)=>`<div style="width:8px;height:8px;border-radius:50%;background:${p.currentHp>0?(p.status&&STATUS[p.status]?STATUS[p.status].color:"#22C55E"):"#1a1a1a"};outline:${i===(isP2?b.a2:b.a1)?"2px solid "+(isP2?"#93C5FD":"#FCD34D"):"1px solid #333"};outline-offset:1px;"></div>`).join("");
     return`<div style="display:flex;align-items:center;gap:7px;padding:5px 8px;">
       <div style="width:40px;height:40px;flex-shrink:0;border:2px solid ${isP2?"#3B6CB7":"#7a5a10"};border-radius:3px;overflow:hidden;background:#050505;">
-        <img src="${su(pk.id)}" style="width:120%;height:120%;object-fit:cover;object-position:center 10%;transform:${isP2?"none":"scaleX(-1)"};filter:saturate(1.2) contrast(1.05);">
+        <img src="${suStatic(pk.id)}" style="width:120%;height:120%;object-fit:cover;object-position:center 10%;transform:${isP2?"none":"scaleX(-1)"};filter:saturate(1.2) contrast(1.05);">
       </div>
       <div style="flex:1;min-width:0;">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
@@ -481,7 +481,7 @@ battle(){
   if(typeof initCanvasScene==='function'){
     setTimeout(()=>initCanvasScene(sc.name),30);
   }
-  const arena=`<div id="arena" style="position:relative;overflow:hidden;flex:1;min-height:0;height:44vh;">
+  const arena=`<div id="arena" style="position:relative;overflow:hidden;flex-shrink:0;height:44vh;">
     <canvas id="scene-canvas" style="position:absolute;inset:0;width:100%;height:100%;display:block;min-height:0;"></canvas>
     <!-- ground shadow overlay for depth -->
     <div style="position:absolute;bottom:0;left:0;right:0;height:${sc.groundH+5}%;background:linear-gradient(0deg,rgba(0,0,0,.35) 0%,transparent 100%);pointer-events:none;z-index:1;"></div>
@@ -600,7 +600,7 @@ battle(){
         </div>
       </div>`;
 
-      ac=`<div style="background:rgba(5,10,25,.96);border-top:1px solid rgba(59,130,246,.2);flex-shrink:0;">
+      ac=`<div style="background:rgba(5,10,25,.96);border-top:1px solid rgba(59,130,246,.2);flex-shrink:0;overflow:hidden;">
         ${atkHeader}
         <!-- Horizontal scroll carousel: 2 moves visible, snap scroll -->
         <div style="display:flex;gap:8px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;padding:8px 12px 10px;scrollbar-width:none;">
@@ -615,7 +615,7 @@ battle(){
       const pks=at.map((pk,i)=>{
         const d=pk.currentHp<=0||i===ai;
         return`<button ${d?"disabled":""} onclick="sfxSel();doSw(${i})" style="flex:1;background:${d?"#111":"#1a1a1a"};border:1px solid ${d?"#222":"#444"};border-radius:8px;padding:10px 6px;cursor:${d?"not-allowed":"pointer"};opacity:${d?.25:1};text-align:center;" onpointerdown="if(!this.disabled)this.style.transform='scale(.92)'" onpointerup="this.style.transform='scale(1)'">
-          <img src="${su(pk.id)}" width="50" height="50" style="margin:0 auto;object-fit:contain;display:block;${pk.currentHp<=0?"filter:grayscale(1) opacity(.2);":""}">
+          <img src="${suStatic(pk.id)}" width="50" height="50" style="margin:0 auto;object-fit:contain;display:block;${pk.currentHp<=0?"filter:grayscale(1) opacity(.2);":""};">
           <div style="font-weight:800;font-size:.68rem;color:${d?"#444":"#ccc"};margin-top:2px;">${pk.name}</div>
           <div style="font-size:.6rem;color:${d?"#333":"#666"};">${pk.currentHp}/${pk.hp}</div>
         </button>`;
@@ -647,7 +647,7 @@ battle(){
     }
   },100);
   // Blog (battle log) is the default content zone when not attacking/switching
-  const blogDiv=`<div id="blog" style="background:rgba(5,10,25,.92);border-top:1px solid rgba(59,130,246,.15);padding:5px 10px;flex:1;min-height:55px;max-height:110px;overflow-y:auto;display:flex;flex-direction:column;gap:3px;"></div>`;
+  const blogDiv=`<div id="blog" style="background:rgba(5,10,25,.92);border-top:1px solid rgba(59,130,246,.15);padding:5px 10px;flex-shrink:0;min-height:55px;max-height:110px;overflow-y:auto;display:flex;flex-direction:column;gap:3px;"></div>`;
   const contentZone=ac||blogDiv;
   return`<div style="background:#000;display:flex;flex-direction:column;position:absolute;inset:0;overflow:hidden;">${sfTop}${arena}${tb}${turnBanner||""}${contentZone}${bottomBar}</div>`;
 },
