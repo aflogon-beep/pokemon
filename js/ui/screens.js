@@ -514,8 +514,8 @@ battle(){
     <button class="btn" onclick="dSave()" style="background:rgba(15,23,42,.7);border-radius:0;border-right:1px solid rgba(59,130,246,.15);font-size:.75rem;padding:14px 4px;color:rgba(255,255,255,.35);">💾</button>
     <button id="exit-confirm" data-step="0" class="btn" onclick="exitBattle()" style="background:rgba(15,23,42,.7);border-radius:0;font-size:.75rem;padding:14px 4px;color:rgba(255,255,255,.35);">🚪</button>
   </div>`;
+  const turnBanner=G.mode==="cpu"?`<div style="text-align:center;padding:5px;background:linear-gradient(90deg,transparent,rgba(59,130,246,.1),transparent);border-bottom:1px solid rgba(59,130,246,.15);"><span style="font-family:'Roboto',sans-serif;font-size:.7rem;font-weight:700;color:#60A5FA;letter-spacing:.1em;">⚔ TU TURNO — ${G.p1.name.toUpperCase()}</span></div>`:"";
   if(!b.locked){
-      const turnBanner=G.mode==="cpu"&&!b.locked?`<div style="text-align:center;padding:4px 0;background:linear-gradient(90deg,transparent,rgba(59,130,246,.15),transparent);animation:pulseGlow 1.5s ease-in-out infinite;border-top:1px solid rgba(59,130,246,.2);flex-shrink:0;"><span style="font-family:'Roboto',sans-serif;font-size:.72rem;font-weight:700;color:#60A5FA;letter-spacing:.12em;">⚔ TU TURNO — ${G.p1.name.toUpperCase()}</span></div>`:"";
     if(b.ph==="action"){
       const turnBanner=G.mode==="cpu"&&!b.locked?`<div style="text-align:center;padding:5px;background:linear-gradient(90deg,transparent,rgba(59,130,246,.1),transparent);border-bottom:1px solid rgba(59,130,246,.15);"><span style="font-family:'Roboto',sans-serif;font-size:.7rem;font-weight:700;color:#60A5FA;letter-spacing:.1em;">⚔ TU TURNO — ${G.p1.name.toUpperCase()}</span></div>`:"";
       ac="";
