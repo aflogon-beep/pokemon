@@ -611,9 +611,9 @@ function placeSpriteNow(img, wrapId, shadowId, isP1, groundH){
 
   // Portrait mobile: bigger sprites, tight padding
   const isPortrait = W < H;
-  const maxPct   = isPortrait ? 0.32 : 0.34;   // sprite width % of arena
-  const minPx    = isPortrait ? 150  : 200;
-  const maxPx    = isPortrait ? 290  : 400;
+  const maxPct   = isPortrait ? 0.22 : 0.26;   // sprite width % of arena
+  const minPx    = isPortrait ? 100  : 150;
+  const maxPx    = isPortrait ? 200  : 280;
   const maxHpct  = isPortrait ? 0.46 : 0.50;   // max height % of arena
   const padPct   = isPortrait ? 0.01 : 0.05;   // very tight pad = max separation
 
@@ -621,6 +621,8 @@ function placeSpriteNow(img, wrapId, shadowId, isP1, groundH){
 
   img.style.width=targetW+"px";
   img.style.height="auto";
+  img.style.maxHeight=Math.round(H*0.42)+"px";
+  img.style.objectFit="contain";
   img.style.display="block";
 
   const ratio=(img.naturalHeight&&img.naturalWidth)
