@@ -752,6 +752,9 @@ scenepick(){
     {idx:4,name:"Cueva",tagline:"LAS PROFUNDIDADES",desc:"Piedra, lava y cristales brillantes",emoji:"🦇",accent:"#F59E0B",glow:"rgba(245,158,11,.5)",bg:"linear-gradient(135deg,#1a0f00,#2d1f05,#3d2a08)",sky:"linear-gradient(180deg,#0a0a0a,#1a1008,#2d1f05)",icon:"🔥"},
     {idx:5,name:"Playa",tagline:"ATARDECER TROPICAL",desc:"Olas, palmeras y sol poniente",emoji:"🌊",accent:"#60A5FA",glow:"rgba(96,165,250,.6)",bg:"linear-gradient(135deg,#0a2a4a,#1a4a7a,#2a6aaa)",sky:"linear-gradient(180deg,#FF6B35,#FFB347,#87CEEB,#4AA8D8)",icon:"🌅"},
     {idx:6,name:"Noche",tagline:"BAJO LA LUNA LLENA",desc:"Estrellas, luna y luciérnagas",emoji:"🌙",accent:"#818CF8",glow:"rgba(129,140,248,.6)",bg:"linear-gradient(135deg,#05051a,#0a0a2e,#10104a)",sky:"linear-gradient(180deg,#000510,#020c1b,#041628)",icon:"🌕"},
+    {idx:7,name:"Mundo del Revés",tagline:"STRANGER THINGS",desc:"Cielo carmesí, árboles retorcidos, relámpagos violetas",emoji:"🔴",accent:"#9333EA",glow:"rgba(147,51,234,.7)",bg:"linear-gradient(135deg,#1a0000,#3a0505,#2a0010)",sky:"linear-gradient(180deg,#2a0000,#550808,#6e1010)",icon:"🌑"},
+    {idx:8,name:"Monte Corona",tagline:"SINNOH — CIMAS NEVADAS",desc:"Aurora boreal, picos nevados y lago helado",emoji:"🏔️",accent:"#60A5FA",glow:"rgba(96,165,250,.6)",bg:"linear-gradient(135deg,#050820,#0f1840,#1e2a60)",sky:"linear-gradient(180deg,#050820,#1e2a60,#8a5030,#c87040)",icon:"❄️"},
+    {idx:9,name:"Ciudad Lavanda",tagline:"KANTO — CIUDAD FANTASMA",desc:"Luna llena, lápidas, espíritus y niebla morada",emoji:"👻",accent:"#A855F7",glow:"rgba(168,85,247,.7)",bg:"linear-gradient(135deg,#08040e,#140828,#200c3e)",sky:"linear-gradient(180deg,#08040e,#140828,#200c3e,#2e1050)",icon:"🌕"},
   ];
 
   // Animated particles background
