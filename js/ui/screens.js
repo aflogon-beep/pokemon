@@ -744,28 +744,23 @@ saves(){
   </div>`;
 },
 scenepick(){
-  const SC_INFO=[
-    {idx:0,name:"Campo",tagline:"HIERBA Y NATURALEZA",desc:"Batalla bajo el sol entre árboles",emoji:"🌿",accent:"#22C55E",glow:"rgba(34,197,94,.6)",bg:"linear-gradient(135deg,#052e16,#14532d,#166534)",sky:"linear-gradient(180deg,#4AA8D8,#87CEEB,#B0E0FF,#8DB96A)",icon:"🌳"},
-    {idx:1,name:"Galaxia",tagline:"ESPACIO PROFUNDO",desc:"Las estrellas serán testigos",emoji:"🌌",accent:"#A855F7",glow:"rgba(168,85,247,.6)",bg:"linear-gradient(135deg,#0d0020,#1E0A3C,#4C1D95)",sky:"linear-gradient(180deg,#020618,#0B1A3E,#1a0a3e)",icon:"⭐"},
-    {idx:2,name:"Estadio",tagline:"ARENA OFICIAL",desc:"Focos encendidos, gradas rugiendo",emoji:"⚡",accent:"#3B82F6",glow:"rgba(59,130,246,.6)",bg:"linear-gradient(135deg,#0c1a2e,#1E3A5F,#1D4ED8)",sky:"linear-gradient(180deg,#1a1a2e,#16213e,#0f3460)",icon:"🏟️"},
-    {idx:3,name:"Fútbol",tagline:"ESTADIO LLENO",desc:"Fans enloquecidos, césped mojado",emoji:"⚽",accent:"#F59E0B",glow:"rgba(245,158,11,.6)",bg:"linear-gradient(135deg,#052e16,#14532D,#166534)",sky:"linear-gradient(180deg,#1a3a6e,#2e6db4,#5ba3e0,#87CEEB)",icon:"🏆",weather:null},
-    {idx:4,name:"Cueva",tagline:"LAS PROFUNDIDADES",desc:"Piedra, lava y cristales brillantes",emoji:"🦇",accent:"#F59E0B",glow:"rgba(245,158,11,.5)",bg:"linear-gradient(135deg,#1a0f00,#2d1f05,#3d2a08)",sky:"linear-gradient(180deg,#0a0a0a,#1a1008,#2d1f05)",icon:"🔥"},
-    {idx:5,name:"Playa",tagline:"ATARDECER TROPICAL",desc:"Olas, palmeras y sol poniente",emoji:"🌊",accent:"#60A5FA",glow:"rgba(96,165,250,.6)",bg:"linear-gradient(135deg,#0a2a4a,#1a4a7a,#2a6aaa)",sky:"linear-gradient(180deg,#FF6B35,#FFB347,#87CEEB,#4AA8D8)",icon:"🌅"},
-    {idx:6,name:"Noche",tagline:"BAJO LA LUNA LLENA",desc:"Estrellas, luna y luciérnagas",emoji:"🌙",accent:"#818CF8",glow:"rgba(129,140,248,.6)",bg:"linear-gradient(135deg,#05051a,#0a0a2e,#10104a)",sky:"linear-gradient(180deg,#000510,#020c1b,#041628)",icon:"🌕"},
-    {idx:7,name:"Mundo del Revés",tagline:"STRANGER THINGS",desc:"Cielo carmesí, árboles retorcidos, relámpagos violetas",emoji:"🔴",accent:"#9333EA",glow:"rgba(147,51,234,.7)",bg:"linear-gradient(135deg,#1a0000,#3a0505,#2a0010)",sky:"linear-gradient(180deg,#2a0000,#550808,#6e1010)",icon:"🌑"},
-    {idx:8,name:"Monte Corona",tagline:"SINNOH — CIMAS NEVADAS",desc:"Aurora boreal, picos nevados y lago helado",emoji:"🏔️",accent:"#60A5FA",glow:"rgba(96,165,250,.6)",bg:"linear-gradient(135deg,#050820,#0f1840,#1e2a60)",sky:"linear-gradient(180deg,#050820,#1e2a60,#8a5030,#c87040)",icon:"❄️"},
-    {idx:9,name:"Ciudad Lavanda",tagline:"KANTO — CIUDAD FANTASMA",desc:"Luna llena, lápidas, espíritus y niebla morada",emoji:"👻",accent:"#A855F7",glow:"rgba(168,85,247,.7)",bg:"linear-gradient(135deg,#08040e,#140828,#200c3e)",sky:"linear-gradient(180deg,#08040e,#140828,#200c3e,#2e1050)",icon:"🌕"},
-  ];
-
-  // Animated particles background
-  let sparks="";
-  for(let i=0;i<20;i++){
-    const x=Math.random()*100,y=Math.random()*100;
-    const s=1+Math.random()*2,d=2+Math.random()*5,dl=Math.random()*4;
-    const col=["#EF4444","#F59E0B","#A855F7","#3B82F6","#22C55E"][i%5];
-    sparks+=`<div style="position:absolute;left:${x}%;top:${y}%;width:${s}px;height:${s}px;background:${col};border-radius:50%;animation:twinkle ${d}s ease-in-out ${dl}s infinite;opacity:.4;pointer-events:none;"></div>`;
-  }
-
+  // Build scene info dynamically from SCENARIOS array
+  const SC_STYLES = {
+    campo:   {emoji:"🌿",tagline:"HIERBA Y NATURALEZA",desc:"Batalla bajo el sol entre árboles",accent:"#22C55E",glow:"rgba(34,197,94,.6)",bg:"linear-gradient(135deg,#052e16,#14532d,#166534)",icon:"🌳"},
+    galaxia: {emoji:"🌌",tagline:"ESPACIO PROFUNDO",desc:"Las estrellas serán testigos",accent:"#A855F7",glow:"rgba(168,85,247,.6)",bg:"linear-gradient(135deg,#0d0020,#1E0A3C,#4C1D95)",icon:"⭐"},
+    estadio: {emoji:"⚡",tagline:"ARENA OFICIAL",desc:"Focos encendidos, gradas rugiendo",accent:"#3B82F6",glow:"rgba(59,130,246,.6)",bg:"linear-gradient(135deg,#0c1a2e,#1E3A5F,#1D4ED8)",icon:"🏟️"},
+    futbol:  {emoji:"⚽",tagline:"ESTADIO LLENO",desc:"Fans enloquecidos, césped mojado",accent:"#F59E0B",glow:"rgba(245,158,11,.6)",bg:"linear-gradient(135deg,#052e16,#14532D,#166534)",icon:"🏆"},
+    cueva:   {emoji:"🦇",tagline:"LAS PROFUNDIDADES",desc:"Piedra, lava y cristales brillantes",accent:"#F59E0B",glow:"rgba(245,158,11,.5)",bg:"linear-gradient(135deg,#1a0f00,#2d1f05,#3d2a08)",icon:"🔥"},
+    playa:   {emoji:"🌊",tagline:"ATARDECER TROPICAL",desc:"Olas, palmeras y sol poniente",accent:"#60A5FA",glow:"rgba(96,165,250,.6)",bg:"linear-gradient(135deg,#0a2a4a,#1a4a7a,#2a6aaa)",icon:"🌅"},
+    noche:   {emoji:"🌙",tagline:"BAJO LA LUNA LLENA",desc:"Estrellas, luna y luciérnagas",accent:"#818CF8",glow:"rgba(129,140,248,.6)",bg:"linear-gradient(135deg,#05051a,#0a0a2e,#10104a)",icon:"🌕"},
+    reves:   {emoji:"🔴",tagline:"STRANGER THINGS",desc:"Cielo carmesí, relámpagos violetas",accent:"#9333EA",glow:"rgba(147,51,234,.7)",bg:"linear-gradient(135deg,#1a0000,#3a0505,#2a0010)",icon:"🌑"},
+    nieve:   {emoji:"🏔️",tagline:"SINNOH — MONTE CORONA",desc:"Aurora boreal, picos nevados y lago helado",accent:"#60A5FA",glow:"rgba(96,165,250,.6)",bg:"linear-gradient(135deg,#050820,#0f1840,#1e2a60)",icon:"❄️"},
+    lavanda: {emoji:"👻",tagline:"KANTO — CIUDAD FANTASMA",desc:"Luna llena, lápidas y espíritus",accent:"#A855F7",glow:"rgba(168,85,247,.7)",bg:"linear-gradient(135deg,#08040e,#140828,#200c3e)",icon:"🌕"},
+  };
+  const SC_INFO = SCENARIOS.map((sc, idx) => {
+    const st = SC_STYLES[sc.name] || {emoji:"🌍",tagline:sc.name.toUpperCase(),desc:"Un escenario misterioso",accent:"#3B82F6",glow:"rgba(59,130,246,.5)",bg:"linear-gradient(135deg,#0a0a2e,#1a1a4e)",icon:"⭐"};
+    return {...st, idx, name: (_scLabels[sc.name]||sc.name), sky: sc.sky};
+  });
   const cards=SC_INFO.map(si=>`
     <button onclick="sfxSel();pickScene(${si.idx})"
       style="border:none;cursor:pointer;padding:0;background:transparent;display:block;width:100%;border-radius:16px;overflow:hidden;
