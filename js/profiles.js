@@ -32,10 +32,11 @@ function trainerAvatarHtml(trainerId, size=60) {
   const tr = TRAINERS.find(t=>t.id===trainerId) || TRAINERS[0];
   const colors = ['#EF4444','#3B82F6','#22C55E','#F59E0B','#8B5CF6','#EC4899','#14B8A6','#F97316'];
   const colorIdx = tr.name.charCodeAt(0) % colors.length;
-  return `<div style="position:relative;width:${size}px;height:${size}px;border-radius:50%;overflow:hidden;background:${colors[colorIdx]};flex-shrink:0;">
-    <img src="${tr.url}" style="width:100%;height:100%;object-fit:cover;" 
-      onerror="this.style.display='none';this.nextSibling.style.display='flex'">
-    <div style="display:none;position:absolute;inset:0;align-items:center;justify-content:center;font-weight:900;font-size:${Math.round(size*0.45)}px;color:#fff;">${tr.name[0]}</div>
+  const uid = 'av_' + tr.id + '_' + size;
+  return `<div style="position:relative;width:${size}px;height:${size}px;border-radius:50%;overflow:hidden;background:${colors[colorIdx]};flex-shrink:0;display:flex;align-items:center;justify-content:center;">
+    <img src="${tr.url}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"
+      onerror="this.style.display='none'">
+    <span style="font-weight:900;font-size:${Math.round(size*0.45)}px;color:#fff;position:relative;z-index:1;">${tr.name[0]}</span>
   </div>`;
 }
 
